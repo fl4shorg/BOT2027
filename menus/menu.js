@@ -173,6 +173,7 @@ function obterMenuAdmin() {
 
 👥 *GERENCIAMENTO DE GRUPO:*
 • \`${prefix}marca\` - Menciona todos os membros
+• \`${prefix}totag\` - Marca todos sem mostrar menções
 • \`${prefix}fechargrupo\` / \`${prefix}fechar\` - Fecha o grupo
 • \`${prefix}abrirgrupo\` / \`${prefix}abrir\` - Abre o grupo
 • \`${prefix}mudargrupo [nome]\` - Altera nome do grupo

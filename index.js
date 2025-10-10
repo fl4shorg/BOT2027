@@ -1153,7 +1153,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             }
             break;
 
-        case "hidetag": {
+        case "totag": {
             // Só funciona em grupos
             if (!from.endsWith('@g.us') && !from.endsWith('@lid')) {
                 await reply(sock, from, "❌ Este comando só pode ser usado em grupos.");
@@ -1172,7 +1172,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             const texto = args.join(" ").trim();
             if (!texto) {
                 const config = obterConfiguracoes();
-                await reply(sock, from, `❌ Use: ${config.prefix}hidetag [mensagem]\n\nExemplo: ${config.prefix}hidetag Atenção galera! Reunião em 10 minutos!`);
+                await reply(sock, from, `❌ Use: ${config.prefix}totag [mensagem]\n\nExemplo: ${config.prefix}totag Atenção galera! Reunião em 10 minutos!`);
                 break;
             }
 
@@ -1189,7 +1189,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 });
                 
             } catch (error) {
-                console.error("❌ Erro no hidetag:", error);
+                console.error("❌ Erro no totag:", error);
                 await reply(sock, from, "❌ Erro ao enviar mensagem com marcação oculta.");
             }
         }
@@ -1535,7 +1535,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         case "antiaudio":
         case "antisticker":
         case "antiflod":
-        case "antifake":
         case "x9":
         case "antiporno":
         case "antilinkhard":
@@ -1567,7 +1566,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 'antiaudio': '🎵 ANTIAUDIO',
                 'antisticker': '🏷️ ANTISTICKER',
                 'antiflod': '🌊 ANTIFLOD',
-                'antifake': '🇧🇷 ANTIFAKE',
                 'x9': '📊 X9 MONITOR',
                 'antiporno': '🔞 ANTIPORNO',
                 'antilinkhard': '🔗 ANTILINK HARD',
