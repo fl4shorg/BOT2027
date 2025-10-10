@@ -661,11 +661,27 @@ function obterTargetGamer(message) {
 async function processarDanbooru(sock, from, message, tag, titulo) {
     console.log(`🎨 Comando danbooru/${tag} acionado`);
     
+    const sender = message.key.participant || from;
+    const isGroup = from.endsWith('@g.us') || from.endsWith('@lid');
+    
     try {
         // Reage com loading apenas se a conexão estiver ativa
         await reagirMensagem(sock, message, "⏳").catch(() => {});
     } catch (e) {
         console.log("⚠️ Não foi possível reagir (conexão instável)");
+    }
+
+    // Se for grupo, avisa que vai enviar no PV
+    if (isGroup) {
+        try {
+            await sock.sendMessage(from, {
+                text: `🎲 *${titulo} - Imagens Aleatórias*\n\n📬 Enviando imagens no seu privado para manter a organização do grupo...\n\n⏳ Aguarde alguns segundos!`
+            }, { quoted: message });
+            
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        } catch (e) {
+            console.log("⚠️ Não foi possível enviar aviso no grupo");
+        }
     }
 
     try {
@@ -723,8 +739,11 @@ async function processarDanbooru(sock, from, message, tag, titulo) {
             }
         }));
 
+        // Define onde enviar: se for grupo, envia no PV do usuário; se não, envia onde foi solicitado
+        const targetJid = isGroup ? sender : from;
+
         // Cria mensagem em carrossel
-        const carouselMessage = generateWAMessageFromContent(from, {
+        const carouselMessage = generateWAMessageFromContent(targetJid, {
             viewOnceMessage: {
                 message: {
                     messageContextInfo: {
@@ -741,9 +760,9 @@ async function processarDanbooru(sock, from, message, tag, titulo) {
                     }
                 }
             }
-        }, { quoted: message });
+        }, {});
 
-        await sock.relayMessage(from, carouselMessage.message, {});
+        await sock.relayMessage(targetJid, carouselMessage.message, {});
         
         try {
             await reagirMensagem(sock, message, "✅");
@@ -751,16 +770,18 @@ async function processarDanbooru(sock, from, message, tag, titulo) {
             console.log("⚠️ Não foi possível reagir com sucesso (conexão instável)");
         }
         
-        console.log(`✅ ${tag} - Carrossel enviado com sucesso!`);
+        const destino = isGroup ? `PV de ${sender.split('@')[0]}` : from;
+        console.log(`✅ ${tag} - Carrossel enviado com sucesso para ${destino}!`);
 
     } catch (error) {
         console.error(`❌ Erro ao buscar ${tag}:`, error.message);
         
         try {
             await reagirMensagem(sock, message, "❌");
-            await sock.sendMessage(from, {
+            const targetJid = isGroup ? sender : from;
+            await sock.sendMessage(targetJid, {
                 text: `❌ Erro ao buscar imagens de ${titulo}. Tente novamente!\n\n💡 Motivo: ${error.message}`
-            }, { quoted: message });
+            }, {});
         } catch (sendError) {
             console.error(`❌ Não foi possível enviar mensagem de erro:`, sendError.message);
         }
