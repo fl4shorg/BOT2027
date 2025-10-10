@@ -1141,7 +1141,12 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 const groupMetadata = await sock.groupMetadata(from);
                 const participants = groupMetadata.participants.map(p => p.id);
                 const mensagem = `📢 Marcação geral:\n` + participants.map((p, i) => `${i+1}. @${p.split("@")[0]}`).join("\n");
-                await reply(sock, from, mensagem);
+                
+                // Envia mensagem com menções reais
+                await sock.sendMessage(from, {
+                    text: mensagem,
+                    mentions: participants
+                });
             } catch(err) {
                 console.error("❌ Erro ao marcar participantes:", err);
                 await reply(sock, from, "❌ Falha ao marcar todos no grupo.");
