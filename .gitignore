@@ -1,0 +1,30 @@
+node_modules/
+package-lock.json
+
+# Pasta de conexão do WhatsApp (NUNCA COMMIT)
+conexao/
+
+# Configurações sensíveis
+settings/settings.json
+settings/necessary.json
+
+# Logs e arquivos temporários
+*.log
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Arquivos de ambiente
+.env
+.env.local
+
+# Database local
+database/grupos/
+database/registros/
+
+# Arquivos temporários do sistema
+.replit
+.upm
+.cache/
+.npm/
