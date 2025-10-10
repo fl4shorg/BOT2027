@@ -6,8 +6,9 @@ Bot WhatsApp completo desenvolvido pela Neext LTDA com múltiplas funcionalidade
 ## 🎯 Status Atual
 - ✅ Projeto importado do GitHub
 - ✅ Configuração do Replit completa
-- ✅ ffmpeg instalado para suporte a figurinhas
-- ⚠️ Requer reconexão ao WhatsApp (credenciais expiradas)
+- ✅ Dependências instaladas (408 packages)
+- ✅ Workflow configurado e rodando
+- ⏳ Aguardando conexão ao WhatsApp (primeiro uso ou reconexão)
 
 ## 🏗️ Arquitetura do Projeto
 
@@ -123,20 +124,22 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - ✅ **Novo comando `.reset`** - Dono pode limpar cache manualmente
 - ✅ ffmpeg instalado para comandos de figurinha
 
-### 10/10/2025 - Importação GitHub
+### 10/10/2025 - Importação GitHub (Atual)
 - ✅ Projeto importado e configurado no Replit
-- ✅ `.gitignore` criado para proteger dados sensíveis
-- ✅ Workflow configurado (npm start)
-- 📌 Pasta de conexão preservada (não modificada)
+- ✅ Dependências instaladas via `npm install`
+- ✅ Workflow "WhatsApp Bot" configurado (`node main.js`)
+- ✅ Bot iniciado com sucesso e aguardando método de conexão
+- 📌 Arquivos de conexão preservados (não modificados conforme solicitado)
 
 ## 🐛 Problemas Conhecidos
 
 ### Resolvidos
-- ✅ Erro "Cannot find ffmpeg" - ffmpeg instalado
+- ✅ Dependências instaladas corretamente
+- ✅ Workflow configurado e funcionando
 
 ### Requer Ação do Usuário
-- ⚠️ Reconectar WhatsApp (credenciais expiradas)
-- ⚠️ Testar comando de figurinha após reconexão
+- ⏳ Conectar ao WhatsApp (escolher método: QR Code ou Pairing Code)
+- ⏳ Após conectar, bot estará pronto para uso
 
 ## 💡 Notas Importantes
 
@@ -148,6 +151,7 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 🔄 Workflow
 - **Nome**: WhatsApp Bot
-- **Comando**: `npm start`
+- **Comando**: `node main.js`
 - **Saída**: Console
 - **Auto-restart**: Sim (em caso de desconexão)
+- **Status**: ✅ Rodando e aguardando conexão
