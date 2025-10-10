@@ -271,16 +271,15 @@ async function startBot() {
             const statusCode = lastDisconnect?.error?.output?.statusCode;
             const reason = lastDisconnect?.error?.output?.payload?.message;
             
-            // Só limpa sessão se for erro de autenticação PERMANENTE, não temporário
-            const isPermanentAuthError = (statusCode === 401 || statusCode === 403) && 
-                                         reason && (reason.includes('logged out') || reason.includes('invalid'));
+            // Limpa sessão se for erro de autenticação (401, 403, 440)
+            const isPermanentAuthError = (statusCode === 401 || statusCode === 403 || statusCode === 440);
             
             const shouldReconnect = !isPermanentAuthError;
-            console.log(`❌ Conexão fechada (${statusCode || 'desconhecido'}). Reconectando... (${shouldReconnect?"sim":"não"})`);
+            console.log(`❌ Conexão fechada (${statusCode || 'desconhecido'}). ${isPermanentAuthError ? 'Limpando sessão...' : 'Reconectando...'}`);
             
             if(isPermanentAuthError){
-                console.log("🔄 Sessão PERMANENTEMENTE inválida! Limpando credenciais...");
-                console.log(`📋 Motivo: ${reason}`);
+                console.log("🔄 Sessão inválida detectada! Limpando credenciais...");
+                if(reason) console.log(`📋 Motivo: ${reason}`);
                 try {
                     await sock.logout().catch(()=>{});
                     const path = require('path');
@@ -291,8 +290,13 @@ async function startBot() {
                             fs.unlinkSync(filePath);
                         }
                     }
-                    console.log("✅ Credenciais antigas removidas!");
+                    console.log("✅ Credenciais removidas!");
                     console.log("🔄 Reiniciando para novo login...\n");
+                    
+                    // Reset flags para reconfigurar listeners na próxima conexão
+                    listenersConfigurados = false;
+                    agendamentoIniciado = false;
+                    
                     setTimeout(()=>startBot(), 2000);
                 } catch(err){
                     console.log("❌ Erro ao limpar sessão:", err.message);

@@ -160,9 +160,9 @@ const contextAnuncio = {
     }
 };
 
-// Mensagens já processadas (evita duplicadas)
+// Mensagens já processadas (evita duplicadas) - Cache reduzido para 30 segundos
 const processedMessages = new Set();
-setInterval(() => processedMessages.clear(), 5 * 60 * 1000);
+setInterval(() => processedMessages.clear(), 30 * 1000);
 
 // Sistema de Xadrez - Chess Games
 const chessGames = new Map();
@@ -797,6 +797,34 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     }
                 }
             }, { quoted: selinho });
+        }
+        break;
+
+        case "resetcache":
+        case "reset": {
+            // Só o dono pode usar
+            if (!isDono(message.key.participant || from)) {
+                await reply(sock, from, "❌ Este comando é exclusivo do dono do bot.");
+                break;
+            }
+
+            try {
+                // Limpa cache de mensagens processadas
+                processedMessages.clear();
+                
+                await reagirMensagem(sock, message, "♻️");
+                await reply(sock, from, 
+                    `✅ *CACHE LIMPO COM SUCESSO!*\n\n` +
+                    `♻️ Cache de mensagens resetado\n` +
+                    `🔄 Bot pronto para processar comandos\n\n` +
+                    `💡 Use este comando se o bot estiver ignorando mensagens.`
+                );
+                
+                console.log("✅ Cache de mensagens limpo manualmente pelo dono");
+            } catch (err) {
+                console.error("❌ Erro ao resetar cache:", err);
+                await reply(sock, from, "❌ Erro ao resetar cache. Tente novamente.");
+            }
         }
         break;
 
