@@ -116,11 +116,17 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
+### 10/10/2025 - Correções de Desempenho
+- ✅ **Cache de mensagens otimizado** - Reduzido de 5min para 30s (evita comandos ignorados)
+- ✅ **Reconexão automática melhorada** - Erro 440 agora limpa sessão automaticamente
+- ✅ **Reset de listeners** - Listeners são resetados ao limpar sessão
+- ✅ **Novo comando `.reset`** - Dono pode limpar cache manualmente
+- ✅ ffmpeg instalado para comandos de figurinha
+
 ### 10/10/2025 - Importação GitHub
 - ✅ Projeto importado e configurado no Replit
 - ✅ `.gitignore` criado para proteger dados sensíveis
 - ✅ Workflow configurado (npm start)
-- ✅ ffmpeg instalado para comandos de figurinha
 - 📌 Pasta de conexão preservada (não modificada)
 
 ## 🐛 Problemas Conhecidos
