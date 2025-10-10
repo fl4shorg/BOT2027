@@ -85,28 +85,71 @@ function registrarAtividade(groupId, userId, tipo) {
             break;
     }
     
+    // Registra estatísticas do grupo
+    if (!atividades._stats) {
+        atividades._stats = {
+            totalMensagens: 0,
+            diasAtividade: {}
+        };
+    }
+    
+    // Incrementa total de mensagens do grupo
+    atividades._stats.totalMensagens++;
+    
+    // Registra atividade do dia
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    if (!atividades._stats.diasAtividade[hoje]) {
+        atividades._stats.diasAtividade[hoje] = 0;
+    }
+    atividades._stats.diasAtividade[hoje]++;
+    
     return salvarAtividades(groupId, atividades);
 }
 
 // Obter ranking dos usuários mais ativos
-function obterRanking(groupId, limite = 6) {
+function obterRanking(groupId, limite = 10) {
     const atividades = carregarAtividades(groupId);
     
-    // Converte objeto em array e calcula total de atividades
-    const usuarios = Object.entries(atividades).map(([userId, dados]) => {
-        const total = dados.mensagens + dados.comandos + dados.stickers + dados.midias;
-        return {
-            userId,
-            ...dados,
-            total
-        };
-    });
+    // Converte objeto em array e calcula total de atividades (ignora _stats)
+    const usuarios = Object.entries(atividades)
+        .filter(([userId]) => !userId.startsWith('_'))
+        .map(([userId, dados]) => {
+            const total = dados.mensagens + dados.comandos + dados.stickers + dados.midias;
+            return {
+                userId,
+                ...dados,
+                total
+            };
+        });
     
     // Ordena por total de atividades (decrescente)
     usuarios.sort((a, b) => b.total - a.total);
     
     // Retorna apenas o limite especificado
     return usuarios.slice(0, limite);
+}
+
+// Obter estatísticas do grupo
+function obterEstatisticasGrupo(groupId) {
+    const atividades = carregarAtividades(groupId);
+    
+    if (!atividades._stats) {
+        return {
+            totalMensagens: 0,
+            topDias: []
+        };
+    }
+    
+    // Converte dias em array e ordena por mensagens
+    const diasOrdenados = Object.entries(atividades._stats.diasAtividade || {})
+        .map(([data, mensagens]) => ({ data, mensagens }))
+        .sort((a, b) => b.mensagens - a.mensagens)
+        .slice(0, 5); // Top 5 dias
+    
+    return {
+        totalMensagens: atividades._stats.totalMensagens || 0,
+        topDias: diasOrdenados
+    };
 }
 
 // Formatar nome de usuário
@@ -129,7 +172,8 @@ function formatarNomeUsuario(userId) {
 // Gerar ranking formatado
 async function gerarRankingFormatado(sock, groupId) {
     try {
-        const ranking = obterRanking(groupId, 6);
+        const ranking = obterRanking(groupId, 10);
+        const stats = obterEstatisticasGrupo(groupId);
         
         if (ranking.length === 0) {
             return {
@@ -138,18 +182,32 @@ async function gerarRankingFormatado(sock, groupId) {
             };
         }
         
-        const posicoes = ['🏆', '🥈', '🥉', '', '', ''];
-        const numeros = ['1°', '2°', '3°', '4°', '5°', '6°'];
+        const posicoes = ['🏆', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
         const mentions = [];
         
-        let mensagem = `╭════ •⊰✿⊱• ════╮
-  🔥 𝐑𝐀𝐍𝐊 𝐃𝐄 𝐀𝐓𝐈𝐕𝐎𝐒 𝐃𝐎 𝐆𝐑𝐔𝐏𝐎 🔥
-╰════ •⊰✿⊱• ════╯\n\n`;
+        let mensagem = `╭═══════════════════╮
+  🔥 𝐑𝐀𝐍𝐊 𝐃𝐄 𝐀𝐓𝐈𝐕𝐎𝐒 - 𝐓𝐎𝐏 10 🔥
+╰═══════════════════╯
+
+📊 *ESTATÍSTICAS DO GRUPO*
+━━━━━━━━━━━━━━━━━━━━
+📨 Total de Mensagens: *${stats.totalMensagens.toLocaleString('pt-BR')}*\n`;
+
+        // Adiciona top 5 dias mais ativos
+        if (stats.topDias.length > 0) {
+            mensagem += `\n🔥 *DIAS MAIS ATIVOS:*\n`;
+            stats.topDias.forEach((dia, index) => {
+                const emoji = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][index];
+                mensagem += `${emoji} ${dia.data} - ${dia.mensagens.toLocaleString('pt-BR')} msgs\n`;
+            });
+        }
+
+        mensagem += `\n━━━━━━━━━━━━━━━━━━━━
+👥 *TOP 10 USUÁRIOS MAIS ATIVOS:*\n\n`;
 
         for (let i = 0; i < ranking.length; i++) {
             const usuario = ranking[i];
             const emoji = posicoes[i];
-            const numero = numeros[i];
             
             // Adiciona o userId ao array de mentions
             mentions.push(usuario.userId);
@@ -157,32 +215,14 @@ async function gerarRankingFormatado(sock, groupId) {
             // Extrai o número limpo para menção
             const numeroLimpo = usuario.userId.replace(/@s\.whatsapp\.net|@lid/g, '');
             
-            // Tenta obter o nome do usuário através do grupo
-            let nomeUsuario = '';
-            try {
-                const groupMetadata = await sock.groupMetadata(groupId);
-                const participant = groupMetadata.participants.find(p => p.id === usuario.userId);
-                
-                if (participant && participant.notify) {
-                    nomeUsuario = participant.notify;
-                } else {
-                    // Usa o número formatado como fallback
-                    nomeUsuario = formatarNomeUsuario(usuario.userId);
-                }
-            } catch (err) {
-                nomeUsuario = formatarNomeUsuario(usuario.userId);
-            }
-            
-            mensagem += `『 ${numero} ${emoji} 』
-╔═══════════════╗
-┃ 👤 Usuário: @${numeroLimpo}
-┃ 💬 Mensagens: ${usuario.mensagens}
-┃ ⌨️ Comandos: ${usuario.comandos}
-┃ 📱 Conectado: Android 🗿
-┃ 🖼️ Stickers: ${usuario.stickers}
-┃ 📊 Total: ${usuario.total}
-╚═══════════════╝\n\n`;
+            mensagem += `${emoji} *${i + 1}° LUGAR*
+👤 @${numeroLimpo}
+💬 Msgs: ${usuario.mensagens} | ⌨️ Cmds: ${usuario.comandos}
+🖼️ Stickers: ${usuario.stickers} | 📊 Total: *${usuario.total}*\n\n`;
         }
+        
+        mensagem += `━━━━━━━━━━━━━━━━━━━━
+✨ Continue ativo para subir no rank!`;
         
         return {
             mensagem: mensagem.trim(),
@@ -247,6 +287,7 @@ setInterval(() => {
 module.exports = {
     registrarAtividade,
     obterRanking,
+    obterEstatisticasGrupo,
     gerarRankingFormatado,
     carregarAtividades,
     salvarAtividades,

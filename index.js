@@ -1632,14 +1632,14 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 // Se não tem argumentos, verifica se está ativo para mostrar ranking ou instruções
                 if (!acao) {
                     if (estadoAtual) {
-                        // Está ativo, mostra o ranking
+                        // Está ativo, mostra o ranking (QUALQUER MEMBRO PODE VER)
                         await reagirMensagem(sock, message, "🔥");
                         const resultado = await rankAtivo.gerarRankingFormatado(sock, from);
                         await reply(sock, from, resultado.mensagem, resultado.mentions);
                     } else {
                         // Está inativo, mostra como ativar
                         await reagirMensagem(sock, message, "⚠️");
-                        await reply(sock, from, `⚠️ *🔥 RANK DE ATIVOS DESATIVADO*\n\n📊 O sistema de ranking não está ativo neste grupo.\n\n📝 *Para ativar:*\n• \`.rankativo on\` - Ativa o sistema\n\n✨ *Após ativar:*\n• Digite \`.rankativo\` para ver o ranking\n• O bot irá rastrear mensagens, comandos e stickers\n• Mostra os top 6 usuários mais ativos\n\n⚠️ Apenas admins podem ativar/desativar`);
+                        await reply(sock, from, `⚠️ *🔥 RANK DE ATIVOS DESATIVADO*\n\n📊 O sistema de ranking não está ativo neste grupo.\n\n📝 *Para ativar (apenas admins):*\n• \`.rankativo on\` - Ativa o sistema\n\n✨ *Após ativar:*\n• Digite \`.rankativo\` para ver o ranking\n• O bot irá rastrear mensagens, comandos e stickers\n• Mostra os top 10 usuários mais ativos\n• Estatísticas completas do grupo\n• Dias mais ativos\n\n⚠️ Apenas admins podem ativar/desativar\n💡 Qualquer membro pode ver o ranking!`);
                     }
                     break;
                 }
@@ -1691,7 +1691,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     if (resultado) {
                         await reagirMensagem(sock, message, "✅");
                         if (command === "rankativo") {
-                            await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n📊 O bot agora rastreará:\n• 💬 Mensagens enviadas\n• ⌨️ Comandos executados\n• 🖼️ Stickers enviados\n• 📱 Mídias compartilhadas\n\n🔥 Digite \`.rankativo\` para ver o ranking a qualquer momento!`);
+                            await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n📊 O bot agora rastreará:\n• 💬 Mensagens enviadas\n• ⌨️ Comandos executados\n• 🖼️ Stickers enviados\n• 📱 Mídias compartilhadas\n\n🔥 Digite \`.rankativo\` para ver o ranking a qualquer momento!\n\n📈 *Novidades:*\n• Top 10 usuários mais ativos\n• Total de mensagens do grupo\n• Top 5 dias mais ativos\n• Qualquer membro pode ver o ranking!`);
                         } else if (command === "welcome1") {
                             await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n🎉 Sistema de boas-vindas está ativo!\n💡 Digite \`.welcome1\` para ver configurações\n🎨 Use \`.mensagembemvindo1\` para personalizar\n👥 Novos membros receberão boas-vindas automáticas`);
                         } else {
