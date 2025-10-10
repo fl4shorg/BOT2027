@@ -1878,12 +1878,21 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
                 console.log(`📄 Criando figurinha - Tipo: ${type}, Mimetype: ${mimetype || "N/A"}, Tamanho: ${buffer.length} bytes`);
 
-                // Detecta se é vídeo baseado no mimetype
-                const isVideoType = mimetype && (
-                    mimetype.includes('video') ||
-                    mimetype.includes('gif') ||
-                    mimetype === 'image/gif'
-                );
+                // Detecta tipo de mídia corretamente
+                let finalMimetype;
+                
+                // Se for sticker citado, já é WebP
+                if (isQuotedSticker) {
+                    finalMimetype = 'image/webp';
+                } else {
+                    // Detecta se é vídeo baseado no mimetype
+                    const isVideoType = mimetype && (
+                        mimetype.includes('video') ||
+                        mimetype.includes('gif') ||
+                        mimetype === 'image/gif'
+                    );
+                    finalMimetype = mimetype || (isVideoType ? 'video/mp4' : 'image/jpeg');
+                }
 
                 // Obtém informações para os metadados
                 const config = obterConfiguracoes();
@@ -1893,9 +1902,9 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 var pack = `↧ ❪🎨ฺ࣭࣪͘ꕸ▸ 𝐂𝐫𝐢𝐚𝐝𝐚 𝐩𝐨𝐫:\n• ↳ ${config.nomeDoBot}\n—\n↧ ❪🕵🏻‍♂️ฺ࣭࣪͘ꕸ▸ 𝐏𝐫𝐨𝐩𝐫𝐢𝐞𝐭𝐚𝐫𝐢𝐨:\n• ↳ ${config.nickDoDono}\n—`;
                 var author2 = `↧ ❪🏮ฺ࣭࣪͘ꕸ▸ 𝐒𝐨𝐥𝐢𝐜𝐢𝐭𝐚𝐝𝐨 𝐩𝐨𝐫:\n• ↳ ${senderName}\n—\n↧ ❪🐦‍🔥ฺ࣭࣪͘ꕸ▸ 𝐕𝐢𝐬𝐢𝐭𝐞 𝐧𝐨𝐬𝐬𝐨 𝐬𝐢𝐭𝐞:\n• ↳ www.api.neext.online`;
 
-                // Usa writeExif que suporta vídeos também
+                // Usa writeExif que suporta vídeos e webp
                 const webpFile = await writeExif(
-                    { mimetype: mimetype || (isVideoType ? 'video/mp4' : 'image/jpeg'), data: buffer },
+                    { mimetype: finalMimetype, data: buffer },
                     {
                         packname: pack,
                         author: author2,

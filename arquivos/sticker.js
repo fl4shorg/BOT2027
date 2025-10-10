@@ -12,13 +12,20 @@ function getRandomFile(ext) {
 
 // Converte Buffer para WebP preservando transparência
 async function bufferToWebp(buffer, isVideo = false, mimetype = null) {
+    // Se já é WebP, apenas salva e retorna (não reprocessa)
+    const isWebP = mimetype && mimetype.includes('webp');
+    if (isWebP) {
+        const output = getRandomFile(".webp");
+        fs.writeFileSync(output, buffer);
+        return output;
+    }
+
     // Detecta extensão correta baseada no mimetype para preservar transparência
     let inputExt;
     if (isVideo) {
         inputExt = ".mp4";
     } else if (mimetype) {
         if (mimetype.includes('png')) inputExt = ".png";
-        else if (mimetype.includes('webp')) inputExt = ".webp";
         else if (mimetype.includes('gif')) inputExt = ".gif";
         else inputExt = ".jpg";
     } else {

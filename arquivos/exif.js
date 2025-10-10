@@ -39,7 +39,12 @@ async function writeExifImg(buffer, options = {}) {
         // Marca como rename para usar APENAS valores do usuário
         const packname = options.packname;
         const author = options.author;
-        const media = { data: buffer, mimetype: 'image/jpeg' };
+        
+        // Detecta se já é WebP (figurinha existente)
+        const isWebP = buffer.toString('hex', 0, 4).toUpperCase().includes('52494646') && 
+                       buffer.toString('hex', 8, 12).toUpperCase().includes('57454250');
+        
+        const media = { data: buffer, mimetype: isWebP ? 'image/webp' : 'image/jpeg' };
         const metadata = { packname, author, _isRename: true };
         return await writeExif(media, metadata);
     } catch (error) {
@@ -54,7 +59,12 @@ async function writeExifVid(buffer, options = {}) {
         // Marca como rename para usar APENAS valores do usuário
         const packname = options.packname;
         const author = options.author;
-        const media = { data: buffer, mimetype: 'video/mp4' };
+        
+        // Detecta se já é WebP animado (figurinha animada existente)
+        const isWebP = buffer.toString('hex', 0, 4).toUpperCase().includes('52494646') && 
+                       buffer.toString('hex', 8, 12).toUpperCase().includes('57454250');
+        
+        const media = { data: buffer, mimetype: isWebP ? 'image/webp' : 'video/mp4' };
         const metadata = { packname, author, _isRename: true };
         return await writeExif(media, metadata);
     } catch (error) {
