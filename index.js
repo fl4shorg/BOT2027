@@ -640,6 +640,23 @@ async function processarListaNegra(sock, participants, groupId, action) {
     }
 }
 
+// Função auxiliar para obter target (@ ou resposta de mensagem)
+function obterTargetGamer(message) {
+    // Primeiro tenta pegar da menção (@)
+    const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+    if (mentioned && mentioned.length > 0) {
+        return mentioned[0];
+    }
+    
+    // Se não tem menção, tenta pegar da mensagem quotada (resposta)
+    const quotedParticipant = message.message?.extendedTextMessage?.contextInfo?.participant;
+    if (quotedParticipant) {
+        return quotedParticipant;
+    }
+    
+    return null;
+}
+
 // Função genérica para processar comandos Danbooru
 async function processarDanbooru(sock, from, message, tag, titulo) {
     console.log(`🎨 Comando danbooru/${tag} acionado`);
@@ -6836,14 +6853,12 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const target = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
-                await reply(sock, from, `❌ Marque alguém para dar um tapa!\n\nExemplo: ${config.prefix}tapa @usuario`);
+            if (!target) {
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para dar um tapa!\n\nExemplo: ${config.prefix}tapa @usuario`);
                 break;
             }
-
-            const target = mentioned[0];
             
             // Envia GIF de tapa
             const gifEnviado = await enviarGif(
@@ -7162,15 +7177,13 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const target = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
+            if (!target) {
                 const botConfig = obterConfiguracoes();
-                await reply(sock, from, `❌ Marque alguém para matar!\n\nExemplo: ${botConfig.prefix}matar @usuario`);
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para matar!\n\nExemplo: ${botConfig.prefix}matar @usuario`);
                 break;
             }
-
-            const target = mentioned[0];
 
             // Envia GIF usando método simples
             const gifEnviado = await enviarGif(
@@ -7204,15 +7217,13 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const target = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
+            if (!target) {
                 const botConfig = obterConfiguracoes();
-                await reply(sock, from, `❌ Marque alguém para atirar!\n\nExemplo: ${botConfig.prefix}atirar @usuario`);
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para atirar!\n\nExemplo: ${botConfig.prefix}atirar @usuario`);
                 break;
             }
-
-            const target = mentioned[0];
 
             // Envia GIF usando método simples
             const gifEnviado = await enviarGif(
@@ -7246,15 +7257,13 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const target = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
+            if (!target) {
                 const botConfig = obterConfiguracoes();
-                await reply(sock, from, `❌ Marque alguém para banir!\n\nExemplo: ${botConfig.prefix}bam @usuario`);
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para banir!\n\nExemplo: ${botConfig.prefix}bam @usuario`);
                 break;
             }
-
-            const target = mentioned[0];
 
             // Primeira mensagem - Banimento fake
             await reply(sock, from, `🔨 *USUÁRIO BANIDO COM SUCESSO!*\n\n@${target.split('@')[0]} foi banido do grupo! 🚫`, [target]);
@@ -7294,15 +7303,13 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const target = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
+            if (!target) {
                 const botConfig = obterConfiguracoes();
-                await reply(sock, from, `❌ Marque alguém para fazer cafuné!\n\nExemplo: ${botConfig.prefix}cafune @usuario`);
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para fazer cafuné!\n\nExemplo: ${botConfig.prefix}cafune @usuario`);
                 break;
             }
-
-            const target = mentioned[0];
 
             // Envia GIF usando método simples
             const gifEnviado = await enviarGif(
@@ -7429,10 +7436,10 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const target = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
-                await reply(sock, from, `❌ Marque alguém para prender!\n\nExemplo: ${config.prefix}prender @usuario`);
+            if (!target) {
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para prender!\n\nExemplo: ${config.prefix}prender @usuario`);
                 break;
             }
 
@@ -7442,8 +7449,6 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 "porte ilegal de charme", "formação de quadrilha do amor", "assalto ao coração",
                 "tráfico de sorrisos", "porte de sorriso fatal", "estelionato sentimental"
             ];
-
-            const target = mentioned[0];
             const crime = crimes[Math.floor(Math.random() * crimes.length)];
 
             await sock.sendMessage(from, {
@@ -7469,15 +7474,13 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const target = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
+            if (!target) {
                 const botConfig = obterConfiguracoes();
-                await reply(sock, from, `❌ Marque alguém para beijar!\n\nExemplo: ${botConfig.prefix}beijar @usuario`);
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para beijar!\n\nExemplo: ${botConfig.prefix}beijar @usuario`);
                 break;
             }
-
-            const target = mentioned[0];
 
             // Envia GIF de beijo
             const gifEnviado = await enviarGif(
@@ -7510,15 +7513,13 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const target = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
+            if (!target) {
                 const botConfig = obterConfiguracoes();
-                await reply(sock, from, `❌ Marque alguém para atropelar!\n\nExemplo: ${botConfig.prefix}atropelar @usuario`);
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para atropelar!\n\nExemplo: ${botConfig.prefix}atropelar @usuario`);
                 break;
             }
-
-            const target = mentioned[0];
 
             // Envia GIF de atropelamento
             const gifEnviado = await enviarGif(
@@ -7551,15 +7552,13 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const target = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
+            if (!target) {
                 const botConfig = obterConfiguracoes();
-                await reply(sock, from, `❌ Marque alguém para fazer dedo!\n\nExemplo: ${botConfig.prefix}dedo @usuario`);
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para fazer dedo!\n\nExemplo: ${botConfig.prefix}dedo @usuario`);
                 break;
             }
-
-            const target = mentioned[0];
 
             // Envia GIF de dedo
             const gifEnviado = await enviarGif(
@@ -7592,15 +7591,13 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const target = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
+            if (!target) {
                 const botConfig = obterConfiguracoes();
-                await reply(sock, from, `❌ Marque alguém para sarrar!\n\nExemplo: ${botConfig.prefix}sarra @usuario`);
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para sarrar!\n\nExemplo: ${botConfig.prefix}sarra @usuario`);
                 break;
             }
-
-            const target = mentioned[0];
 
             // Envia GIF de sarrada/dança
             const gifEnviado = await enviarGif(
@@ -7964,14 +7961,13 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const oponente = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
-                await reply(sock, from, `❌ Marque alguém para jogar!\n\nExemplo: ${config.prefix}jogodavelha @usuario`);
+            if (!oponente) {
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para jogar!\n\nExemplo: ${config.prefix}jogodavelha @usuario`);
                 break;
             }
 
-            const oponente = mentioned[0];
             if (oponente === sender) {
                 await reply(sock, from, "❌ Você não pode jogar contra si mesmo!");
                 break;
@@ -8159,14 +8155,13 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
             }
 
             const sender = message.key.participant || from;
-            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+            const oponente = obterTargetGamer(message);
 
-            if (!mentioned || mentioned.length === 0) {
-                await reply(sock, from, `❌ Marque alguém para jogar roleta russa!\n\nExemplo: ${config.prefix}roletarussa @usuario`);
+            if (!oponente) {
+                await reply(sock, from, `❌ Marque alguém (@) ou responda a mensagem de alguém para jogar roleta russa!\n\nExemplo: ${config.prefix}roletarussa @usuario`);
                 break;
             }
 
-            const oponente = mentioned[0];
             if (oponente === sender) {
                 await reply(sock, from, "❌ Você não pode jogar roleta russa contra si mesmo!");
                 break;
