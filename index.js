@@ -6639,17 +6639,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     await reply(sock, from,
                         `🎮 *MODO GAMER ATIVADO!*\n\n` +
                         `✅ Modo gamer foi ativado no grupo!\n` +
-                        `🎯 Agora os membros podem usar jogos e comandos de diversão\n\n` +
-                        `🎲 **Jogos disponíveis:**\n` +
-                        `• ${config.prefix}eununca - Enquetes divertidas\n` +
-                        `• ${config.prefix}vab - Enquetes com perguntas aleatórias\n` +
-                        `• ${config.prefix}jogodaforca - Jogo da forca\n` +
-                        `• ${config.prefix}jogodavelha - Jogo da velha\n` +
-                        `• ${config.prefix}roletarussa - Roleta russa\n\n` +
-                        `🎪 **Comandos de diversão:**\n` +
-                        `• Rankings e interações disponíveis\n` +
-                        `• Digite ${config.prefix}help para ver todos os comandos\n\n` +
-                        `👤 Ativado por: @${sender.split('@')[0]}`,
+                        `Use ${config.prefix}menugamer para ver os comandos`,
                         [sender]
                     );
                 } else {
