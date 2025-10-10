@@ -7231,6 +7231,143 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
         }
         break;
 
+        case "bam": {
+            // Verifica se modo gamer está ativo
+            if (!from.endsWith('@g.us') && !from.endsWith('@lid')) {
+                await reply(sock, from, "❌ Este comando só pode ser usado em grupos.");
+                break;
+            }
+
+            const config = antiSpam.carregarConfigGrupo(from);
+            if (!config || !config.modogamer) {
+                const botConfig = obterConfiguracoes();
+                await reply(sock, from, `❌ Modo Gamer está desativado neste grupo! Use \`${botConfig.prefix}modogamer on\` para ativar.`);
+                break;
+            }
+
+            const sender = message.key.participant || from;
+            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+
+            if (!mentioned || mentioned.length === 0) {
+                const botConfig = obterConfiguracoes();
+                await reply(sock, from, `❌ Marque alguém para banir!\n\nExemplo: ${botConfig.prefix}bam @usuario`);
+                break;
+            }
+
+            const target = mentioned[0];
+
+            // Primeira mensagem - Banimento fake
+            await reply(sock, from, `🔨 *USUÁRIO BANIDO COM SUCESSO!*\n\n@${target.split('@')[0]} foi banido do grupo! 🚫`, [target]);
+            
+            // Aguarda 2 segundos
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Envia GIF da pegadinha
+            const gifEnviado = await enviarGif(
+                sock,
+                from,
+                "https://files.catbox.moe/tezqn1.gif",
+                `😂 *VOCÊ CAIU NA PEGADINHA!*\n\n@${target.split('@')[0]} não foi banido, relaxa! 🤣\n\n🎭 Foi só uma brincadeira!`,
+                [sender, target],
+                message
+            );
+
+            if (!gifEnviado) {
+                // Fallback para texto se o GIF falhar
+                await reply(sock, from, `😂 *VOCÊ CAIU NA PEGADINHA!*\n\n@${target.split('@')[0]} não foi banido, relaxa! 🤣\n\n🎭 Foi só uma brincadeira!`, [sender, target]);
+            }
+        }
+        break;
+
+        case "cafune": {
+            // Verifica se modo gamer está ativo
+            if (!from.endsWith('@g.us') && !from.endsWith('@lid')) {
+                await reply(sock, from, "❌ Este comando só pode ser usado em grupos.");
+                break;
+            }
+
+            const config = antiSpam.carregarConfigGrupo(from);
+            if (!config || !config.modogamer) {
+                const botConfig = obterConfiguracoes();
+                await reply(sock, from, `❌ Modo Gamer está desativado neste grupo! Use \`${botConfig.prefix}modogamer on\` para ativar.`);
+                break;
+            }
+
+            const sender = message.key.participant || from;
+            const mentioned = message.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+
+            if (!mentioned || mentioned.length === 0) {
+                const botConfig = obterConfiguracoes();
+                await reply(sock, from, `❌ Marque alguém para fazer cafuné!\n\nExemplo: ${botConfig.prefix}cafune @usuario`);
+                break;
+            }
+
+            const target = mentioned[0];
+
+            // Envia GIF usando método simples
+            const gifEnviado = await enviarGif(
+                sock,
+                from,
+                "https://files.catbox.moe/1342p2.mp4",
+                `🥰 *CAFUNÉ GOSTOSO!*\n\n@${sender.split('@')[0]} está fazendo cafuné em @${target.split('@')[0]}! 💕\n\n😌 Que carinho lindo!`,
+                [sender, target],
+                message
+            );
+
+            if (!gifEnviado) {
+                // Fallback para texto se o GIF falhar
+                await reply(sock, from, `🥰 *CAFUNÉ GOSTOSO!*\n\n@${sender.split('@')[0]} está fazendo cafuné em @${target.split('@')[0]}! 💕\n\n😌 Que carinho lindo!`, [sender, target]);
+            }
+        }
+        break;
+
+        case "novos": {
+            // Verifica se modo gamer está ativo
+            if (!from.endsWith('@g.us') && !from.endsWith('@lid')) {
+                await reply(sock, from, "❌ Este comando só pode ser usado em grupos.");
+                break;
+            }
+
+            const config = antiSpam.carregarConfigGrupo(from);
+            if (!config || !config.modogamer) {
+                const botConfig = obterConfiguracoes();
+                await reply(sock, from, `❌ Modo Gamer está desativado neste grupo! Use \`${botConfig.prefix}modogamer on\` para ativar.`);
+                break;
+            }
+
+            try {
+                const groupMetadata = await sock.groupMetadata(from);
+                const participants = groupMetadata.participants;
+
+                // Pega os últimos 5 membros (assumindo que são os mais novos)
+                const novosMembros = participants.slice(-5).reverse();
+                
+                if (novosMembros.length === 0) {
+                    await reply(sock, from, "❌ Nenhum membro encontrado no grupo!");
+                    break;
+                }
+
+                let mensagem = `👥 *NOVOS MEMBROS DO GRUPO*\n\n`;
+                mensagem += `📊 Total de membros: ${participants.length}\n\n`;
+                mensagem += `🆕 Últimos ${novosMembros.length} membros:\n\n`;
+                
+                novosMembros.forEach((participant, index) => {
+                    const numero = participant.id.split('@')[0];
+                    mensagem += `${index + 1}. @${numero}\n`;
+                });
+
+                mensagem += `\n👋 Bem-vindos ao grupo!`;
+
+                const mentions = novosMembros.map(p => p.id);
+                await reply(sock, from, mensagem, mentions);
+                
+            } catch (err) {
+                console.error("❌ Erro ao listar novos membros:", err);
+                await reply(sock, from, "❌ Erro ao buscar novos membros do grupo.");
+            }
+        }
+        break;
+
         case "rankcasal": {
             // Verifica se modo gamer está ativo
             if (!from.endsWith('@g.us') && !from.endsWith('@lid')) {
