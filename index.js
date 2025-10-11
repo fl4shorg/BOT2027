@@ -252,22 +252,22 @@ async function reply(sock, from, text, mentions = []) {
     try {
         // Validação e correção do texto
         if (text === undefined || text === null) {
-            console.error("❌ Texto da reply é undefined/null:", text);
-            text = "❌ Erro: Mensagem não encontrada";
+            console.error("❌ [REPLY] Texto da reply é undefined/null - ignorando envio");
+            return; // Não envia nada
         }
 
         if (typeof text !== 'string') {
-            console.error("❌ Texto da reply não é string:", typeof text, text);
-            text = String(text || "❌ Erro: Tipo de mensagem inválida");
+            console.error("❌ [REPLY] Texto da reply não é string:", typeof text, text);
+            text = String(text || "");
         }
 
         if (text.trim().length === 0) {
-            console.error("❌ Texto da reply está vazio");
-            text = "❌ Erro: Mensagem vazia";
+            console.error("❌ [REPLY] Texto da reply está vazio - ignorando envio");
+            return; // Não envia nada
         }
 
         // Garante que o texto seja uma string válida
-        const mensagemFinal = text.toString().trim() || "❌ Erro: Mensagem vazia";
+        const mensagemFinal = text.toString().trim();
 
         await sock.sendMessage(from, {
             text: mensagemFinal,
@@ -282,16 +282,8 @@ async function reply(sock, from, text, mentions = []) {
             mentions: mentions || []
         });
     } catch (err) {
-        console.error("❌ Erro ao enviar reply:", err.message || err);
-        // Tenta envio mais simples em caso de erro
-        try {
-            await sock.sendMessage(from, {
-                text: "❌ Erro na mensagem",
-                mentions: mentions || []
-            });
-        } catch (secondErr) {
-            console.error("❌ Falha no fallback reply:", secondErr.message || secondErr);
-        }
+        console.error("❌ [REPLY] Erro ao enviar reply:", err.message || err);
+        // Não tenta enviar nada em caso de erro para evitar flood
     }
 }
 

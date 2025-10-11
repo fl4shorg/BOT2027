@@ -140,7 +140,7 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - ✅ **Novo comando `.reset`** - Dono pode limpar cache manualmente
 - ✅ ffmpeg instalado para comandos de figurinha
 
-### 11/10/2025 - Importação GitHub e Remoções
+### 11/10/2025 - Importação GitHub e Correções
 - ✅ Projeto importado e configurado no Replit
 - ✅ Dependências do sistema instaladas: `ffmpeg`
 - ✅ Dependências npm instaladas (408 packages)
@@ -149,12 +149,17 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - ✅ Arquivo `.env.example` criado com instruções
 - 📌 Arquivos de conexão preservados (não modificados conforme solicitado)
 - ✅ **Removidos comandos antifake e antiporno completamente**
+- ✅ **Corrigido flood de "Mensagem não encontrada" nos grupos**
+  - Função `getMessage` agora retorna `undefined` em vez de enviar mensagem
+  - Função `reply` não envia mais mensagens de erro quando há problemas internos
 
 ## 🐛 Problemas Conhecidos
 
 ### Resolvidos
 - ✅ Dependências instaladas corretamente
 - ✅ Workflow configurado e funcionando
+- ✅ Flood de "Mensagem não encontrada" corrigido
+- ✅ Comandos antifake e antiporno removidos
 
 ### Requer Ação do Usuário
 - ⏳ Conectar ao WhatsApp (escolher método: QR Code ou Pairing Code)
