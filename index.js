@@ -54,6 +54,76 @@ const { mostrarBanner, logMensagem } = require("./export");
 // importa funções auxiliares do menu
 const { obterSaudacao, contarGrupos, contarComandos } = require("./arquivos/funcoes/function.js");
 
+// =============================================
+// SISTEMA DE CACHE E RETRY - PREVINE RATE LIMIT
+// =============================================
+
+// Cache de metadata de grupos (válido por 60 segundos)
+const metadataCache = new Map();
+const CACHE_DURATION = 60000; // 60 segundos
+
+// Função para obter metadata com cache
+async function getGroupMetadataWithCache(sock, groupId) {
+    const now = Date.now();
+    const cached = metadataCache.get(groupId);
+    
+    // Se tem cache válido, retorna
+    if (cached && (now - cached.timestamp) < CACHE_DURATION) {
+        return cached.data;
+    }
+    
+    try {
+        // Busca novo metadata
+        const metadata = await sock.groupMetadata(groupId);
+        
+        // Armazena no cache
+        metadataCache.set(groupId, {
+            data: metadata,
+            timestamp: now
+        });
+        
+        return metadata;
+    } catch (error) {
+        // Se der erro mas tem cache expirado, retorna ele mesmo assim
+        if (cached) {
+            console.log("⚠️ Usando cache expirado devido a erro:", error.message);
+            return cached.data;
+        }
+        throw error;
+    }
+}
+
+// Função de retry com backoff exponencial
+async function retryWithBackoff(fn, maxRetries = 3, initialDelay = 1000) {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            return await fn();
+        } catch (error) {
+            const isRateLimit = error.message && error.message.includes('rate-overlimit');
+            const isLastRetry = i === maxRetries - 1;
+            
+            if (isRateLimit && !isLastRetry) {
+                const delay = initialDelay * Math.pow(2, i); // Backoff exponencial
+                console.log(`⏳ Rate limit detectado. Tentativa ${i + 1}/${maxRetries}. Aguardando ${delay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            } else {
+                throw error;
+            }
+        }
+    }
+}
+
+// Limpa cache periodicamente (a cada 5 minutos)
+setInterval(() => {
+    const now = Date.now();
+    for (const [key, value] of metadataCache.entries()) {
+        if (now - value.timestamp > CACHE_DURATION) {
+            metadataCache.delete(key);
+        }
+    }
+    console.log(`🧹 Cache limpo. Entradas restantes: ${metadataCache.size}`);
+}, 300000); // 5 minutos
+
 // Config do Bot - PRIORIZA settings.json sobre environment vars
 function obterConfiguracoes() {
     try {
@@ -282,39 +352,66 @@ async function reply(sock, from, text, mentions = []) {
             mentions: mentions || []
         });
     } catch (err) {
-        console.error("❌ [REPLY] Erro ao enviar reply:", err.message || err);
+        // Apenas loga erro se não for rate limit
+        if (!err.message || !err.message.includes('rate-overlimit')) {
+            console.error("❌ [REPLY] Erro ao enviar reply:", err.message || err);
+        }
         // Não tenta enviar nada em caso de erro para evitar flood
     }
 }
 
-// Reage a qualquer mensagem com emoji
+// Reage a qualquer mensagem com emoji (COM RETRY)
 async function reagirMensagem(sock, normalized, emoji = "🤖") {
     if (!normalized?.key) return false;
     try {
-        await sock.sendMessage(normalized.key.remoteJid, {
-            react: {
-                text: emoji,
-                key: normalized.key
-            }
-        });
+        // Usa retry para evitar falha por rate limit
+        await retryWithBackoff(async () => {
+            await sock.sendMessage(normalized.key.remoteJid, {
+                react: {
+                    text: emoji,
+                    key: normalized.key
+                }
+            });
+        }, 2, 500); // Máximo 2 tentativas, delay inicial 500ms
         return true;
     } catch (err) {
-        console.error("❌ Erro ao reagir:", err);
+        // Apenas loga erro silenciosamente se for rate limit
+        if (!err.message || !err.message.includes('rate-overlimit')) {
+            console.error("❌ Erro ao reagir:", err);
+        }
         return false;
     }
 }
 
-// Detecta links na mensagem
+// Detecta links na mensagem (MELHORADO - MENOS FALSOS POSITIVOS)
 function detectarLinks(texto) {
     if (!texto) return false;
-    const linkRegex = /((https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)|wa.me\/|whatsapp.com\/|t.me\/|chat.whatsapp.com\/|instagram.com\/|facebook.com\/|twitter.com\/|tiktok.com\/|youtube.com\/|discord.gg\//i;
-    return linkRegex.test(texto);
+    
+    // Regex melhorada - mais específica para evitar falsos positivos
+    const linkPatterns = [
+        // URLs completas com http/https
+        /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/gi,
+        // URLs com www sem protocolo
+        /\bwww\.[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/gi,
+        // Links específicos de redes sociais e mensageiros
+        /\b(wa\.me|whatsapp\.com|t\.me|chat\.whatsapp\.com|instagram\.com|facebook\.com|twitter\.com|tiktok\.com|youtube\.com|youtu\.be|discord\.gg)\//gi
+    ];
+    
+    // Testa cada padrão
+    for (const pattern of linkPatterns) {
+        if (pattern.test(texto)) {
+            return true;
+        }
+    }
+    
+    return false;
 }
 
-// Verifica se usuário é admin do grupo
+// Verifica se usuário é admin do grupo (COM CACHE)
 async function isAdmin(sock, groupId, userId) {
     try {
-        const groupMetadata = await sock.groupMetadata(groupId);
+        // Usa cache para evitar rate limit
+        const groupMetadata = await getGroupMetadataWithCache(sock, groupId);
         const participant = groupMetadata.participants.find(p => p.id === userId);
         return participant && (participant.admin === 'admin' || participant.admin === 'superadmin');
     } catch (err) {
