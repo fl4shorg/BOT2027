@@ -143,11 +143,8 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 ### 11/10/2025 - Importação GitHub e Configuração Replit
 - ✅ Projeto importado e configurado no Replit
 - ✅ Dependências npm instaladas (408 packages)
-- ✅ Workflow "WhatsApp Bot" configurado com QR Code automático
-  - Comando: `BOT_CONNECTION_METHOD=qr node main.js`
-  - Bot gera QR Code automaticamente sem interação manual
-- ✅ Bot iniciado com sucesso e gerando QR Code
-- 📌 Arquivos de conexão preservados (não modificados conforme solicitado)
+- ✅ Workflow "WhatsApp Bot" configurado (`node main.js`)
+- 📌 Conexão preservada sem modificações (conforme solicitado)
 - ✅ **Removidos comandos antifake e antiporno completamente**
 - ✅ **Corrigido flood de "Mensagem não encontrada" nos grupos**
   - Função `getMessage` agora retorna `undefined` em vez de enviar mensagem
@@ -162,7 +159,7 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - ✅ Comandos antifake e antiporno removidos
 
 ### Requer Ação do Usuário
-- ⏳ Escanear o QR Code no console com WhatsApp
+- ⏳ Conectar ao WhatsApp (método definido na primeira execução)
 - ⏳ Após conectar, bot estará pronto para uso
 
 ## 💡 Notas Importantes
@@ -175,8 +172,7 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 🔄 Workflow
 - **Nome**: WhatsApp Bot
-- **Comando**: `BOT_CONNECTION_METHOD=qr node main.js`
+- **Comando**: `node main.js`
 - **Saída**: Console
-- **Método de Conexão**: QR Code (automático)
 - **Auto-restart**: Sim (em caso de desconexão)
-- **Status**: ✅ Rodando e gerando QR Code automaticamente
+- **Status**: ✅ Rodando
