@@ -6,9 +6,10 @@ Bot WhatsApp completo desenvolvido pela Neext LTDA com múltiplas funcionalidade
 ## 🎯 Status Atual
 - ✅ Projeto importado do GitHub
 - ✅ Configuração do Replit completa
-- ✅ Dependências instaladas (408 packages)
+- ✅ ffmpeg instalado (sistema)
+- ✅ Dependências npm instaladas (408 packages)
 - ✅ Workflow configurado e rodando
-- ⏳ Aguardando conexão ao WhatsApp (primeiro uso ou reconexão)
+- ⏳ **AGUARDANDO AÇÃO:** Conectar ao WhatsApp (via console ou .env)
 
 ## 🏗️ Arquitetura do Projeto
 
@@ -103,10 +104,21 @@ Sistema permite múltiplos donos com seus LIDs específicos.
 ## 🚀 Como Usar
 
 ### Primeira Execução
-1. Bot pergunta método de conexão (QR Code ou Pairing)
-2. Conectar WhatsApp conforme escolhido
-3. Bot salva sessão em `conexao/`
-4. Reconexões automáticas subsequentes
+
+#### Opção 1: Modo Interativo (Console)
+1. No console do Replit, o bot pergunta o método de conexão
+2. Digite `1` para QR Code ou `2` para Pairing Code
+3. Se escolher QR Code: Escaneie com WhatsApp
+4. Se escolher Pairing: Digite seu número e use o código mostrado
+5. Bot salva sessão em `conexao/`
+6. Reconexões automáticas subsequentes
+
+#### Opção 2: Variáveis de Ambiente (Automático)
+1. Copie `.env.example` para `.env`
+2. Configure `BOT_CONNECTION_METHOD=qr` ou `pairing`
+3. Se usar `pairing`, defina `BOT_OWNER_NUMBER=5527999999999`
+4. Reinicie o workflow
+5. Bot conecta automaticamente
 
 ### Reconectar WhatsApp
 Se o bot mostrar erro 401/440 (credenciais inválidas):
@@ -124,11 +136,13 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - ✅ **Novo comando `.reset`** - Dono pode limpar cache manualmente
 - ✅ ffmpeg instalado para comandos de figurinha
 
-### 10/10/2025 - Importação GitHub (Atual)
+### 11/10/2025 - Importação GitHub (Atual)
 - ✅ Projeto importado e configurado no Replit
-- ✅ Dependências instaladas via `npm install`
+- ✅ Dependências do sistema instaladas: `ffmpeg`
+- ✅ Dependências npm instaladas (408 packages)
 - ✅ Workflow "WhatsApp Bot" configurado (`node main.js`)
-- ✅ Bot iniciado com sucesso e aguardando método de conexão
+- ✅ Bot iniciado com sucesso e aguardando conexão WhatsApp
+- ✅ Arquivo `.env.example` criado com instruções
 - 📌 Arquivos de conexão preservados (não modificados conforme solicitado)
 
 ## 🐛 Problemas Conhecidos
