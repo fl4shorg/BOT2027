@@ -187,6 +187,7 @@ function obterMenuAdmin() {
 
 ⚙️ *CONFIGURAÇÕES:*
 • \`${prefix}antilink on/off\` - Liga/desliga antilink
+• \`${prefix}antiflodcomando on/off\` - Anti-flood de comandos
 • \`${prefix}modogamer on/off\` - Liga/desliga modo gamer
 • \`${prefix}rpg on/off\` - Liga/desliga sistema RPG
 
@@ -373,6 +374,7 @@ function obterMenuAdm() {
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiaudio on/off - Anti-áudios
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antisticker on/off - Anti-stickers
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiflod on/off - Anti-flood
+╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiflodcomando on/off - Anti-flood de comandos
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antipalavrao on/off - Anti-palavrões
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antipagamento on/off - Anti-pagamento
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}del - Deleta mensagem marcada

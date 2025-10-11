@@ -6,6 +6,7 @@ const path = require('path');
 // Diretórios do sistema
 const GRUPOS_DIR = path.join(__dirname, '../database/grupos/ativadogrupo');
 const CACHE_FLOOD = new Map(); // Cache para controle de flood
+const CACHE_COMANDO = new Map(); // Cache para controle de flood de comandos
 
 // Utilitários
 function formatGroupId(groupId) {
@@ -30,6 +31,7 @@ function carregarConfigGrupo(groupId) {
                 antiaudio: false,
                 antisticker: false,
                 antiflod: false,
+                antiflodcomando: false,
                 x9: false,
                 modogamer: false,
                 antilinkhard: false,
@@ -43,6 +45,11 @@ function carregarConfigGrupo(groupId) {
                 floodConfig: {
                     maxMensagens: 5,
                     tempoSegundos: 10
+                },
+                floodComandoConfig: {
+                    maxComandos: 5,
+                    tempoSegundos: 30,
+                    tempoBloqueio: 180
                 }
             };
         }
@@ -232,6 +239,66 @@ setInterval(() => {
     }
 }, 60000);
 
+// Controle de flood de comandos
+function verificarFloodComando(userId, groupId, comando, config) {
+    if (!config.antiflodcomando) return { bloqueado: false };
+    
+    const key = `${groupId}_${userId}`;
+    const agora = Date.now();
+    const comandoConfig = config.floodComandoConfig || { maxComandos: 5, tempoSegundos: 30, tempoBloqueio: 180 };
+    const limiteJanela = comandoConfig.tempoSegundos * 1000;
+    const tempoBloqueio = comandoConfig.tempoBloqueio * 1000;
+    
+    if (!CACHE_COMANDO.has(key)) {
+        CACHE_COMANDO.set(key, { comandos: [], bloqueadoAte: 0 });
+    }
+    
+    const dados = CACHE_COMANDO.get(key);
+    
+    // Verifica se ainda está bloqueado
+    if (dados.bloqueadoAte > agora) {
+        const tempoRestante = Math.ceil((dados.bloqueadoAte - agora) / 1000);
+        return { 
+            bloqueado: true, 
+            tempoRestante,
+            mensagem: `⏱️ *ANTIFLODCOMANDO ATIVADO*\n\n@${userId.split('@')[0]}, você está usando comandos demais!\n\n⛔ Tente novamente em *${tempoRestante} segundos*`
+        };
+    }
+    
+    // Remove comandos antigos
+    const comandosRecentes = dados.comandos.filter(cmd => agora - cmd.timestamp < limiteJanela);
+    
+    // Adiciona novo comando
+    comandosRecentes.push({ comando, timestamp: agora });
+    dados.comandos = comandosRecentes;
+    
+    // Verifica se excedeu o limite
+    if (comandosRecentes.length > comandoConfig.maxComandos) {
+        dados.bloqueadoAte = agora + tempoBloqueio;
+        CACHE_COMANDO.set(key, dados);
+        const tempoRestante = Math.ceil(tempoBloqueio / 1000);
+        return { 
+            bloqueado: true, 
+            tempoRestante,
+            mensagem: `⏱️ *ANTIFLODCOMANDO ATIVADO*\n\n@${userId.split('@')[0]}, você excedeu o limite de comandos!\n\n⛔ Tente novamente em *${tempoRestante} segundos*`
+        };
+    }
+    
+    CACHE_COMANDO.set(key, dados);
+    return { bloqueado: false };
+}
+
+// Limpa cache de comandos periodicamente
+setInterval(() => {
+    const agora = Date.now();
+    for (const [key, dados] of CACHE_COMANDO.entries()) {
+        // Se não está bloqueado e não tem comandos recentes, remove
+        if (dados.bloqueadoAte < agora && dados.comandos.length === 0) {
+            CACHE_COMANDO.delete(key);
+        }
+    }
+}, 60000);
+
 // Verifica se usuário está na lista negra
 function isUsuarioListaNegra(userId, groupId) {
     const config = carregarConfigGrupo(groupId);
@@ -271,7 +338,7 @@ function toggleAntiFeature(groupId, feature, estado) {
     const config = carregarConfigGrupo(groupId);
     if (!config) return false;
     
-    const validFeatures = ['antilink', 'anticontato', 'antidocumento', 'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'x9', 'antilinkhard', 'antipalavrao', 'antipv', 'anticall', 'antipagamento', 'rankativo'];
+    const validFeatures = ['antilink', 'anticontato', 'antidocumento', 'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'antiflodcomando', 'x9', 'antilinkhard', 'antipalavrao', 'antipv', 'anticall', 'antipagamento', 'rankativo'];
     
     if (!validFeatures.includes(feature)) return false;
     
@@ -388,6 +455,7 @@ module.exports = {
     isStickerMessage,
     isPaymentMessage,
     verificarFlood,
+    verificarFloodComando,
     
     // Utilitários
     formatGroupId,

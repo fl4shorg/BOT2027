@@ -778,6 +778,45 @@ async function handleCommand(sock, message, command, args, from, quoted) {
     const msg = message.message;
     if (!msg) return;
 
+    // Verifica antiflodcomando (apenas em grupos)
+    if (from.endsWith('@g.us') || from.endsWith('@lid')) {
+        const sender = message.key.participant || from;
+        
+        // Não aplica para dono e admins
+        const ehDono = isDono(sender);
+        const ehAdmin = await isAdmin(sock, from, sender);
+        
+        if (!ehDono && !ehAdmin) {
+            // Lista de comandos que NÃO devem ser afetados pelo antiflodcomando
+            const comandosExcluidos = [
+                // Jogos interativos
+                'xadrez', 'akinator', 'akinatorvoltar', 'akinatorparar',
+                // RPG (jogos que requerem múltiplos comandos sequenciais)
+                'perfil', 'trabalhar', 'estudar', 'pescar', 'minerar', 'coletar', 'cacar',
+                'tigrinho', 'assaltar', 'depositar', 'sacar', 'daily', 'inventario',
+                'loja', 'comprar', 'vender', 'trabalhos', 'escolhertrabalho', 'educacao',
+                // Outros jogos
+                'jogodavelha', 'roletarussa', 'disparar', 'jogodaforca',
+                // Comandos de sistema básicos
+                'ping', 'menu', 'menuadm', 'menudono', 'menumembro', 'menugamer',
+                'menudownload', 'menufigurinhas', 'menuhentai', 'menurandom'
+            ];
+            
+            // Se o comando não está na lista de excluídos, verifica flood
+            if (!comandosExcluidos.includes(command)) {
+                const config = antiSpam.carregarConfigGrupo(from);
+                if (config) {
+                    const resultado = antiSpam.verificarFloodComando(sender, from, command, config);
+                    if (resultado.bloqueado) {
+                        await reagirMensagem(sock, message, "⏱️");
+                        await reply(sock, from, resultado.mensagem, [sender]);
+                        return; // Bloqueia execução do comando
+                    }
+                }
+            }
+        }
+    }
+
     switch (command) {
         case "ping": {
             const now = new Date();
@@ -1352,7 +1391,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             // Conta quantos estão ativos
             const featuresAtivas = [
                 'antilink', 'anticontato', 'antidocumento',
-                'antivideo', 'antiaudio', 'antisticker', 'antiflod', 
+                'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'antiflodcomando',
                 'x9', 'antilinkhard', 'antipalavrao', 'antipagamento', 'modogamer', 'rankativo'
             ].filter(feature => config[feature]).length;
 
@@ -1364,14 +1403,15 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 ╭⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓╮
 
 │╭─━─⋆｡°✩🔰 PROTEÇÕES BÁSICAS ✩°｡⋆ ━─━╮
-││￫ 𝑨𝑵𝑻𝑰-𝑳𝑰𝑵𝑲:       ${getStatusText('antilink')}
-││￫ 𝑨𝑵𝑻𝑰-𝑳𝑰𝑵𝑲-𝑯𝑨𝑹𝑫: ${getStatusText('antilinkhard')}
-││￫ 𝑨𝑵𝑻𝑰-𝑪𝑻𝑻:        ${getStatusText('anticontato')}
-││￫ 𝑨𝑵𝑻𝑰-𝑫𝑶𝑪:        ${getStatusText('antidocumento')}
-││￫ 𝑨𝑵𝑻𝑰-𝑽𝑰𝑫𝑬𝑶:      ${getStatusText('antivideo')}
-││￫ 𝑨𝑵𝑻𝑰-𝑨𝑼𝑫𝑰𝑶:      ${getStatusText('antiaudio')}
-││￫ 𝑨𝑵𝑻𝑰-𝑺𝑻𝑰𝑪𝑲𝑬𝑹:   ${getStatusText('antisticker')}
-││￫ 𝑨𝑵𝑻𝑰-𝑭𝑳𝑶𝑶𝑫:      ${getStatusText('antiflod')}
+││￫ 𝑨𝑵𝑻𝑰-𝑳𝑰𝑵𝑲:          ${getStatusText('antilink')}
+││￫ 𝑨𝑵𝑻𝑰-𝑳𝑰𝑵𝑲-𝑯𝑨𝑹𝑫:    ${getStatusText('antilinkhard')}
+││￫ 𝑨𝑵𝑻𝑰-𝑪𝑻𝑻:           ${getStatusText('anticontato')}
+││￫ 𝑨𝑵𝑻𝑰-𝑫𝑶𝑪:           ${getStatusText('antidocumento')}
+││￫ 𝑨𝑵𝑻𝑰-𝑽𝑰𝑫𝑬𝑶:         ${getStatusText('antivideo')}
+││￫ 𝑨𝑵𝑻𝑰-𝑨𝑼𝑫𝑰𝑶:         ${getStatusText('antiaudio')}
+││￫ 𝑨𝑵𝑻𝑰-𝑺𝑻𝑰𝑪𝑲𝑬𝑹:      ${getStatusText('antisticker')}
+││￫ 𝑨𝑵𝑻𝑰-𝑭𝑳𝑶𝑶𝑫:         ${getStatusText('antiflod')}
+││￫ 𝑨𝑵𝑻𝑰-𝑭𝑳𝑶𝑶𝑫-𝑪𝑴𝑫:   ${getStatusText('antiflodcomando')}
 │╰─━─⋆｡°✩🔰✩°｡⋆ ━─━╯
 
 │╭─━─⋆｡°✩🔞 PROTEÇÕES AVANÇADAS ✩°｡⋆ ━─━╮
@@ -1393,7 +1433,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 │╰─━─⋆｡°✩🤖✩°｡⋆ ━─━╯
 
 │╭─━─⋆｡°✩📊 ESTATÍSTICAS ✩°｡⋆ ━─━╮
-││￫ 𝑷𝑹𝑶𝑻𝑬𝑪𝑶̃𝑬𝑺 𝑨𝑻𝑰𝑽𝑨𝑫𝑨𝑺: ${featuresAtivas}/13
+││￫ 𝑷𝑹𝑶𝑻𝑬𝑪𝑶̃𝑬𝑺 𝑨𝑻𝑰𝑽𝑨𝑫𝑨𝑺: ${featuresAtivas}/14
 ││￫ 𝑵𝑰́𝑽𝑬𝑳 𝑫𝑬 𝑺𝑬𝑮𝑼𝑹𝑨𝑵𝑪̧𝑨: ${nivelSeguranca}
 │╰─━─⋆｡°✩📊✩°｡⋆ ━─━╯
 
@@ -1554,6 +1594,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         case "antiaudio":
         case "antisticker":
         case "antiflod":
+        case "antiflodcomando":
         case "x9":
         case "antilinkhard":
         case "antipalavrao":
@@ -1584,6 +1625,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 'antiaudio': '🎵 ANTIAUDIO',
                 'antisticker': '🏷️ ANTISTICKER',
                 'antiflod': '🌊 ANTIFLOD',
+                'antiflodcomando': '⏱️ ANTIFLOD COMANDO',
                 'x9': '📊 X9 MONITOR',
                 'antilinkhard': '🔗 ANTILINK HARD',
                 'antipalavrao': '🤬 ANTIPALAVRAO',
@@ -1673,6 +1715,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n📊 O bot agora rastreará:\n• 💬 Mensagens enviadas\n• ⌨️ Comandos executados\n• 🖼️ Stickers enviados\n• 📱 Mídias compartilhadas\n\n🔥 Digite \`.rankativo\` para ver o ranking a qualquer momento!\n\n📈 *Novidades:*\n• Top 10 usuários mais ativos\n• Total de mensagens do grupo\n• Top 5 dias mais ativos\n• Qualquer membro pode ver o ranking!`);
                         } else if (command === "welcome1") {
                             await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n🎉 Sistema de boas-vindas está ativo!\n💡 Digite \`.welcome1\` para ver configurações\n🎨 Use \`.mensagembemvindo1\` para personalizar\n👥 Novos membros receberão boas-vindas automáticas`);
+                        } else if (command === "antiflodcomando") {
+                            await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n⏱️ *Sistema de proteção contra flood de comandos ativo!*\n\n📊 *Configuração:*\n• Máximo: 5 comandos em 30 segundos\n• Bloqueio: 3 minutos\n\n🛡️ *Proteções:*\n• Admins são protegidos\n• Dono é protegido\n• Jogos não são afetados (xadrez, akinator, RPG)\n\n⚡ Membros que abusarem serão bloqueados temporariamente!`);
                         } else {
                             await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n⚔️ Conteúdo será removido e usuário será BANIDO\n🛡️ Admins e dono são protegidos\n🚫 Ação dupla: Delete + Ban automático`);
                         }
@@ -1706,6 +1750,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n📊 O bot parou de rastrear atividades\n💡 Use \`.rankativo on\` para reativar\n⚠️ Dados existentes são mantidos`);
                         } else if (command === "welcome1") {
                             await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n🎉 Sistema de boas-vindas desligado\n💡 Use \`.welcome1 on\` para reativar\n⚠️ Configurações são mantidas`);
+                        } else if (command === "antiflodcomando") {
+                            await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n⏱️ Proteção contra flood de comandos desligada\n💡 Use \`.antiflodcomando on\` para reativar\n✅ Membros podem usar comandos sem limite`);
                         } else {
                             await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n✅ Conteúdo agora é permitido\n💡 Use \`${config.prefix}${command} on\` para reativar`);
                         }
@@ -1724,6 +1770,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     'antiaudio': 'Remove áudios e bane usuário',
                     'antisticker': 'Remove stickers e bane usuário',
                     'antiflod': 'Remove flood (spam) e bane usuário',
+                    'antiflodcomando': 'Limita uso excessivo de comandos (5 comandos em 30s = bloqueio de 3 minutos)',
                     'x9': 'Monitora ações administrativas do grupo (promover, rebaixar, adicionar, remover)',
                     'rankativo': 'Rastreia atividades e gera ranking dos usuários mais ativos',
                     'welcome1': 'Envia boas-vindas automáticas com mensagem e imagem personalizada'
