@@ -72,7 +72,7 @@ Sistema permite múltiplos donos com seus LIDs específicos.
 
 ### Sistemas Principais
 1. **Sistema RPG** - NeextCity completo com economia, trabalhos, educação
-2. **Anti-Spam** - Proteção contra links, flood, arquivos indesejados
+2. **Anti-Spam** - Proteção contra links, flood, arquivos indesejados, palavrões
 3. **Welcome System** - Boas-vindas automáticas
 4. **Ranking Ativo** - Sistema de XP por atividade
 5. **Xadrez** - Jogo de xadrez completo
@@ -95,10 +95,14 @@ Sistema permite múltiplos donos com seus LIDs específicos.
 - ✅ .gitignore configurado adequadamente
 
 ### Sistema Anti-Spam
-- Anti-link
+- Anti-link (normal e avançado)
 - Anti-contato
 - Anti-documento
+- Anti-vídeo/áudio/sticker
 - Anti-flood
+- Anti-palavrão
+- Anti-pagamento
+- X9 Monitor (ações de admin)
 - Banimento automático de infratores
 
 ## 🚀 Como Usar
@@ -136,7 +140,7 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - ✅ **Novo comando `.reset`** - Dono pode limpar cache manualmente
 - ✅ ffmpeg instalado para comandos de figurinha
 
-### 11/10/2025 - Importação GitHub (Atual)
+### 11/10/2025 - Importação GitHub e Remoções
 - ✅ Projeto importado e configurado no Replit
 - ✅ Dependências do sistema instaladas: `ffmpeg`
 - ✅ Dependências npm instaladas (408 packages)
@@ -144,6 +148,7 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - ✅ Bot iniciado com sucesso e aguardando conexão WhatsApp
 - ✅ Arquivo `.env.example` criado com instruções
 - 📌 Arquivos de conexão preservados (não modificados conforme solicitado)
+- ✅ **Removidos comandos antifake e antiporno completamente**
 
 ## 🐛 Problemas Conhecidos
 

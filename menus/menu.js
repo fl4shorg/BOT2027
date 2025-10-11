@@ -373,8 +373,6 @@ function obterMenuAdm() {
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiaudio on/off - Anti-áudios
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antisticker on/off - Anti-stickers
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiflod on/off - Anti-flood
-╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antifake on/off - Anti-números fake
-╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiporno on/off - Anti-pornografia
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antipalavrao on/off - Anti-palavrões
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antipagamento on/off - Anti-pagamento
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}del - Deleta mensagem marcada
@@ -419,8 +417,6 @@ function obterMenuAnti() {
 • \`${prefix}antiaudio on/off\` - Anti-áudios
 • \`${prefix}antisticker on/off\` - Anti-stickers
 • \`${prefix}antiflod on/off\` - Anti-flood
-• \`${prefix}antifake on/off\` - Anti-números fake
-• \`${prefix}antiporno on/off\` - Anti-pornografia
 • \`${prefix}antipalavrao on/off\` - Anti-palavrões
 • \`${prefix}x9 on/off\` - Anti-X9
 

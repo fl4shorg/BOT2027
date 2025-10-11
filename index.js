@@ -590,7 +590,7 @@ async function processarAntiSpam(sock, normalized) {
     }
 }
 
-// Auto-ban para lista negra e antifake quando usuário entra no grupo
+// Auto-ban para lista negra quando usuário entra no grupo
 async function processarListaNegra(sock, participants, groupId, action) {
     try {
         if (action !== 'add') return;
@@ -608,13 +608,6 @@ async function processarListaNegra(sock, participants, groupId, action) {
                 motivo = 'Lista Negra';
                 shouldBan = true;
                 console.log(`📋 Usuário da lista negra detectado: ${participantNumber}`);
-            }
-
-            // Verifica antifake (números não brasileiros)
-            if (config.antifake && !antiSpam.isNumeroBrasileiro(participant)) {
-                motivo = motivo ? `${motivo} + Antifake` : 'Antifake (não brasileiro)';
-                shouldBan = true;
-                console.log(`🇧🇷 Usuário não brasileiro detectado: ${participantNumber}`);
             }
 
             if (shouldBan) {
@@ -636,7 +629,7 @@ async function processarListaNegra(sock, participants, groupId, action) {
             }
         }
     } catch (err) {
-        console.error("❌ Erro no processamento de lista negra/antifake:", err);
+        console.error("❌ Erro no processamento de lista negra:", err);
     }
 }
 
@@ -1367,8 +1360,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             // Conta quantos estão ativos
             const featuresAtivas = [
                 'antilink', 'anticontato', 'antidocumento',
-                'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'antifake', 
-                'x9', 'antiporno', 'antilinkhard', 'antipalavrao', 'antipagamento', 'modogamer', 'rankativo'
+                'antivideo', 'antiaudio', 'antisticker', 'antiflod', 
+                'x9', 'antilinkhard', 'antipalavrao', 'antipagamento', 'modogamer', 'rankativo'
             ].filter(feature => config[feature]).length;
 
             // Calcula nível de segurança
@@ -1387,11 +1380,9 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 ││￫ 𝑨𝑵𝑻𝑰-𝑨𝑼𝑫𝑰𝑶:      ${getStatusText('antiaudio')}
 ││￫ 𝑨𝑵𝑻𝑰-𝑺𝑻𝑰𝑪𝑲𝑬𝑹:   ${getStatusText('antisticker')}
 ││￫ 𝑨𝑵𝑻𝑰-𝑭𝑳𝑶𝑶𝑫:      ${getStatusText('antiflod')}
-││￫ 𝑨𝑵𝑻𝑰-𝑭𝑨𝑲𝑬:       ${getStatusText('antifake')}
 │╰─━─⋆｡°✩🔰✩°｡⋆ ━─━╯
 
 │╭─━─⋆｡°✩🔞 PROTEÇÕES AVANÇADAS ✩°｡⋆ ━─━╮
-││￫ 𝑨𝑵𝑻𝑰-𝑷𝑶𝑹𝑵𝑶:       ${getStatusText('antiporno')}
 ││￫ 𝑨𝑵𝑻𝑰-𝑷𝑨𝑳𝑨𝑽𝑹𝑨𝑶:     ${getStatusText('antipalavrao')}
 ││￫ 𝑨𝑵𝑻𝑰-𝑷𝑨𝑮𝑨𝑴𝑬𝑵𝑻𝑶:   ${getStatusText('antipagamento')}
 ││￫ 𝑿9:                    ${getStatusText('x9')}
@@ -1410,7 +1401,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 │╰─━─⋆｡°✩🤖✩°｡⋆ ━─━╯
 
 │╭─━─⋆｡°✩📊 ESTATÍSTICAS ✩°｡⋆ ━─━╮
-││￫ 𝑷𝑹𝑶𝑻𝑬𝑪𝑶̃𝑬𝑺 𝑨𝑻𝑰𝑽𝑨𝑫𝑨𝑺: ${featuresAtivas}/15
+││￫ 𝑷𝑹𝑶𝑻𝑬𝑪𝑶̃𝑬𝑺 𝑨𝑻𝑰𝑽𝑨𝑫𝑨𝑺: ${featuresAtivas}/13
 ││￫ 𝑵𝑰́𝑽𝑬𝑳 𝑫𝑬 𝑺𝑬𝑮𝑼𝑹𝑨𝑵𝑪̧𝑨: ${nivelSeguranca}
 │╰─━─⋆｡°✩📊✩°｡⋆ ━─━╯
 
@@ -1483,8 +1474,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             // Conta quantos estão ativos
             const featuresAtivas = [
                 'antilink', 'anticontato', 'antidocumento',
-                'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'antifake', 
-                'x9', 'antiporno', 'antilinkhard', 'antipalavrao', 'modogamer'
+                'antivideo', 'antiaudio', 'antisticker', 'antiflod', 
+                'x9', 'antilinkhard', 'antipalavrao', 'modogamer'
             ].filter(feature => config[feature]).length;
 
             const statusMsg = `🛡️ *STATUS DO GRUPO - NEEXT SECURITY*\n\n` +
@@ -1496,15 +1487,13 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 `${getStatusIcon('antivideo')} **Antivideo:** ${getStatusText('antivideo')}\n` +
                 `${getStatusIcon('antiaudio')} **Antiaudio:** ${getStatusText('antiaudio')}\n` +
                 `${getStatusIcon('antisticker')} **Antisticker:** ${getStatusText('antisticker')}\n` +
-                `${getStatusIcon('antiflod')} **Antiflod:** ${getStatusText('antiflod')}\n` +
-                `${getStatusIcon('antifake')} **Antifake:** ${getStatusText('antifake')}\n\n` +
+                `${getStatusIcon('antiflod')} **Antiflod:** ${getStatusText('antiflod')}\n\n` +
                 `🔞 **PROTEÇÕES AVANÇADAS**\n\n` +
-                `${getStatusIcon('antiporno')} **Antiporno:** ${getStatusText('antiporno')}\n` +
                 `${getStatusIcon('antipalavrao')} **Antipalavrao:** ${getStatusText('antipalavrao')}\n` +
                 `${getStatusIcon('x9')} **X9:** ${getStatusText('x9')}\n\n` +
                 `📊 **ESTATÍSTICAS**\n\n` +
-                `📊 **Proteções Ativas:** ${featuresAtivas}/13\n` +
-                `🔒 **Nível de Segurança:** ${featuresAtivas >= 9 ? "🟢 ALTO" : featuresAtivas >= 5 ? "🟡 MÉDIO" : "🔴 BAIXO"}\n\n` +
+                `📊 **Proteções Ativas:** ${featuresAtivas}/11\n` +
+                `🔒 **Nível de Segurança:** ${featuresAtivas >= 7 ? "🟢 ALTO" : featuresAtivas >= 4 ? "🟡 MÉDIO" : "🔴 BAIXO"}\n\n` +
                 `⚙️ **COMANDOS**\n\n` +
                 `💡 **Use:** \`${prefixAtual}[comando] on/off\` para alterar\n` +
                 `🛡️ **Powered by:** NEEXT SECURITY\n` +
@@ -1574,7 +1563,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         case "antisticker":
         case "antiflod":
         case "x9":
-        case "antiporno":
         case "antilinkhard":
         case "antipalavrao":
         case "antipagamento":
@@ -1605,7 +1593,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 'antisticker': '🏷️ ANTISTICKER',
                 'antiflod': '🌊 ANTIFLOD',
                 'x9': '📊 X9 MONITOR',
-                'antiporno': '🔞 ANTIPORNO',
                 'antilinkhard': '🔗 ANTILINK HARD',
                 'antipalavrao': '🤬 ANTIPALAVRAO',
                 'rankativo': '🔥 RANK DE ATIVOS',
@@ -1745,7 +1732,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     'antiaudio': 'Remove áudios e bane usuário',
                     'antisticker': 'Remove stickers e bane usuário',
                     'antiflod': 'Remove flood (spam) e bane usuário',
-                    'antifake': 'Remove usuários não brasileiros',
                     'x9': 'Monitora ações administrativas do grupo (promover, rebaixar, adicionar, remover)',
                     'rankativo': 'Rastreia atividades e gera ranking dos usuários mais ativos',
                     'welcome1': 'Envia boas-vindas automáticas com mensagem e imagem personalizada'
@@ -9132,7 +9118,7 @@ function setupListeners(sock) {
         try {
             console.log(`👥 [GROUP-UPDATE] Evento recebido: ${action} - ${participants.length} participante(s) no grupo ${id} por ${author || 'desconhecido'}`);
             
-            // Processa lista negra e antifake PRIMEIRO
+            // Processa lista negra PRIMEIRO
             await processarListaNegra(sock, participants, id, action);
             
             // Processa X9 (monitor de ações de admin)

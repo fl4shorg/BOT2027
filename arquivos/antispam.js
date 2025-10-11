@@ -1,51 +1,7 @@
 // Sistema Anti-Spam Completo para WhatsApp Bot
-// Silencia logs do TensorFlow
-process.env.TF_CPP_MIN_LOG_LEVEL = '3';
 
 const fs = require('fs');
 const path = require('path');
-const tf = require('@tensorflow/tfjs-node');
-
-// Intercepta stdout e stderr para filtrar logs do NSFWJS
-const originalStdoutWrite = process.stdout.write.bind(process.stdout);
-const originalStderrWrite = process.stderr.write.bind(process.stderr);
-
-process.stdout.write = (chunk, encoding, callback) => {
-    const message = chunk.toString();
-    if (message.includes('modelOrUrl') || message.includes('MobileNetV2') || message.includes('NSFWJS')) {
-        return true;
-    }
-    return originalStdoutWrite(chunk, encoding, callback);
-};
-
-process.stderr.write = (chunk, encoding, callback) => {
-    const message = chunk.toString();
-    if (message.includes('modelOrUrl') || message.includes('MobileNetV2') || message.includes('NSFWJS')) {
-        return true;
-    }
-    return originalStderrWrite(chunk, encoding, callback);
-};
-
-const nsfw = require('nsfwjs');
-const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
-
-// Modelo NSFW para detecção de pornografia
-let nsfwModel = null;
-
-// Carrega o modelo NSFW na inicialização
-async function carregarModeloNSFW() {
-    if (!nsfwModel) {
-        try {
-            nsfwModel = await nsfw.load();
-        } catch (err) {
-            console.error('❌ Erro ao carregar modelo NSFW:', err);
-        }
-    }
-    return nsfwModel;
-}
-
-// Inicia carregamento do modelo automaticamente
-carregarModeloNSFW();
 
 // Diretórios do sistema
 const GRUPOS_DIR = path.join(__dirname, '../database/grupos/ativadogrupo');
@@ -54,20 +10,6 @@ const CACHE_FLOOD = new Map(); // Cache para controle de flood
 // Utilitários
 function formatGroupId(groupId) {
     return groupId.replace('@g.us', '').replace('@lid', '').replace(/[^a-zA-Z0-9]/g, '_');
-}
-
-// Verifica se número é brasileiro
-function isNumeroBrasileiro(jid) {
-    if (!jid || typeof jid !== 'string') return false;
-    
-    // Remove o @s.whatsapp.net para pegar apenas o número
-    const numero = jid.replace('@s.whatsapp.net', '');
-    
-    // Verifica se começa com 55 (código do Brasil)
-    // Formatos aceitos: 55XXXXXXXXXXX (13 dígitos) ou 5511XXXXXXXXX (12 dígitos para alguns casos)
-    const brasileiroRegex = /^55[1-9][0-9]{8,9}$/;
-    
-    return brasileiroRegex.test(numero);
 }
 
 function getGroupConfigPath(groupId) {
@@ -88,10 +30,8 @@ function carregarConfigGrupo(groupId) {
                 antiaudio: false,
                 antisticker: false,
                 antiflod: false,
-                antifake: false,
                 x9: false,
                 modogamer: false,
-                antiporno: false,
                 antilinkhard: false,
                 antipalavrao: false,
                 antipv: false,
@@ -166,105 +106,6 @@ function detectarLinksHard(texto) {
     ];
     
     return linksHardRegex.some(regex => regex.test(textoLimpo));
-}
-
-// Analisa imagem com IA para detectar pornografia
-async function analisarImagemComIA(imageBuffer) {
-    try {
-        if (!nsfwModel) {
-            await carregarModeloNSFW();
-        }
-        
-        if (!nsfwModel) {
-            console.log('⚠️ Modelo NSFW não carregado, pulando análise de imagem');
-            return { isPorn: false, predictions: [] };
-        }
-        
-        const image = await tf.node.decodeImage(imageBuffer, 3);
-        const predictions = await nsfwModel.classify(image);
-        image.dispose(); // Libera memória
-        
-        // Verifica se é pornografia (Porn ou Sexy com alta probabilidade)
-        const pornPrediction = predictions.find(p => p.className === 'Porn');
-        const sexyPrediction = predictions.find(p => p.className === 'Sexy');
-        const hentaiPrediction = predictions.find(p => p.className === 'Hentai');
-        
-        const pornScore = pornPrediction?.probability || 0;
-        const sexyScore = sexyPrediction?.probability || 0;
-        const hentaiScore = hentaiPrediction?.probability || 0;
-        
-        // Considera pornografia se:
-        // - Porn > 50% OU
-        // - Sexy > 70% OU
-        // - Hentai > 60%
-        const isPorn = pornScore > 0.5 || sexyScore > 0.7 || hentaiScore > 0.6;
-        
-        console.log(`🔍 Análise NSFW: Porn=${(pornScore*100).toFixed(1)}%, Sexy=${(sexyScore*100).toFixed(1)}%, Hentai=${(hentaiScore*100).toFixed(1)}% | Resultado: ${isPorn ? 'PORNOGRAFIA' : 'LIMPO'}`);
-        
-        return { isPorn, predictions };
-    } catch (err) {
-        console.error('❌ Erro ao analisar imagem com IA:', err);
-        return { isPorn: false, predictions: [] };
-    }
-}
-
-// Detecta conteúdo pornográfico (agora com IA)
-async function detectarPorno(texto, message, sock) {
-    // Só verifica antiporno em MÍDIAS (imagens e vídeos)
-    if (!message) return false;
-    
-    // Verifica se é uma imagem ou vídeo
-    const ehImagem = message.imageMessage;
-    const ehVideo = message.videoMessage;
-    
-    if (!ehImagem && !ehVideo) return false;
-    
-    // Lista de palavras relacionadas a pornografia (para legendas)
-    const palavrasPorno = [
-        'porno', 'pornografia', 'pornô', 'xxx', 'sexo', 'nude', 'nua', 'pelada',
-        'buceta', 'pau', 'pênis', 'vagina', 'peitos', 'seios', 'rola', 'piru',
-        'xota', 'xereca', 'ppk', 'penis', 'tesao', 'tesão', 'gozar', 'gozo',
-        'pornhub', 'xvideos', 'redtube', 'xhamster', 'youporn', 'hentai'
-    ];
-    
-    function normalizarTexto(texto) {
-        return texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
-    }
-
-    // Verifica legendas primeiro
-    const caption = message.imageMessage?.caption || message.videoMessage?.caption || '';
-    if (caption) {
-        const captionLimpa = normalizarTexto(caption);
-        for (const palavra of palavrasPorno) {
-            if (captionLimpa.includes(normalizarTexto(palavra))) {
-                console.log(`🚫 Pornografia detectada na legenda: "${palavra}"`);
-                return true;
-            }
-        }
-    }
-    
-    // Para imagens, usa IA para analisar o conteúdo visual
-    if (ehImagem && sock) {
-        try {
-            // Download da imagem usando o método correto do Baileys
-            const stream = await downloadContentFromMessage(message.imageMessage, 'image');
-            let buffer = Buffer.from([]);
-            
-            // Lê o stream em um buffer
-            for await (const chunk of stream) {
-                buffer = Buffer.concat([buffer, chunk]);
-            }
-            
-            const resultado = await analisarImagemComIA(buffer);
-            return resultado.isPorn;
-        } catch (err) {
-            console.error('❌ Erro ao baixar/analisar imagem:', err);
-            return false;
-        }
-    }
-    
-    // Para vídeos, por enquanto só analisa legenda (analisar vídeo seria muito pesado)
-    return false;
 }
 
 // Detecta palavrões
@@ -430,7 +271,7 @@ function toggleAntiFeature(groupId, feature, estado) {
     const config = carregarConfigGrupo(groupId);
     if (!config) return false;
     
-    const validFeatures = ['antilink', 'anticontato', 'antidocumento', 'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'antifake', 'x9', 'antiporno', 'antilinkhard', 'antipalavrao', 'antipv', 'anticall', 'antipagamento', 'rankativo'];
+    const validFeatures = ['antilink', 'anticontato', 'antidocumento', 'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'x9', 'antilinkhard', 'antipalavrao', 'antipv', 'anticall', 'antipagamento', 'rankativo'];
     
     if (!validFeatures.includes(feature)) return false;
     
@@ -470,11 +311,6 @@ async function processarMensagem(message, groupId, userId, sock) {
     // Verifica antilinkhard
     if (config.antilinkhard && detectarLinksHard(texto)) {
         violations.push('antilinkhard');
-    }
-    
-    // Verifica antiporno (agora com IA)
-    if (config.antiporno && await detectarPorno(texto, message, sock)) {
-        violations.push('antiporno');
     }
     
     // Verifica antipalavrao
@@ -544,7 +380,6 @@ module.exports = {
     // Detecções específicas
     detectarLinks,
     detectarLinksHard,
-    detectarPorno,
     detectarPalavrao,
     isContactMessage,
     isDocumentMessage,
@@ -553,7 +388,6 @@ module.exports = {
     isStickerMessage,
     isPaymentMessage,
     verificarFlood,
-    isNumeroBrasileiro,
     
     // Utilitários
     formatGroupId,
