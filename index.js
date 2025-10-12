@@ -896,7 +896,9 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 'jogodavelha', 'roletarussa', 'disparar', 'jogodaforca',
                 // Comandos de sistema básicos
                 'ping', 'menu', 'menuadm', 'menudono', 'menumembro', 'menugamer',
-                'menudownload', 'menufigurinhas', 'menuhentai', 'menurandom'
+                'menudownload', 'menufigurinhas', 'menuhentai', 'menurandom',
+                // Comandos de agendamento
+                'time-status', 'opengp', 'closegp'
             ];
             
             // Se o comando não está na lista de excluídos, verifica flood
