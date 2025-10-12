@@ -9091,7 +9091,7 @@ function setupListeners(sock) {
                 }
 
                 // Processa X9 visualização única (deve vir ANTES da normalização)
-                await processarX9VisuUnica(sock, m);
+                await processarX9VisuUnica(sock, message);
 
                 // Processa anti-spam primeiro
                 const bloqueado = await processarAntiSpam(sock, normalized);

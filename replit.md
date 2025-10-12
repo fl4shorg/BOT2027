@@ -140,6 +140,14 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
+### 12/10/2025 - Correção Crítica: Comandos Funcionando ✅
+- ✅ **Bug crítico corrigido** - Variável `m` não definida na linha 9094
+  - Erro: `ReferenceError: m is not defined`
+  - Causa: Processamento de X9 visualização única usava variável errada
+  - Solução: Corrigido para usar `message` ao invés de `m`
+  - Resultado: Todos os comandos funcionando normalmente agora
+- ✅ **Bot totalmente operacional** no Replit
+
 ### 12/10/2025 - X9 de Visualização Única ✅
 - ✅ **Novo comando `.x9visuunica`** - Revela automaticamente imagens/vídeos de visualização única
   - Quando ativado, toda mídia enviada com "view once" é revelada no grupo
