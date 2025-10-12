@@ -139,6 +139,12 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
+### 12/10/2025 - Comando Pinterest Corrigido ✅
+- ✅ **API atualizada** - Usando `https://api.nekolabs.my.id/discovery/pinterest/search`
+- ✅ **Verificação corrigida** - Agora checa `success` ao invés de `status` (compatível com API)
+- ✅ **Timeout otimizado** - Aumentado de 15s para 20s
+- ✅ **Carrossel funcional** - Envia até 5 imagens do Pinterest com informações do autor
+
 ### 12/10/2025 - Comandos Play e Play-Spotify Corrigidos ✅
 - ✅ **Comando `.play` otimizado** - Timeout aumentado para 2 minutos (download completo)
 - ✅ **Comando `.playspotify` otimizado** - Timeouts ajustados em todas as etapas

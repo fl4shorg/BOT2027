@@ -2213,15 +2213,15 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 
                 // API Real do Pinterest
                 const response = await axios.get(`https://api.nekolabs.my.id/discovery/pinterest/search?q=${encodeURIComponent(query)}`, {
-                    timeout: 15000,
+                    timeout: 20000,
                     headers: {
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
                     }
                 });
                 
-                console.log(`📥 Resposta da API Pinterest:`, response.data?.status, response.data?.result?.length);
+                console.log(`📥 Resposta da API Pinterest:`, response.data?.success, response.data?.result?.length);
                 
-                if (!response.data || !response.data.status || !Array.isArray(response.data.result) || response.data.result.length === 0) {
+                if (!response.data || !response.data.success || !Array.isArray(response.data.result) || response.data.result.length === 0) {
                     await reagirMensagem(sock, message, "❌");
                     await sock.sendMessage(from, {
                         text: '❌ Nenhuma imagem encontrada para essa busca. Tente uma palavra-chave diferente.'
