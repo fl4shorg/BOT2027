@@ -6322,6 +6322,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 break;
             }
 
+            const configBot = obterConfiguracoes();
             const groupSchedule = require('./arquivos/grupo-schedule.js');
             const schedule = groupSchedule.getSchedule(from);
             
