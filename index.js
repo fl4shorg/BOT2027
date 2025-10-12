@@ -1933,7 +1933,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     } else if (command === "welcome1") {
                         await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ DESATIVADO!*\n\n✅ O sistema já estava desligado\n💡 Use \`.welcome1 on\` para ativar`);
                     } else {
-                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ DESATIVADO!*\n\n✅ A proteção já estava desligada\n💡 Use \`${config.prefix}${command} on\` para ativar`);
+                        const configBot = obterConfiguracoes();
+                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ DESATIVADO!*\n\n✅ A proteção já estava desligada\n💡 Use \`${configBot.prefix}${command} on\` para ativar`);
                     }
                 } else {
                     // Precisa desativar
@@ -1952,7 +1953,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         } else if (command === "antiflodcomando") {
                             await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n⏱️ Proteção contra flood de comandos desligada\n💡 Use \`.antiflodcomando on\` para reativar\n✅ Membros podem usar comandos sem limite`);
                         } else {
-                            await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n✅ Conteúdo agora é permitido\n💡 Use \`${config.prefix}${command} on\` para reativar`);
+                            const configBot = obterConfiguracoes();
+                            await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n✅ Conteúdo agora é permitido\n💡 Use \`${configBot.prefix}${command} on\` para reativar`);
                         }
                     } else {
                         await reply(sock, from, `❌ Erro ao desativar ${featureName}`);
@@ -1984,7 +1986,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     extraInfo = `\n\n🎉 *O que o Bem-Vindo inclui:*\n• 💬 Mensagem personalizada automática\n• 🖼️ Welcome card com foto do membro\n• 🏷️ Placeholders dinâmicos\n• 👤 Foto de perfil automática\n• 📊 Informações do grupo em tempo real\n\n⚠️ Status do Bem-Vindo: ${status}`;
                 }
 
-                await reply(sock, from, `📊 *${featureName}*\n\nStatus: ${status}\n\n📝 *Como usar:*\n• \`${config.prefix}${command} on\` - Ativar\n• \`${config.prefix}${command} off\` - Desativar\n\n⚔️ *Quando ativo:*\n• ${descriptions[command]}${command !== 'x9' ? '\n• Protege admins e dono' : ''}${extraInfo}\n\n⚠️ Apenas admins podem usar`);
+                const configBot = obterConfiguracoes();
+                await reply(sock, from, `📊 *${featureName}*\n\nStatus: ${status}\n\n📝 *Como usar:*\n• \`${configBot.prefix}${command} on\` - Ativar\n• \`${configBot.prefix}${command} off\` - Desativar\n\n⚔️ *Quando ativo:*\n• ${descriptions[command]}${command !== 'x9' ? '\n• Protege admins e dono' : ''}${extraInfo}\n\n⚠️ Apenas admins podem usar`);
             }
         }
         break;
