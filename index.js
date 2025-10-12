@@ -1836,7 +1836,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         } else if (command === "welcome1") {
                             await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n🎉 Sistema de boas-vindas está ativo!\n💡 Digite \`.welcome1\` para ver configurações\n🎨 Use \`.mensagembemvindo1\` para personalizar\n👥 Novos membros receberão boas-vindas automáticas`);
                         } else if (command === "antiflodcomando") {
-                            await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n⏱️ *Sistema de proteção contra flood de comandos ativo!*\n\n📊 *Configuração:*\n• Máximo: 5 comandos em 30 segundos\n• Bloqueio: 3 minutos\n\n🛡️ *Proteções:*\n• Admins são protegidos\n• Dono é protegido\n• Jogos não são afetados (xadrez, akinator, RPG)\n\n⚡ Membros que abusarem serão bloqueados temporariamente!`);
+                            await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n⏱️ *Sistema de proteção contra flood de comandos ativo!*\n\n📊 *Configuração:*\n• Máximo: 5 comandos em 30 segundos\n• Bloqueio: 5 minutos\n\n🛡️ *Proteções:*\n• Admins são protegidos\n• Dono é protegido\n• Jogos não são afetados (xadrez, akinator, RPG)\n\n⚡ Membros que abusarem serão bloqueados temporariamente!`);
                         } else {
                             await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n⚔️ Conteúdo será removido e usuário será BANIDO\n🛡️ Admins e dono são protegidos\n🚫 Ação dupla: Delete + Ban automático`);
                         }

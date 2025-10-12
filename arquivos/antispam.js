@@ -51,7 +51,7 @@ function carregarConfigGrupo(groupId) {
                 floodComandoConfig: {
                     maxComandos: 5,
                     tempoSegundos: 30,
-                    tempoBloqueio: 180
+                    tempoBloqueio: 300
                 }
             };
         }
@@ -257,7 +257,7 @@ function verificarFloodComando(userId, groupId, comando, config) {
     
     const key = `${groupId}_${userId}`;
     const agora = Date.now();
-    const comandoConfig = config.floodComandoConfig || { maxComandos: 5, tempoSegundos: 30, tempoBloqueio: 180 };
+    const comandoConfig = config.floodComandoConfig || { maxComandos: 5, tempoSegundos: 30, tempoBloqueio: 300 };
     const limiteJanela = comandoConfig.tempoSegundos * 1000;
     const tempoBloqueio = comandoConfig.tempoBloqueio * 1000;
     
