@@ -85,9 +85,10 @@ Sistema permite múltiplos donos com seus LIDs específicos.
 - `.xadrez` - Jogar xadrez
 - `.pinterest` - Buscar imagens
 - `.ping` - Verificar latência
-- `.linkgrupo` - Mostra link do grupo (novo)
-- `.antiloc on/off` - Anti-localização (novo)
-- `.antiimg on/off` - Anti-imagem (novo)
+- `.linkgrupo` - Mostra link do grupo
+- `.antiloc on/off` - Anti-localização
+- `.antiimg on/off` - Anti-imagem
+- `.x9visuunica on/off` - Revela visualização única (novo) 👁️
 - `.time-status` - Ver agendamentos do grupo
 
 ## 🔒 Segurança
@@ -108,6 +109,7 @@ Sistema permite múltiplos donos com seus LIDs específicos.
 - Anti-localização (novo) 📍
 - Anti-imagem (novo) 🖼️
 - X9 Monitor (ações de admin)
+- X9 Visualização Única (novo) 👁️
 - Banimento automático de infratores
 
 ## 🚀 Como Usar
@@ -137,6 +139,15 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 4. Conectar novamente
 
 ## 📝 Mudanças Recentes
+
+### 12/10/2025 - X9 de Visualização Única ✅
+- ✅ **Novo comando `.x9visuunica`** - Revela automaticamente imagens/vídeos de visualização única
+  - Quando ativado, toda mídia enviada com "view once" é revelada no grupo
+  - Mostra quem enviou, tipo de mídia e revela sem restrição
+  - Funciona com imagens e vídeos
+  - Sistema detecta viewOnceMessage, viewOnceMessageV2 e viewOnceMessageV2Extension
+- ✅ **Comando adicionado ao menuadm e grupo-status**
+- ✅ **Total de proteções atualizado** para 17 (era 14)
 
 ### 12/10/2025 - Novos Comandos Anti-Spam e Link do Grupo ✅
 - ✅ **Comando `.time-status` corrigido** - Variável configBot não definida estava causando erro

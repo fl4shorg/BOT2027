@@ -379,6 +379,7 @@ function obterMenuAdm() {
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antipagamento on/off - Anti-pagamento
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiloc on/off - Anti-localização
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiimg on/off - Anti-imagem
+╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}x9visuunica on/off - Revela visu única
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}linkgrupo - Mostra link do grupo
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}del - Deleta mensagem marcada
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}marca - Menciona todos os membros

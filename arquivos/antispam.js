@@ -41,6 +41,7 @@ function carregarConfigGrupo(groupId) {
                 antipagamento: false,
                 antiloc: false,
                 antiimg: false,
+                x9visuunica: false,
                 rankativo: false,
                 welcome1: false,
                 listanegra: [],
