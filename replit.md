@@ -139,6 +139,13 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
+### 12/10/2025 - Proteção da Pasta Conexão e Logs Limpos ✅
+- ✅ **Pasta `conexao` protegida** - NUNCA será apagada automaticamente pelo bot
+- ✅ **Logs de cache removidos** - Sem mais "🧹 Cache limpo" aparecendo a cada 5 minutos
+- ✅ **Logs de debug removidos** - Console mais limpo e profissional
+- ✅ **Reconexão melhorada** - Bot reconecta automaticamente sem apagar credenciais
+- 📌 **Segurança garantida** - Conexão do WhatsApp sempre preservada
+
 ### 12/10/2025 - Importação GitHub Finalizada ✅
 - ✅ **Projeto importado do GitHub com sucesso**
 - ✅ **ffmpeg instalado** - Dependência de sistema para processamento de mídia

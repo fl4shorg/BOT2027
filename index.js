@@ -121,7 +121,7 @@ setInterval(() => {
             metadataCache.delete(key);
         }
     }
-    console.log(`🧹 Cache limpo. Entradas restantes: ${metadataCache.size}`);
+    // Log removido - desnecessário
 }, 300000); // 5 minutos
 
 // Config do Bot - PRIORIZA settings.json sobre environment vars
@@ -992,8 +992,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     `🔄 Bot pronto para processar comandos\n\n` +
                     `💡 Use este comando se o bot estiver ignorando mensagens.`
                 );
-                
-                console.log("✅ Cache de mensagens limpo manualmente pelo dono");
             } catch (err) {
                 console.error("❌ Erro ao resetar cache:", err);
                 await reply(sock, from, "❌ Erro ao resetar cache. Tente novamente.");
