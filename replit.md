@@ -89,7 +89,6 @@ Sistema permite múltiplos donos com seus LIDs específicos.
 - `.linkgrupo` - Mostra link do grupo
 - `.antiloc on/off` - Anti-localização
 - `.antiimg on/off` - Anti-imagem
-- `.x9visuunica on/off` - Revela visualização única (novo) 👁️
 - `.time-status` - Ver agendamentos do grupo
 
 ## 🔒 Segurança
@@ -107,10 +106,9 @@ Sistema permite múltiplos donos com seus LIDs específicos.
 - Anti-flood
 - Anti-palavrão
 - Anti-pagamento
-- Anti-localização (novo) 📍
-- Anti-imagem (novo) 🖼️
+- Anti-localização 📍
+- Anti-imagem 🖼️
 - X9 Monitor (ações de admin)
-- X9 Visualização Única (novo) 👁️
 - Banimento automático de infratores
 
 ## 🚀 Como Usar
@@ -149,41 +147,13 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - 📌 **Autenticação preservada**: Nenhuma modificação nos arquivos de conexão
 - ✅ **Pronto para uso**: Basta conectar ao WhatsApp e começar a usar
 
-### 12/10/2025 - X9 Visualização Única 100% Funcional ✅
-- ✅ **Sistema X9 Visu Única completamente corrigido e operacional**
-  1. **Bug variável `m` corrigida** (linha 9094)
-     - Erro: `ReferenceError: m is not defined`
-     - Solução: Corrigido para usar `message`
-  
-  2. **Bug variável `config` corrigida** (linhas 1936, 1955, 1987)
-     - Erro: `ReferenceError: config is not defined`
-     - Solução: Adicionado `const configBot = obterConfiguracoes()` onde necessário
-  
-  3. **Feature x9visuunica adicionada ao antispam** (antispam.js linha 354)
-     - Problema: Comando não reconhecido como válido
-     - Solução: Adicionado 'x9visuunica' à lista validFeatures
-  
-  4. **Download de mídia corrigido** (index.js linha 775-786)
-     - Problema: Função `downloadMediaMessage` não existe
-     - Solução: Substituído por `downloadContentFromMessage` (nativo do Baileys)
-     - Agora baixa corretamente imagens/vídeos de visualização única
-
-- ✅ **Como funciona agora:**
-  - Digite `.x9visuunica on` no grupo
-  - Qualquer mídia enviada com "ver uma vez" será revelada
-  - Bot envia a imagem/vídeo sem restrição + identificação de quem enviou
-  - Detecta: viewOnceMessage, viewOnceMessageV2, viewOnceMessageV2Extension
-
-- ✅ **Bot totalmente operacional** no Replit
-
-### 12/10/2025 - X9 de Visualização Única ✅
-- ✅ **Novo comando `.x9visuunica`** - Revela automaticamente imagens/vídeos de visualização única
-  - Quando ativado, toda mídia enviada com "view once" é revelada no grupo
-  - Mostra quem enviou, tipo de mídia e revela sem restrição
-  - Funciona com imagens e vídeos
-  - Sistema detecta viewOnceMessage, viewOnceMessageV2 e viewOnceMessageV2Extension
-- ✅ **Comando adicionado ao menuadm e grupo-status**
-- ✅ **Total de proteções atualizado** para 17 (era 14)
+### 12/10/2025 - Comando x9visuunica Removido ✅
+- ✅ **Comando `.x9visuunica` removido completamente do bot**
+  - Função processarX9VisuUnica removida do index.js
+  - Removido de todos os menus (menuadm)
+  - Removido do sistema antispam
+  - Documentação atualizada
+- 📌 **Motivo**: Removido a pedido do usuário
 
 ### 12/10/2025 - Novos Comandos Anti-Spam e Link do Grupo ✅
 - ✅ **Comando `.time-status` corrigido** - Variável configBot não definida estava causando erro

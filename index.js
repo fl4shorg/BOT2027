@@ -724,94 +724,6 @@ async function processarListaNegra(sock, participants, groupId, action) {
     }
 }
 
-// Processa X9 de visualização única
-async function processarX9VisuUnica(sock, message) {
-    try {
-        const from = message.key.remoteJid;
-        const sender = message.key.participant || from;
-
-        // Só funciona em grupos
-        if (!from.endsWith('@g.us') && !from.endsWith('@lid')) return false;
-
-        // Verifica se x9visuunica está ativo no grupo
-        const config = antiSpam.carregarConfigGrupo(from);
-        if (!config || !config.x9visuunica) return false;
-
-        // Detecta se a mensagem é viewOnce (visualização única)
-        let msg = message.message;
-        let isViewOnce = false;
-        let mediaMessage = null;
-        let mediaType = null;
-
-        // Verifica diferentes formatos de viewOnce
-        if (msg?.viewOnceMessage) {
-            isViewOnce = true;
-            mediaMessage = msg.viewOnceMessage.message;
-        } else if (msg?.viewOnceMessageV2) {
-            isViewOnce = true;
-            mediaMessage = msg.viewOnceMessageV2.message;
-        } else if (msg?.viewOnceMessageV2Extension) {
-            isViewOnce = true;
-            mediaMessage = msg.viewOnceMessageV2Extension.message;
-        }
-
-        if (!isViewOnce || !mediaMessage) return false;
-
-        // Identifica o tipo de mídia
-        if (mediaMessage.imageMessage) {
-            mediaType = 'image';
-        } else if (mediaMessage.videoMessage) {
-            mediaType = 'video';
-        } else {
-            return false; // Não é imagem nem vídeo
-        }
-
-        const senderNumber = sender.split('@')[0];
-        const senderName = message.pushName || senderNumber;
-
-        console.log(`👁️ X9 VISU ÚNICA: Detectada mensagem viewOnce de ${senderNumber}`);
-
-        // Baixa a mídia
-        const stream = await downloadContentFromMessage(
-            mediaType === 'image' ? mediaMessage.imageMessage : mediaMessage.videoMessage,
-            mediaType
-        );
-        
-        let buffer = Buffer.from([]);
-        for await (const chunk of stream) {
-            buffer = Buffer.concat([buffer, chunk]);
-        }
-
-        // Revela a mensagem sem viewOnce
-        const caption = `👁️ *X9 VISUALIZAÇÃO ÚNICA REVELADA*\n\n` +
-            `👤 *Enviado por:* @${senderNumber}\n` +
-            `📝 *Nome:* ${senderName}\n` +
-            `📸 *Tipo:* ${mediaType === 'image' ? 'Imagem' : 'Vídeo'}\n\n` +
-            `⚠️ *Esta mídia foi enviada com visualização única mas foi revelada pelo sistema!*`;
-
-        if (mediaType === 'image') {
-            await sock.sendMessage(from, {
-                image: buffer,
-                caption: caption,
-                mentions: [sender]
-            });
-        } else if (mediaType === 'video') {
-            await sock.sendMessage(from, {
-                video: buffer,
-                caption: caption,
-                mentions: [sender]
-            });
-        }
-
-        console.log(`✅ X9 VISU ÚNICA: Mensagem revelada com sucesso de ${senderNumber}`);
-        return true;
-
-    } catch (err) {
-        console.error("❌ Erro ao processar X9 visualização única:", err);
-        return false;
-    }
-}
-
 // Função auxiliar para obter target (@ ou resposta de mensagem)
 function obterTargetGamer(message) {
     // Primeiro tenta pegar da menção (@)
@@ -988,7 +900,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 'ping', 'menu', 'menuadm', 'menudono', 'menumembro', 'menugamer',
                 'menudownload', 'menufigurinhas', 'menuhentai', 'menurandom',
                 // Comandos de agendamento e grupo
-                'time-status', 'opengp', 'closegp', 'linkgrupo', 'linkdogrupo', 'link', 'x9visuunica'
+                'time-status', 'opengp', 'closegp', 'linkgrupo', 'linkdogrupo', 'link'
             ];
             
             // Se o comando não está na lista de excluídos, verifica flood
@@ -1581,7 +1493,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             const featuresAtivas = [
                 'antilink', 'anticontato', 'antidocumento',
                 'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'antiflodcomando',
-                'x9', 'antilinkhard', 'antipalavrao', 'antipagamento', 'antiloc', 'antiimg', 'x9visuunica', 'modogamer', 'rankativo'
+                'x9', 'antilinkhard', 'antipalavrao', 'antipagamento', 'antiloc', 'antiimg', 'modogamer', 'rankativo'
             ].filter(feature => config[feature]).length;
 
             // Calcula nível de segurança
@@ -1609,7 +1521,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 ││￫ 𝑨𝑵𝑻𝑰-𝑳𝑶𝑪:            ${getStatusText('antiloc')}
 ││￫ 𝑨𝑵𝑻𝑰-𝑰𝑴𝑮:            ${getStatusText('antiimg')}
 ││￫ 𝑿9:                    ${getStatusText('x9')}
-││￫ 𝑿9 𝑽𝑰𝑺𝑼 𝑼́𝑵𝑰𝑪𝑨:       ${getStatusText('x9visuunica')}
 │╰─━─⋆｡°✩🔞✩°｡⋆ ━─━╯
 
 │╭─━─⋆｡°✩🎮 SISTEMAS DO GRUPO ✩°｡⋆ ━─━╮
@@ -1772,7 +1683,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 `💰 Antipagamento: ${getStatus('antipagamento')}\n` +
                 `📍 Antiloc: ${getStatus('antiloc')}\n` +
                 `🖼️ Antiimg: ${getStatus('antiimg')}\n` +
-                `👁️ X9 Visu Única: ${getStatus('x9visuunica')}\n` +
                 `🌊 Antiflod: ${getStatus('antiflod')}\n` +
                 `📊 X9 Monitor: ${getStatus('x9')}\n\n` +
                 `💡 *Use os comandos individuais para ativar/desativar*`;
@@ -1796,7 +1706,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         case "antipagamento":
         case "antiloc":
         case "antiimg":
-        case "x9visuunica":
         case "rankativo":
         case "welcome1": {
             // Só funciona em grupos
@@ -1830,7 +1739,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 'antipagamento': '💰 ANTIPAGAMENTO',
                 'antiloc': '📍 ANTI-LOCALIZAÇÃO',
                 'antiimg': '🖼️ ANTI-IMAGEM',
-                'x9visuunica': '👁️ X9 VISU ÚNICA',
                 'rankativo': '🔥 RANK DE ATIVOS',
                 'welcome1': '🎉 BEM-VINDO'
             };
@@ -9095,9 +9003,6 @@ function setupListeners(sock) {
                         }
                     }
                 }
-
-                // Processa X9 visualização única (deve vir ANTES da normalização)
-                await processarX9VisuUnica(sock, message);
 
                 // Processa anti-spam primeiro
                 const bloqueado = await processarAntiSpam(sock, normalized);

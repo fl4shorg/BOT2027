@@ -41,7 +41,6 @@ function carregarConfigGrupo(groupId) {
                 antipagamento: false,
                 antiloc: false,
                 antiimg: false,
-                x9visuunica: false,
                 rankativo: false,
                 welcome1: false,
                 listanegra: [],
@@ -351,7 +350,7 @@ function toggleAntiFeature(groupId, feature, estado) {
     const config = carregarConfigGrupo(groupId);
     if (!config) return false;
     
-    const validFeatures = ['antilink', 'anticontato', 'antidocumento', 'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'antiflodcomando', 'x9', 'antilinkhard', 'antipalavrao', 'antipv', 'anticall', 'antipagamento', 'antiloc', 'antiimg', 'x9visuunica', 'rankativo'];
+    const validFeatures = ['antilink', 'anticontato', 'antidocumento', 'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'antiflodcomando', 'x9', 'antilinkhard', 'antipalavrao', 'antipv', 'anticall', 'antipagamento', 'antiloc', 'antiimg', 'rankativo'];
     
     if (!validFeatures.includes(feature)) return false;
     
