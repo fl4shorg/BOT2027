@@ -139,6 +139,13 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
+### 12/10/2025 - Comandos Play e Play-Spotify Corrigidos ✅
+- ✅ **Comando `.play` otimizado** - Timeout aumentado para 2 minutos (download completo)
+- ✅ **Comando `.playspotify` otimizado** - Timeouts ajustados em todas as etapas
+- ✅ **Busca melhorada** - 40s para buscar música no Spotify
+- ✅ **Download melhorado** - 2 minutos para baixar áudio sem interrupção
+- ✅ **Sem erros falsos** - Não mostra mais erro antes da música baixar completamente
+
 ### 12/10/2025 - Proteção da Pasta Conexão e Logs Limpos ✅
 - ✅ **Pasta `conexao` protegida** - NUNCA será apagada automaticamente pelo bot
 - ✅ **Logs de cache removidos** - Sem mais "🧹 Cache limpo" aparecendo a cada 5 minutos

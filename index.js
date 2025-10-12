@@ -3605,7 +3605,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     console.log(`🔍 [PLAY] URL de busca: ${searchUrl}`);
                     
                     const searchResponse = await axios.get(searchUrl, {
-                        timeout: 20000,
+                        timeout: 40000,
                         headers: {
                             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
                         }
@@ -3633,7 +3633,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     console.log(`📥 [PLAY] Chamando API Neext de download: ${apiUrl}`);
                     
                     const response = await axios.get(apiUrl, {
-                        timeout: 40000,
+                        timeout: 90000,
                         headers: {
                             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
                         }
@@ -3663,7 +3663,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         method: 'GET',
                         url: downloadUrl,
                         responseType: 'arraybuffer',
-                        timeout: 90000,
+                        timeout: 120000,
                         maxContentLength: 50 * 1024 * 1024,
                         headers: {
                             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -3769,16 +3769,16 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await reagirMensagem(sock, message, "⏳");
                 await reply(sock, from, `🎵 Buscando "${query}" no YouTube, aguarde...`);
 
-                // Chama a API do YouTube
+                // Chama a API do YouTube com timeout maior
                 const apiUrl = `https://api.nekolabs.my.id/downloader/youtube/play/v1?q=${encodeURIComponent(query)}`;
                 const response = await axios.get(apiUrl, {
-                    timeout: 30000,
+                    timeout: 60000,
                     headers: {
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
                     }
                 });
 
-                if (!response.data || !response.data.status || !response.data.result) {
+                if (!response.data || response.data.status === false || !response.data.result) {
                     await reagirMensagem(sock, message, "❌");
                     await reply(sock, from, "❌ Não foi possível encontrar esta música. Tente outro termo de busca.");
                     break;
@@ -3799,7 +3799,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     method: 'GET',
                     url: downloadUrl,
                     responseType: 'arraybuffer',
-                    timeout: 60000
+                    timeout: 120000
                 });
 
                 const audioBuffer = Buffer.from(audioResponse.data);
