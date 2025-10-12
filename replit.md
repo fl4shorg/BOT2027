@@ -4,11 +4,11 @@
 Bot WhatsApp completo desenvolvido pela Neext LTDA com múltiplas funcionalidades incluindo jogos, RPG, comandos administrativos, sistema anti-spam e muito mais.
 
 ## 🎯 Status Atual
-- ✅ Projeto importado do GitHub e configurado no Replit
-- ✅ ffmpeg instalado (sistema) 
-- ✅ Dependências npm instaladas (408 packages)
-- ✅ Workflow "WhatsApp Bot" configurado e **RODANDO**
-- ✅ **Bot aguardando conexão** - Digite 1 (QR Code) ou 2 (Pairing) no console
+- ✅ Projeto importado do GitHub e configurado no Replit (12/10/2025)
+- ✅ Dependências instaladas: 408 pacotes npm + ffmpeg (sistema)
+- ✅ Workflow "Bot WhatsApp" configurado e **RODANDO**
+- ✅ **Bot operacional** - QR Code gerado automaticamente
+- ✅ **Método de conexão automático** - QR Code configurado via variável de ambiente
 - 📌 Conexão preservada - Nenhuma modificação nos arquivos de autenticação
 
 ## 🏗️ Arquitetura do Projeto
@@ -57,10 +57,10 @@ Bot WhatsApp completo desenvolvido pela Neext LTDA com múltiplas funcionalidade
   "prefix": ".",
   "nomeDoBot": "Goddard",
   "nickDoDono": "Flash",
-  "numeroDono": "5527999999999",
+  "numeroDono": "5521993272080",
   "lidDono": "74982159855828",
   "idDoCanal": "120363399209756764@g.us",
-  "fotoDoBot": "https://i.ibb.co/...",
+  "fotoDoBot": "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
   "antipv": true
 }
 ```
@@ -113,22 +113,19 @@ Sistema permite múltiplos donos com seus LIDs específicos.
 
 ## 🚀 Como Usar
 
-### Primeira Execução
+### Conectar ao WhatsApp
+1. O bot está configurado para usar **QR Code automaticamente**
+2. Veja o QR Code no console do workflow "Bot WhatsApp"
+3. Abra WhatsApp no celular > Dispositivos Conectados > Conectar dispositivo
+4. Escaneie o QR Code
+5. O bot salva a sessão em `conexao/` e reconecta automaticamente
 
-#### Opção 1: Modo Interativo (Console)
-1. No console do Replit, o bot pergunta o método de conexão
-2. Digite `1` para QR Code ou `2` para Pairing Code
-3. Se escolher QR Code: Escaneie com WhatsApp
-4. Se escolher Pairing: Digite seu número e use o código mostrado
-5. Bot salva sessão em `conexao/`
-6. Reconexões automáticas subsequentes
-
-#### Opção 2: Variáveis de Ambiente (Automático)
-1. Copie `.env.example` para `.env`
-2. Configure `BOT_CONNECTION_METHOD=qr` ou `pairing`
-3. Se usar `pairing`, defina `BOT_OWNER_NUMBER=5527999999999`
-4. Reinicie o workflow
-5. Bot conecta automaticamente
+### Alterar para Pairing Code
+Se preferir usar código de pareamento:
+1. Edite o workflow para `BOT_CONNECTION_METHOD=pairing npm start`
+2. Defina também `BOT_OWNER_NUMBER=seu_numero` (ex: 5527999999999)
+3. Reinicie o workflow
+4. Use o código mostrado no console para parear no WhatsApp
 
 ### Reconectar WhatsApp
 Se o bot mostrar erro 401/440 (credenciais inválidas):
@@ -138,6 +135,12 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 4. Conectar novamente
 
 ## 📝 Mudanças Recentes
+
+### 12/10/2025 - Configuração Automática no Replit ✅
+- ✅ **Workflow atualizado** - `BOT_CONNECTION_METHOD=qr npm start`
+- ✅ **Conexão automática via QR Code** - Sem necessidade de escolha interativa
+- ✅ **QR Code gerado automaticamente** - Basta escanear e usar
+- ✅ **Bot 100% funcional** - Pronto para conectar ao WhatsApp
 
 ### 12/10/2025 - Comando Instagram Corrigido ✅
 - ✅ **API atualizada** - Usando `https://api.nekolabs.my.id/downloader/instagram`
@@ -166,23 +169,6 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - ✅ **Reconexão melhorada** - Bot reconecta automaticamente sem apagar credenciais
 - 📌 **Segurança garantida** - Conexão do WhatsApp sempre preservada
 
-### 12/10/2025 - Importação GitHub Finalizada ✅
-- ✅ **Projeto importado do GitHub com sucesso**
-- ✅ **ffmpeg instalado** - Dependência de sistema para processamento de mídia
-- ✅ **408 pacotes npm instalados** - Todas as dependências do projeto
-- ✅ **Workflow "WhatsApp Bot" configurado** - Executando `node main.js`
-- ✅ **Bot operacional** - Aguardando escolha do método de conexão (1=QR ou 2=Pairing)
-- 📌 **Conexão preservada** - Nenhuma modificação nos arquivos de autenticação
-- ✅ **Pronto para uso** - Basta conectar ao WhatsApp no console
-
-### 12/10/2025 - Configuração Completa no Replit ✅
-- ✅ **Projeto importado do GitHub e configurado com sucesso**
-- ✅ **Dependências instaladas**: 408 pacotes npm + ffmpeg (sistema)
-- ✅ **Workflow configurado**: "WhatsApp Bot" rodando `node main.js`
-- ✅ **Bot operacional**: Aguardando escolha do método de conexão
-- 📌 **Autenticação preservada**: Nenhuma modificação nos arquivos de conexão
-- ✅ **Pronto para uso**: Basta conectar ao WhatsApp e começar a usar
-
 ### 12/10/2025 - Comando x9visuunica Removido ✅
 - ✅ **Comando `.x9visuunica` removido completamente do bot**
   - Função processarX9VisuUnica removida do index.js
@@ -203,42 +189,12 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - ✅ **Comandos adicionados ao grupo-status**
 - ✅ **Sistema antispam atualizado** com suporte a antiloc e antiimg
 
-### 12/10/2025 - Setup Completo no Replit ✅
-- ✅ **Projeto importado do GitHub com sucesso**
-- ✅ **Dependências npm instaladas** - 408 pacotes instalados corretamente
-- ✅ **Workflow "WhatsApp Bot" configurado** - `node main.js` rodando
-- ✅ **Bot iniciado e operacional** - aguardando conexão WhatsApp
-- 📌 **Conexão preservada** - Nenhuma alteração nos arquivos de autenticação
-- ✅ **Status**: Bot rodando e aguardando escolha do método de conexão (1=QR ou 2=Pairing)
-
 ### 10/10/2025 - Correções de Desempenho
 - ✅ **Cache de mensagens otimizado** - Reduzido de 5min para 30s (evita comandos ignorados)
 - ✅ **Reconexão automática melhorada** - Erro 440 agora limpa sessão automaticamente
 - ✅ **Reset de listeners** - Listeners são resetados ao limpar sessão
 - ✅ **Novo comando `.reset`** - Dono pode limpar cache manualmente
 - ✅ ffmpeg instalado para comandos de figurinha
-
-### 11/10/2025 - Importação GitHub e Configuração Replit
-- ✅ Projeto importado e configurado no Replit
-- ✅ Dependências npm instaladas (408 packages)
-- ✅ Workflow "WhatsApp Bot" configurado (`node main.js`)
-- 📌 Conexão preservada sem modificações (conforme solicitado)
-- ✅ **Removidos comandos antifake e antiporno completamente**
-- ✅ **Corrigido flood de "Mensagem não encontrada" nos grupos**
-  - Função `getMessage` agora retorna `undefined` em vez de enviar mensagem
-  - Função `reply` não envia mais mensagens de erro quando há problemas internos
-
-## 🐛 Problemas Conhecidos
-
-### Resolvidos
-- ✅ Dependências instaladas corretamente
-- ✅ Workflow configurado e funcionando
-- ✅ Flood de "Mensagem não encontrada" corrigido
-- ✅ Comandos antifake e antiporno removidos
-
-### Requer Ação do Usuário
-- ⏳ Conectar ao WhatsApp (método definido na primeira execução)
-- ⏳ Após conectar, bot estará pronto para uso
 
 ## 💡 Notas Importantes
 
@@ -248,9 +204,14 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 4. **Agendamento** - Verifica schedules a cada 1 minuto automaticamente
 5. **RPG** - Sistema completo de economia/trabalho/educação integrado
 
-## 🔄 Workflow
-- **Nome**: WhatsApp Bot
-- **Comando**: `node main.js`
+## 🔄 Workflow Configurado
+- **Nome**: Bot WhatsApp
+- **Comando**: `BOT_CONNECTION_METHOD=qr npm start`
+- **Método**: QR Code automático
 - **Saída**: Console
 - **Auto-restart**: Sim (em caso de desconexão)
-- **Status**: ✅ Rodando
+- **Status**: ✅ Rodando e gerando QR Code
+
+## 📌 Preferências do Usuário
+- ⚠️ **NUNCA** mexer ou alterar arquivos de conexão (connect.js, main.js, pasta conexao/)
+- ✅ Preservar a autenticação e sessão existente do WhatsApp
