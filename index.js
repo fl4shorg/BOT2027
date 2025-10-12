@@ -3228,69 +3228,82 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     break;
                 }
 
-                if (!result.status || !result.data || result.data.length === 0) {
+                console.log(`📥 Resposta API Instagram:`, JSON.stringify(result, null, 2));
+
+                if (!result.success || !result.result || !result.result.downloadUrl || result.result.downloadUrl.length === 0) {
                     await reagirMensagem(sock, message, "❌");
                     await reply(sock, from, "❌ Não foi possível baixar este vídeo. Verifique se o link está correto e se o post é público.");
                     break;
                 }
 
-                const videoData = result.data[0];
+                const metadata = result.result.metadata;
+                const downloadUrl = result.result.downloadUrl[0];
 
-                if (!videoData.url) {
-                    await reagirMensagem(sock, message, "❌");
-                    await reply(sock, from, "❌ Vídeo não encontrado neste post.");
-                    break;
-                }
-
-                // Baixa o vídeo usando axios
-                const videoResponse = await axios({
+                // Baixa o vídeo/imagem usando axios
+                const mediaResponse = await axios({
                     method: 'GET',
-                    url: videoData.url,
-                    responseType: 'arraybuffer'
+                    url: downloadUrl,
+                    responseType: 'arraybuffer',
+                    timeout: 60000
                 });
 
-                const videoBuffer = Buffer.from(videoResponse.data);
+                const mediaBuffer = Buffer.from(mediaResponse.data);
 
-                // Baixa a thumbnail se existir
-                let thumbnailBuffer = null;
-                if (videoData.thumbnail) {
-                    try {
-                        const thumbnailResponse = await axios({
-                            method: 'GET',
-                            url: videoData.thumbnail,
-                            responseType: 'arraybuffer'
-                        });
-                        thumbnailBuffer = Buffer.from(thumbnailResponse.data);
-                    } catch (err) {
-                        console.log("❌ Erro ao baixar thumbnail:", err.message);
-                    }
+                // Prepara a caption com informações do post
+                let caption = "📹 *Instagram Download*\n\n";
+                if (metadata.username) caption += `👤 @${metadata.username}\n`;
+                if (metadata.like) caption += `❤️ ${metadata.like} curtidas\n`;
+                if (metadata.comment) caption += `💬 ${metadata.comment} comentários\n`;
+                if (metadata.caption) {
+                    const captionText = metadata.caption.length > 200 ? metadata.caption.substring(0, 197) + '...' : metadata.caption;
+                    caption += `\n📝 ${captionText}\n`;
                 }
+                caption += `\n© NEEXT LTDA`;
 
-                // Prepara a caption simples
-                const caption = "📹 *Vídeo do Instagram baixado com sucesso!*\n\n© NEEXT LTDA";
-
-                // Envia o vídeo com a thumbnail como caption (se disponível)
-                await sock.sendMessage(from, {
-                    video: videoBuffer,
-                    caption: caption,
-                    jpegThumbnail: thumbnailBuffer,
-                    contextInfo: {
-                        isForwarded: true,
-                        forwardingScore: 100000,
-                        forwardedNewsletterMessageInfo: {
-                            newsletterJid: "120363289739581116@newsletter",
-                            newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                        },
-                        externalAdReply: {
-                            title: "© NEEXT LTDA - Instagram Downloader",
-                            body: "📱 Instagram: @neet.tk",
-                            thumbnailUrl: videoData.thumbnail || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
-                            mediaType: 1,
-                            sourceUrl: "https://www.neext.online",
-                            showAdAttribution: true
+                // Envia vídeo ou imagem conforme o tipo
+                if (metadata.isVideo) {
+                    await sock.sendMessage(from, {
+                        video: mediaBuffer,
+                        caption: caption,
+                        contextInfo: {
+                            isForwarded: true,
+                            forwardingScore: 100000,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            },
+                            externalAdReply: {
+                                title: "© NEEXT LTDA - Instagram Downloader",
+                                body: `📱 @${metadata.username || 'Instagram'}`,
+                                thumbnailUrl: "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
+                                mediaType: 1,
+                                sourceUrl: "https://www.neext.online",
+                                showAdAttribution: true
+                            }
                         }
-                    }
-                }, { quoted: selinho2 });
+                    }, { quoted: selinho2 });
+                } else {
+                    await sock.sendMessage(from, {
+                        image: mediaBuffer,
+                        caption: caption,
+                        contextInfo: {
+                            isForwarded: true,
+                            forwardingScore: 100000,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            },
+                            externalAdReply: {
+                                title: "© NEEXT LTDA - Instagram Downloader",
+                                body: `📱 @${metadata.username || 'Instagram'}`,
+                                thumbnailUrl: "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
+                                mediaType: 1,
+                                sourceUrl: "https://www.neext.online",
+                                showAdAttribution: true
+                            }
+                        }
+                    }, { quoted: selinho2 });
+                }
 
                 await reagirMensagem(sock, message, "✅");
 

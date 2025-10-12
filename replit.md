@@ -139,6 +139,13 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
+### 12/10/2025 - Comando Instagram Corrigido ✅
+- ✅ **API atualizada** - Usando `https://api.nekolabs.my.id/downloader/instagram`
+- ✅ **Suporte a imagens e vídeos** - Detecta automaticamente o tipo de mídia
+- ✅ **Informações completas** - Mostra username, curtidas, comentários e legenda
+- ✅ **Timeout otimizado** - Aumentado de 15s para 20s na busca, 60s no download
+- ✅ **Caption aprimorada** - Exibe até 200 caracteres da legenda original
+
 ### 12/10/2025 - Comando Pinterest Corrigido ✅
 - ✅ **API atualizada** - Usando `https://api.nekolabs.my.id/discovery/pinterest/search`
 - ✅ **Verificação corrigida** - Agora checa `success` ao invés de `status` (compatível com API)

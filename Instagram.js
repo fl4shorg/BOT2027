@@ -2,8 +2,8 @@ const axios = require('axios');
 
 async function igdl(query) {
   try {
-    const response = await axios.get(`https://api.siputzx.my.id/api/d/igdl?url=${query}`, {
-      timeout: 15000, // 15 segundos timeout
+    const response = await axios.get(`https://api.nekolabs.my.id/downloader/instagram?url=${encodeURIComponent(query)}`, {
+      timeout: 20000,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
       }
