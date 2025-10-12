@@ -161,14 +161,13 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 - ✅ **Comandos adicionados ao grupo-status**
 - ✅ **Sistema antispam atualizado** com suporte a antiloc e antiimg
 
-### 12/10/2025 - Configuração Completa no Replit ✅
+### 12/10/2025 - Setup Completo no Replit ✅
 - ✅ **Projeto importado do GitHub com sucesso**
-- ✅ **ffmpeg instalado** (sistema) - necessário para criação de figurinhas
 - ✅ **Dependências npm instaladas** - 408 pacotes instalados corretamente
-- ✅ **Workflow configurado** - "WhatsApp Bot" rodando `node main.js`
-- ✅ **Bot iniciado e aguardando conexão** - pronto para usar
-- 📌 **Conexão preservada** - Nenhuma alteração nos arquivos de conexão (conforme solicitado)
-- ✅ **Status**: Bot rodando e aguardando escolha do método de conexão (QR ou Pairing)
+- ✅ **Workflow "WhatsApp Bot" configurado** - `node main.js` rodando
+- ✅ **Bot iniciado e operacional** - aguardando conexão WhatsApp
+- 📌 **Conexão preservada** - Nenhuma alteração nos arquivos de autenticação
+- ✅ **Status**: Bot rodando e aguardando escolha do método de conexão (1=QR ou 2=Pairing)
 
 ### 10/10/2025 - Correções de Desempenho
 - ✅ **Cache de mensagens otimizado** - Reduzido de 5min para 30s (evita comandos ignorados)
