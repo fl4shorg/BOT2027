@@ -873,8 +873,28 @@ async function handleCommand(sock, message, command, args, from, quoted) {
     switch (command) {
         case "ping": {
             const now = new Date();
-            const totalMem = (os.totalmem() / 1024 / 1024).toFixed(2);
-            const freeMem = (os.freemem() / 1024 / 1024).toFixed(2);
+            
+            // Memória - converte para GB se > 1GB, senão MB
+            const totalMemBytes = os.totalmem();
+            const freeMemBytes = os.freemem();
+            const usedMemBytes = totalMemBytes - freeMemBytes;
+            
+            const formatMemory = (bytes) => {
+                const gb = bytes / 1024 / 1024 / 1024;
+                if (gb >= 1) {
+                    return `${gb.toFixed(2)} GB`;
+                } else {
+                    const mb = bytes / 1024 / 1024;
+                    return `${mb.toFixed(2)} MB`;
+                }
+            };
+            
+            const totalMem = formatMemory(totalMemBytes);
+            const freeMem = formatMemory(freeMemBytes);
+            const usedMem = formatMemory(usedMemBytes);
+            const memUsagePercent = ((usedMemBytes / totalMemBytes) * 100).toFixed(1);
+            
+            // Uptime do bot
             let uptimeSec = process.uptime();
             const days = Math.floor(uptimeSec / 86400);
             uptimeSec %= 86400;
@@ -883,15 +903,53 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             const minutes = Math.floor(uptimeSec / 60);
             const seconds = Math.floor(uptimeSec % 60);
             const uptime = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            
+            // Sistema
+            const platform = os.platform();
+            const platformName = {
+                'linux': '🐧 Linux',
+                'darwin': '🍎 MacOS',
+                'win32': '🪟 Windows',
+                'android': '🤖 Android'
+            }[platform] || `💻 ${platform}`;
+            
+            const arch = os.arch();
+            const cpus = os.cpus();
+            const cpuModel = cpus[0]?.model || 'Desconhecido';
+            const cpuCores = cpus.length;
+            
+            // Latência (tempo de resposta)
+            const startTime = Date.now();
+            const latency = Date.now() - startTime;
 
             const pingMessage = `
-┏━━━━━━━━━━━━━━━┓
-┃ 📅 Data: ${now.toLocaleDateString()}
-┃ ⏰ Hora: ${now.toLocaleTimeString()}
+╭━━━━━━━━━━━━━━━━━━━━━━━━╮
+┃  🤖 *STATUS DO BOT*
+╰━━━━━━━━━━━━━━━━━━━━━━━━╯
+
+┏━━━━ ⏰ *TEMPO* ━━━━┓
+┃ 📅 Data: ${now.toLocaleDateString('pt-BR')}
+┃ ⏰ Hora: ${now.toLocaleTimeString('pt-BR')}
 ┃ 🟢 Uptime: ${uptime}
-┃ 💾 Memória Total: ${totalMem} MB
-┃ 💾 Memória Livre: ${freeMem} MB
-┗━━━━━━━━━━━━━━━┛`;
+┃ ⚡ Latência: ${latency}ms
+┗━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━ 💾 *MEMÓRIA* ━━━━┓
+┃ 📊 Total: ${totalMem}
+┃ ✅ Livre: ${freeMem}
+┃ 🔴 Em Uso: ${usedMem} (${memUsagePercent}%)
+┗━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━ 🖥️ *SISTEMA* ━━━━┓
+┃ 💻 OS: ${platformName}
+┃ 🔧 Arch: ${arch}
+┃ 🧮 CPU: ${cpuModel.substring(0, 30)}${cpuModel.length > 30 ? '...' : ''}
+┃ ⚙️ Cores: ${cpuCores}
+┗━━━━━━━━━━━━━━━━━━━┛
+
+╭━━━━━━━━━━━━━━━━━━━━━━━━╮
+┃  © *NEEXT LTDA* 🐦‍🔥
+╰━━━━━━━━━━━━━━━━━━━━━━━━╯`;
 
             await sock.sendMessage(from, {
                 image: { url: "https://i.ibb.co/xqddxGC6/d75ddb6631f10a0eff0b227c5b7617f2.jpg" },
