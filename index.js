@@ -772,12 +772,15 @@ async function processarX9VisuUnica(sock, message) {
         console.log(`👁️ X9 VISU ÚNICA: Detectada mensagem viewOnce de ${senderNumber}`);
 
         // Baixa a mídia
-        const buffer = await downloadMediaMessage(
-            { message: mediaMessage },
-            'buffer',
-            {},
-            { logger: console, reuploadRequest: sock.updateMediaMessage }
+        const stream = await downloadContentFromMessage(
+            mediaType === 'image' ? mediaMessage.imageMessage : mediaMessage.videoMessage,
+            mediaType
         );
+        
+        let buffer = Buffer.from([]);
+        for await (const chunk of stream) {
+            buffer = Buffer.concat([buffer, chunk]);
+        }
 
         // Revela a mensagem sem viewOnce
         const caption = `👁️ *X9 VISUALIZAÇÃO ÚNICA REVELADA*\n\n` +

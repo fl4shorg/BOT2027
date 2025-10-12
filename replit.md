@@ -140,12 +140,31 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
-### 12/10/2025 - Correção Crítica: Comandos Funcionando ✅
-- ✅ **Bug crítico corrigido** - Variável `m` não definida na linha 9094
-  - Erro: `ReferenceError: m is not defined`
-  - Causa: Processamento de X9 visualização única usava variável errada
-  - Solução: Corrigido para usar `message` ao invés de `m`
-  - Resultado: Todos os comandos funcionando normalmente agora
+### 12/10/2025 - X9 Visualização Única 100% Funcional ✅
+- ✅ **Sistema X9 Visu Única completamente corrigido e operacional**
+  1. **Bug variável `m` corrigida** (linha 9094)
+     - Erro: `ReferenceError: m is not defined`
+     - Solução: Corrigido para usar `message`
+  
+  2. **Bug variável `config` corrigida** (linhas 1936, 1955, 1987)
+     - Erro: `ReferenceError: config is not defined`
+     - Solução: Adicionado `const configBot = obterConfiguracoes()` onde necessário
+  
+  3. **Feature x9visuunica adicionada ao antispam** (antispam.js linha 354)
+     - Problema: Comando não reconhecido como válido
+     - Solução: Adicionado 'x9visuunica' à lista validFeatures
+  
+  4. **Download de mídia corrigido** (index.js linha 775-786)
+     - Problema: Função `downloadMediaMessage` não existe
+     - Solução: Substituído por `downloadContentFromMessage` (nativo do Baileys)
+     - Agora baixa corretamente imagens/vídeos de visualização única
+
+- ✅ **Como funciona agora:**
+  - Digite `.x9visuunica on` no grupo
+  - Qualquer mídia enviada com "ver uma vez" será revelada
+  - Bot envia a imagem/vídeo sem restrição + identificação de quem enviou
+  - Detecta: viewOnceMessage, viewOnceMessageV2, viewOnceMessageV2Extension
+
 - ✅ **Bot totalmente operacional** no Replit
 
 ### 12/10/2025 - X9 de Visualização Única ✅
