@@ -39,6 +39,8 @@ function carregarConfigGrupo(groupId) {
                 antipv: false,
                 anticall: false,
                 antipagamento: false,
+                antiloc: false,
+                antiimg: false,
                 rankativo: false,
                 welcome1: false,
                 listanegra: [],
@@ -196,6 +198,16 @@ function isStickerMessage(message) {
     return !!(message.stickerMessage);
 }
 
+// Verifica se é localização
+function isLocationMessage(message) {
+    return !!(message.locationMessage || message.liveLocationMessage);
+}
+
+// Verifica se é imagem
+function isImageMessage(message) {
+    return !!(message.imageMessage);
+}
+
 // Verifica se é solicitação de pagamento (payment request)
 function isPaymentMessage(message) {
     return !!(message.requestPaymentMessage || message.sendPaymentMessage);
@@ -338,7 +350,7 @@ function toggleAntiFeature(groupId, feature, estado) {
     const config = carregarConfigGrupo(groupId);
     if (!config) return false;
     
-    const validFeatures = ['antilink', 'anticontato', 'antidocumento', 'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'antiflodcomando', 'x9', 'antilinkhard', 'antipalavrao', 'antipv', 'anticall', 'antipagamento', 'rankativo'];
+    const validFeatures = ['antilink', 'anticontato', 'antidocumento', 'antivideo', 'antiaudio', 'antisticker', 'antiflod', 'antiflodcomando', 'x9', 'antilinkhard', 'antipalavrao', 'antipv', 'anticall', 'antipagamento', 'antiloc', 'antiimg', 'rankativo'];
     
     if (!validFeatures.includes(feature)) return false;
     
@@ -415,6 +427,16 @@ async function processarMensagem(message, groupId, userId, sock) {
         violations.push('antipagamento');
     }
     
+    // Verifica antiloc (localização)
+    if (config.antiloc && isLocationMessage(message)) {
+        violations.push('antiloc');
+    }
+    
+    // Verifica antiimg (imagem)
+    if (config.antiimg && isImageMessage(message)) {
+        violations.push('antiimg');
+    }
+    
     // Verifica antiflod
     if (verificarFlood(userId, groupId, config)) {
         violations.push('antiflod');
@@ -454,6 +476,8 @@ module.exports = {
     isAudioMessage,
     isStickerMessage,
     isPaymentMessage,
+    isLocationMessage,
+    isImageMessage,
     verificarFlood,
     verificarFloodComando,
     

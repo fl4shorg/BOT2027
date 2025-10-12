@@ -85,6 +85,10 @@ Sistema permite múltiplos donos com seus LIDs específicos.
 - `.xadrez` - Jogar xadrez
 - `.pinterest` - Buscar imagens
 - `.ping` - Verificar latência
+- `.linkgrupo` - Mostra link do grupo (novo)
+- `.antiloc on/off` - Anti-localização (novo)
+- `.antiimg on/off` - Anti-imagem (novo)
+- `.time-status` - Ver agendamentos do grupo
 
 ## 🔒 Segurança
 
@@ -101,6 +105,8 @@ Sistema permite múltiplos donos com seus LIDs específicos.
 - Anti-flood
 - Anti-palavrão
 - Anti-pagamento
+- Anti-localização (novo) 📍
+- Anti-imagem (novo) 🖼️
 - X9 Monitor (ações de admin)
 - Banimento automático de infratores
 
@@ -131,6 +137,18 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 4. Conectar novamente
 
 ## 📝 Mudanças Recentes
+
+### 12/10/2025 - Novos Comandos Anti-Spam e Link do Grupo ✅
+- ✅ **Comando `.time-status` corrigido** - Variável configBot não definida estava causando erro
+- ✅ **Novo comando `.antiloc`** - Bane e apaga quem manda localização quando ativado
+- ✅ **Novo comando `.antiimg`** - Bane e apaga quem manda imagem quando ativado
+- ✅ **Novo comando `.linkgrupo`** - Mostra link de convite do grupo
+  - Aliases: `.linkdogrupo`, `.link`
+  - Mostra nome do grupo, total de membros e link
+  - Bot precisa ser admin para gerar link
+- ✅ **Comandos adicionados ao menuadm**
+- ✅ **Comandos adicionados ao grupo-status**
+- ✅ **Sistema antispam atualizado** com suporte a antiloc e antiimg
 
 ### 12/10/2025 - Configuração Completa no Replit ✅
 - ✅ **Projeto importado do GitHub com sucesso**

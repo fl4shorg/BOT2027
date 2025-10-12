@@ -643,7 +643,9 @@ async function processarAntiSpam(sock, normalized) {
                 'antivideo': '🎥',
                 'antiaudio': '🎵',
                 'antisticker': '🏷️',
-                'antiflod': '🌊'
+                'antiflod': '🌊',
+                'antiloc': '📍',
+                'antiimg': '🖼️'
             };
 
             const violacaoEmoji = emojiMap[tiposViolacao[0]] || '🚫';
@@ -897,8 +899,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 // Comandos de sistema básicos
                 'ping', 'menu', 'menuadm', 'menudono', 'menumembro', 'menugamer',
                 'menudownload', 'menufigurinhas', 'menuhentai', 'menurandom',
-                // Comandos de agendamento
-                'time-status', 'opengp', 'closegp'
+                // Comandos de agendamento e grupo
+                'time-status', 'opengp', 'closegp', 'linkgrupo', 'linkdogrupo', 'link'
             ];
             
             // Se o comando não está na lista de excluídos, verifica flood
@@ -1677,6 +1679,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 `🎵 Antiaudio: ${getStatus('antiaudio')}\n` +
                 `🏷️ Antisticker: ${getStatus('antisticker')}\n` +
                 `💰 Antipagamento: ${getStatus('antipagamento')}\n` +
+                `📍 Antiloc: ${getStatus('antiloc')}\n` +
+                `🖼️ Antiimg: ${getStatus('antiimg')}\n` +
                 `🌊 Antiflod: ${getStatus('antiflod')}\n` +
                 `📊 X9 Monitor: ${getStatus('x9')}\n\n` +
                 `💡 *Use os comandos individuais para ativar/desativar*`;
@@ -1698,6 +1702,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         case "antilinkhard":
         case "antipalavrao":
         case "antipagamento":
+        case "antiloc":
+        case "antiimg":
         case "rankativo":
         case "welcome1": {
             // Só funciona em grupos
@@ -1728,6 +1734,9 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 'x9': '📊 X9 MONITOR',
                 'antilinkhard': '🔗 ANTILINK HARD',
                 'antipalavrao': '🤬 ANTIPALAVRAO',
+                'antipagamento': '💰 ANTIPAGAMENTO',
+                'antiloc': '📍 ANTI-LOCALIZAÇÃO',
+                'antiimg': '🖼️ ANTI-IMAGEM',
                 'rankativo': '🔥 RANK DE ATIVOS',
                 'welcome1': '🎉 BEM-VINDO'
             };
@@ -6351,6 +6360,43 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             
             await reagirMensagem(sock, message, "⏰");
             await reply(sock, from, statusMsg);
+        }
+        break;
+
+        case "linkgrupo":
+        case "linkdogrupo":
+        case "link": {
+            // Só funciona em grupos
+            if (!from.endsWith('@g.us') && !from.endsWith('@lid')) {
+                await reply(sock, from, "❌ Este comando só pode ser usado em grupos.");
+                break;
+            }
+
+            try {
+                // Pega o código de convite do grupo
+                const code = await sock.groupInviteCode(from);
+                const link = `https://chat.whatsapp.com/${code}`;
+                
+                // Pega informações do grupo
+                const groupMetadata = await getGroupMetadataWithCache(sock, from);
+                const groupName = groupMetadata.subject;
+                const totalMembers = groupMetadata.participants.length;
+                
+                const linkMsg = `🔗 *LINK DO GRUPO*\n\n` +
+                    `📱 *Grupo:* ${groupName}\n` +
+                    `👥 *Membros:* ${totalMembers}\n\n` +
+                    `🌐 *Link de convite:*\n${link}\n\n` +
+                    `⚠️ *Importante:* Não compartilhe em locais públicos!`;
+                
+                await reagirMensagem(sock, message, "🔗");
+                await reply(sock, from, linkMsg);
+                
+                console.log(`🔗 Link do grupo ${groupName} solicitado`);
+            } catch (err) {
+                console.error("❌ Erro ao obter link do grupo:", err);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao obter link do grupo. O bot precisa ser admin para gerar o link de convite!");
+            }
         }
         break;
 

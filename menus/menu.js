@@ -377,6 +377,9 @@ function obterMenuAdm() {
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiflodcomando on/off - Anti-flood de comandos
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antipalavrao on/off - Anti-palavrões
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antipagamento on/off - Anti-pagamento
+╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiloc on/off - Anti-localização
+╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}antiimg on/off - Anti-imagem
+╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}linkgrupo - Mostra link do grupo
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}del - Deleta mensagem marcada
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}marca - Menciona todos os membros
 ╎║ な ⃟̸̷᪺͓͡🏮 ${prefix}hidetag [texto] - Marcação oculta
