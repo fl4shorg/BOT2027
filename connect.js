@@ -6,8 +6,7 @@ const {
     generateWAMessageFromContent,
     getContentType,
     getAggregateVotesInPollMessage,
-    downloadContentFromMessage,
-    DisconnectReason
+    downloadContentFromMessage
 } = require("@whiskeysockets/baileys");
 
 // import do export.js (centraliza banner + logger + utilitários)
@@ -298,7 +297,8 @@ async function startBot() {
             if(reason) console.log(`📋 Motivo: ${reason}`);
             
             // Tratamento inteligente de erros de desconexão
-            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+            // 401 = logout manual do WhatsApp
+            const shouldReconnect = statusCode !== 401;
             
             if (shouldReconnect) {
                 const delay = getReconnectDelay();
