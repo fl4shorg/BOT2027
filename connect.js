@@ -6,7 +6,8 @@ const {
     generateWAMessageFromContent,
     getContentType,
     getAggregateVotesInPollMessage,
-    downloadContentFromMessage
+    downloadContentFromMessage,
+    DisconnectReason
 } = require("@whiskeysockets/baileys");
 
 // import do export.js (centraliza banner + logger + utilitários)
@@ -14,6 +15,11 @@ const { readline, fs, join, logger, Jimp, mostrarBanner, logMensagem } = require
 const settings = require("./settings/settings.json");
 
 const prefix = settings.prefix; // pega exatamente o que está no JSON
+
+// Variáveis globais para controle de reconexão
+let reconnectAttempts = 0;
+const MAX_RECONNECT_DELAY = 60000; // 60 segundos no máximo
+const BASE_RECONNECT_DELAY = 3000; // 3 segundos inicial
 
 async function perguntarMetodoConexao() {
     // Verifica se há método predefinido no ambiente
@@ -134,6 +140,18 @@ END:VCARD`,
     }
 }
 
+// Calcula delay de reconexão com exponential backoff
+function getReconnectDelay() {
+    const delay = Math.min(BASE_RECONNECT_DELAY * Math.pow(2, reconnectAttempts), MAX_RECONNECT_DELAY);
+    reconnectAttempts++;
+    return delay;
+}
+
+// Reseta contador de tentativas de reconexão
+function resetReconnectAttempts() {
+    reconnectAttempts = 0;
+}
+
 async function startBot() {
     // Usa a pasta 'conexao' do projeto
     const path = require('path');
@@ -174,18 +192,20 @@ async function startBot() {
         browser: ["MacOS","Safari","16.5"],
         logger,
         version,
-        syncFullHistory:true,
-        markOnlineOnConnect:true,
-        syncContacts:true,
-        syncChats:true,
-        generateHighQualityLinkPreview:true,
-        fireInitQueries:true,
-        shouldSyncHistoryMessage:()=>true,
-        getMessage: async (key)=>undefined,
-        retryRequestDelayMs:3000,
-        defaultQueryTimeoutMs:15000,
-        keepAliveIntervalMs:30000,
-        connectTimeoutMs:60000,
+        syncFullHistory: false, // Desabilitado para reduzir carga
+        markOnlineOnConnect: true,
+        syncContacts: false, // Desabilitado para reduzir carga
+        syncChats: false, // Desabilitado para reduzir carga
+        generateHighQualityLinkPreview: true,
+        fireInitQueries: false, // Desabilitado para reduzir carga inicial
+        shouldSyncHistoryMessage: () => false, // Desabilitado
+        getMessage: async (key) => undefined,
+        retryRequestDelayMs: 5000, // Aumentado de 3000 para 5000
+        defaultQueryTimeoutMs: 60000, // Aumentado de 15000 para 60000 (1 minuto)
+        keepAliveIntervalMs: 60000, // Aumentado de 30000 para 60000 (1 minuto)
+        connectTimeoutMs: 120000, // Aumentado de 60000 para 120000 (2 minutos)
+        emitOwnEvents: false, // Desabilita eventos próprios para reduzir carga
+        qrTimeout: 60000, // Timeout do QR Code
     });
 
     if(metodo==="pairing" && !state.creds.registered){
@@ -223,6 +243,9 @@ async function startBot() {
         }
         
         if(connection==="open"){
+            // Reseta contador de tentativas quando conecta com sucesso
+            resetReconnectAttempts();
+            
             mostrarBanner();
             console.log(`✅ Conectado ao sistema da Neext em ${new Date().toLocaleString()}`);
             
@@ -269,14 +292,22 @@ async function startBot() {
             }
         } else if(connection==="close"){
             const statusCode = lastDisconnect?.error?.output?.statusCode;
-            const reason = lastDisconnect?.error?.output?.payload?.message;
+            const reason = lastDisconnect?.error?.output?.payload?.message || lastDisconnect?.error?.message;
             
-            // NUNCA apaga a pasta conexao automaticamente
-            // Apenas reconecta sempre
-            console.log(`❌ Conexão fechada (${statusCode || 'desconhecido'}). Reconectando...`);
+            console.log(`❌ Conexão fechada (${statusCode || 'desconhecido'})`);
             if(reason) console.log(`📋 Motivo: ${reason}`);
             
-            setTimeout(()=>startBot(), 5000);
+            // Tratamento inteligente de erros de desconexão
+            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+            
+            if (shouldReconnect) {
+                const delay = getReconnectDelay();
+                console.log(`🔄 Reconectando em ${delay/1000} segundos... (tentativa ${reconnectAttempts})`);
+                setTimeout(() => startBot(), delay);
+            } else {
+                console.log(`🚫 Sessão encerrada pelo WhatsApp. Limpe a pasta 'conexao' e reconecte.`);
+                process.exit(1);
+            }
         }
     });
 }

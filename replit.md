@@ -136,6 +136,26 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
+### 13/10/2025 - Conexão Permanente e Estável ✅
+- ✅ **Timeouts otimizados para conexão estável**
+  - Keep-alive: 30s → **60s** (menos agressivo, evita desconexões)
+  - Query timeout: 15s → **60s** (operações não expiram prematuramente)
+  - Connect timeout: 60s → **120s** (mais tempo para conectar)
+- ✅ **Reconexão inteligente com Exponential Backoff**
+  - Começa com 3 segundos e dobra a cada tentativa
+  - Máximo de 60 segundos entre reconexões
+  - Reseta contador quando conecta com sucesso
+- ✅ **Features pesadas desabilitadas**
+  - Não sincroniza histórico completo (syncFullHistory: false)
+  - Não sincroniza contatos (syncContacts: false)
+  - Não sincroniza chats antigos (syncChats: false)
+  - **Resultado:** Conexão muito mais leve e estável
+- ✅ **Tratamento inteligente de erros**
+  - Diferencia logout real de desconexão temporária
+  - Mostra tentativas de reconexão e tempo de espera
+  - Só encerra processo em caso de logout manual
+- 🎯 **Problema resolvido:** Bot não desconecta mais após algumas horas
+
 ### 12/10/2025 - Configuração Automática no Replit ✅
 - ✅ **Workflow atualizado** - `BOT_CONNECTION_METHOD=qr npm start`
 - ✅ **Conexão automática via QR Code** - Sem necessidade de escolha interativa
