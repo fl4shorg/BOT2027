@@ -136,6 +136,12 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
+### 13/10/2025 - Cache NPM Desabilitado ✅
+- ✅ **Pasta `.npm` removida** - Liberado espaço no servidor
+- ✅ **Cache NPM desabilitado** - Arquivo `.npmrc` criado
+- ✅ **Configuração permanente** - NPM não criará mais cache
+- 🎯 **Problema resolvido:** Servidor não fica mais sem espaço por causa do cache NPM
+
 ### 13/10/2025 - Conexão Permanente e Estável ✅
 - ✅ **Timeouts otimizados para conexão estável**
   - Keep-alive: 30s → **60s** (menos agressivo, evita desconexões)
