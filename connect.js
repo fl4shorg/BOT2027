@@ -20,6 +20,11 @@ let reconnectAttempts = 0;
 const MAX_RECONNECT_DELAY = 60000; // 60 segundos no máximo
 const BASE_RECONNECT_DELAY = 3000; // 3 segundos inicial
 
+// Variáveis globais para evitar duplicação de listeners e intervals
+let listenersConfigurados = false;
+let agendamentoIniciado = false;
+let agendamentoInterval = null;
+
 async function perguntarMetodoConexao() {
     // Verifica se há método predefinido no ambiente
     const metodoEnv = process.env.BOT_CONNECTION_METHOD;
@@ -222,10 +227,6 @@ async function startBot() {
         await saveCreds();
         // console.log("💾 Credenciais salvas em:", pastaConexao);
     });
-
-    // Flags para garantir que listeners e agendamentos sejam configurados apenas uma vez
-    let listenersConfigurados = false;
-    let agendamentoIniciado = false;
     
     sock.ev.on("connection.update", async (update)=>{
         const { connection, lastDisconnect, qr } = update;
@@ -281,13 +282,13 @@ async function startBot() {
             // Inicia sistema de agendamento automático de grupos (apenas UMA VEZ)
             if (!agendamentoIniciado) {
                 const groupSchedule = require('./arquivos/grupo-schedule.js');
-                setInterval(() => {
+                agendamentoInterval = setInterval(() => {
                     groupSchedule.checkSchedules(sock);
                 }, 60000); // Verifica a cada 1 minuto
                 agendamentoIniciado = true;
-                // console.log("⏰ Sistema de agendamento de grupos iniciado!");
+                console.log("⏰ Sistema de agendamento de grupos iniciado!");
             } else {
-                // console.log("⏭️ Agendamento já iniciado, pulando...");
+                console.log("⏭️ Agendamento já iniciado, pulando...");
             }
         } else if(connection==="close"){
             const statusCode = lastDisconnect?.error?.output?.statusCode;
@@ -295,6 +296,17 @@ async function startBot() {
             
             console.log(`❌ Conexão fechada (${statusCode || 'desconhecido'})`);
             if(reason) console.log(`📋 Motivo: ${reason}`);
+            
+            // Limpa interval de agendamento e reseta flags (necessário para reconexão funcionar)
+            if (agendamentoInterval) {
+                clearInterval(agendamentoInterval);
+                agendamentoInterval = null;
+                agendamentoIniciado = false;
+                console.log("🧹 Limpeza: Interval de agendamento removido");
+            }
+            
+            // Reseta flag de listeners para permitir re-registro no novo sock
+            listenersConfigurados = false;
             
             // Tratamento inteligente de erros de desconexão
             // 401 = logout manual do WhatsApp
@@ -306,6 +318,13 @@ async function startBot() {
                 setTimeout(() => startBot(), delay);
             } else {
                 console.log(`🚫 Sessão encerrada pelo WhatsApp. Limpe a pasta 'conexao' e reconecte.`);
+                // Limpa completamente em caso de logout
+                if (agendamentoInterval) {
+                    clearInterval(agendamentoInterval);
+                    agendamentoInterval = null;
+                }
+                listenersConfigurados = false;
+                agendamentoIniciado = false;
                 process.exit(1);
             }
         }

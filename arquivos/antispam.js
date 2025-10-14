@@ -8,6 +8,9 @@ const GRUPOS_DIR = path.join(__dirname, '../database/grupos/ativadogrupo');
 const CACHE_FLOOD = new Map(); // Cache para controle de flood
 const CACHE_COMANDO = new Map(); // Cache para controle de flood de comandos
 
+// Limites máximos de cache para evitar memory leak
+const MAX_CACHE_ENTRIES = 1000; // Máximo de 1000 usuários/grupos no cache
+
 // Utilitários
 function formatGroupId(groupId) {
     return groupId.replace('@g.us', '').replace('@lid', '').replace(/[^a-zA-Z0-9]/g, '_');
@@ -249,6 +252,14 @@ setInterval(() => {
             CACHE_FLOOD.set(key, mensagensRecentes);
         }
     }
+    
+    // Proteção contra crescimento infinito - limita a 1000 entries
+    if (CACHE_FLOOD.size > MAX_CACHE_ENTRIES) {
+        const entries = Array.from(CACHE_FLOOD.entries());
+        const entriesToRemove = entries.slice(0, CACHE_FLOOD.size - MAX_CACHE_ENTRIES);
+        entriesToRemove.forEach(([key]) => CACHE_FLOOD.delete(key));
+        console.log(`⚠️ Cache de flood excedeu limite - removidas ${entriesToRemove.length} entradas antigas`);
+    }
 }, 60000);
 
 // Controle de flood de comandos
@@ -300,14 +311,32 @@ function verificarFloodComando(userId, groupId, comando, config) {
     return { bloqueado: false };
 }
 
-// Limpa cache de comandos periodicamente
+// Limpa cache de comandos periodicamente (mais agressivo para evitar memory leak)
 setInterval(() => {
     const agora = Date.now();
+    const LIMITE_JANELA = 30000; // 30 segundos
+    
     for (const [key, dados] of CACHE_COMANDO.entries()) {
-        // Se não está bloqueado e não tem comandos recentes, remove
-        if (dados.bloqueadoAte < agora && dados.comandos.length === 0) {
-            CACHE_COMANDO.delete(key);
+        // Remove comandos antigos da janela de tempo
+        if (dados.comandos && dados.comandos.length > 0) {
+            dados.comandos = dados.comandos.filter(cmd => agora - cmd.timestamp < LIMITE_JANELA);
         }
+        
+        // Se não está bloqueado e não tem comandos recentes, remove completamente
+        if (dados.bloqueadoAte < agora && (!dados.comandos || dados.comandos.length === 0)) {
+            CACHE_COMANDO.delete(key);
+        } else if (dados.comandos && dados.comandos.length > 0) {
+            // Atualiza o cache com comandos filtrados
+            CACHE_COMANDO.set(key, dados);
+        }
+    }
+    
+    // Proteção contra crescimento infinito - limita a 1000 entries
+    if (CACHE_COMANDO.size > MAX_CACHE_ENTRIES) {
+        const entries = Array.from(CACHE_COMANDO.entries());
+        const entriesToRemove = entries.slice(0, CACHE_COMANDO.size - MAX_CACHE_ENTRIES);
+        entriesToRemove.forEach(([key]) => CACHE_COMANDO.delete(key));
+        console.log(`⚠️ Cache de comandos excedeu limite - removidas ${entriesToRemove.length} entradas antigas`);
     }
 }, 60000);
 
