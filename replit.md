@@ -137,6 +137,17 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
+### 14/10/2025 - Mensagens de Ativação Simplificadas ✅
+- ✅ **Mensagens limpas e diretas** - Removidas informações técnicas das mensagens de ativação/desativação
+- ✅ **Todos os sistemas anti atualizados** - antilink, anticontato, antidocumento, antivideo, antiaudio, antisticker, antiflod, antiloc, antiimg, x9, etc.
+- ✅ **Formato simples**:
+  - Ativar: `✅ *ANTILINK ATIVADO*`
+  - Desativar: `❌ *ANTILINK DESATIVADO*`
+  - Já ativo: `⚠️ *ANTILINK JÁ ESTÁ ATIVO!*`
+  - Já desativado: `⚠️ *ANTILINK JÁ ESTÁ DESATIVADO!*`
+- 🚫 **Removido**: Mensagens longas com "Ação: Delete + Ban automático", "Conteúdo será removido e usuário banido", etc.
+- 🎯 **Experiência melhorada** - Interface mais limpa e profissional
+
 ### 14/10/2025 - Configuração Inicial no Replit ✅
 - ✅ **Dependências instaladas** - npm install executado com sucesso (408 pacotes)
 - ✅ **Workflow configurado** - Bot WhatsApp rodando com QR Code automático

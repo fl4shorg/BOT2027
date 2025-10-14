@@ -1813,11 +1813,11 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     // Já está ativo
                     await reagirMensagem(sock, message, "⚠️");
                     if (command === "rankativo") {
-                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ ATIVO!*\n\n✅ O sistema já está rastreando atividades\n📊 Digite \`.rankativo\` para ver o ranking atual`);
+                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ ATIVO!*`);
                     } else if (command === "welcome1") {
-                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ ATIVO!*\n\n✅ O sistema de boas-vindas já está funcionando\n🎉 Novos membros receberão boas-vindas automáticas`);
+                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ ATIVO!*`);
                     } else {
-                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ ATIVO!*\n\n✅ A proteção já está funcionando\n⚔️ Links/conteúdo será removido e usuário banido`);
+                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ ATIVO!*`);
                     }
                 } else {
                     // Precisa ativar
@@ -1830,13 +1830,13 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     if (resultado) {
                         await reagirMensagem(sock, message, "✅");
                         if (command === "rankativo") {
-                            await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n📊 O bot agora rastreará:\n• 💬 Mensagens enviadas\n• ⌨️ Comandos executados\n• 🖼️ Stickers enviados\n• 📱 Mídias compartilhadas\n\n🔥 Digite \`.rankativo\` para ver o ranking a qualquer momento!\n\n📈 *Novidades:*\n• Top 10 usuários mais ativos\n• Total de mensagens do grupo\n• Top 5 dias mais ativos\n• Qualquer membro pode ver o ranking!`);
+                            await reply(sock, from, `✅ *${featureName} ATIVADO*`);
                         } else if (command === "welcome1") {
-                            await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n🎉 Sistema de boas-vindas está ativo!\n💡 Digite \`.welcome1\` para ver configurações\n🎨 Use \`.mensagembemvindo1\` para personalizar\n👥 Novos membros receberão boas-vindas automáticas`);
+                            await reply(sock, from, `✅ *${featureName} ATIVADO*`);
                         } else if (command === "antiflodcomando") {
-                            await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n⏱️ *Sistema de proteção contra flood de comandos ativo!*\n\n📊 *Configuração:*\n• Máximo: 5 comandos em 30 segundos\n• Bloqueio: 5 minutos\n\n🛡️ *Proteções:*\n• Admins são protegidos\n• Dono é protegido\n• Jogos não são afetados (xadrez, akinator, RPG)\n\n⚡ Membros que abusarem serão bloqueados temporariamente!`);
+                            await reply(sock, from, `✅ *${featureName} ATIVADO*`);
                         } else {
-                            await reply(sock, from, `✅ *${featureName} ATIVADO*\n\n⚔️ Conteúdo será removido e usuário será BANIDO\n🛡️ Admins e dono são protegidos\n🚫 Ação dupla: Delete + Ban automático`);
+                            await reply(sock, from, `✅ *${featureName} ATIVADO*`);
                         }
                     } else {
                         await reply(sock, from, `❌ Erro ao ativar ${featureName}`);
@@ -1848,12 +1848,11 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     // Já está desativo
                     await reagirMensagem(sock, message, "⚠️");
                     if (command === "rankativo") {
-                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ DESATIVADO!*\n\n✅ O sistema já estava desligado\n💡 Use \`.rankativo on\` para ativar`);
+                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ DESATIVADO!*`);
                     } else if (command === "welcome1") {
-                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ DESATIVADO!*\n\n✅ O sistema já estava desligado\n💡 Use \`.welcome1 on\` para ativar`);
+                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ DESATIVADO!*`);
                     } else {
-                        const configBot = obterConfiguracoes();
-                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ DESATIVADO!*\n\n✅ A proteção já estava desligada\n💡 Use \`${configBot.prefix}${command} on\` para ativar`);
+                        await reply(sock, from, `⚠️ *${featureName} JÁ ESTÁ DESATIVADO!*`);
                     }
                 } else {
                     // Precisa desativar
@@ -1866,14 +1865,13 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     if (resultado !== undefined) {
                         await reagirMensagem(sock, message, "❌");
                         if (command === "rankativo") {
-                            await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n📊 O bot parou de rastrear atividades\n💡 Use \`.rankativo on\` para reativar\n⚠️ Dados existentes são mantidos`);
+                            await reply(sock, from, `❌ *${featureName} DESATIVADO*`);
                         } else if (command === "welcome1") {
-                            await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n🎉 Sistema de boas-vindas desligado\n💡 Use \`.welcome1 on\` para reativar\n⚠️ Configurações são mantidas`);
+                            await reply(sock, from, `❌ *${featureName} DESATIVADO*`);
                         } else if (command === "antiflodcomando") {
-                            await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n⏱️ Proteção contra flood de comandos desligada\n💡 Use \`.antiflodcomando on\` para reativar\n✅ Membros podem usar comandos sem limite`);
+                            await reply(sock, from, `❌ *${featureName} DESATIVADO*`);
                         } else {
-                            const configBot = obterConfiguracoes();
-                            await reply(sock, from, `❌ *${featureName} DESATIVADO*\n\n✅ Conteúdo agora é permitido\n💡 Use \`${configBot.prefix}${command} on\` para reativar`);
+                            await reply(sock, from, `❌ *${featureName} DESATIVADO*`);
                         }
                     } else {
                         await reply(sock, from, `❌ Erro ao desativar ${featureName}`);
