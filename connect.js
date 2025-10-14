@@ -172,7 +172,7 @@ async function startBot() {
         version = versionInfo.version;
     } catch (err) {
         // Fallback para versão conhecida que funciona em 2025
-        version = [2, 3000, 1015901307];
+        version = [2, 3000, 1025190524];
     }
 
     // Verificar arquivos de sessão existentes
