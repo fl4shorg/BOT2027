@@ -137,21 +137,20 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
-### 19/10/2025 - Comandos de Download Sem Quoted Selinho ✅
-- ✅ **Quoted selinho removido** - Todos os comandos de download agora enviam apenas com reply do canal
+### 19/10/2025 - Downloads Limpos (Sem Reply de Canal) ✅
+- ✅ **Áudios e vídeos 100% limpos** - Removido reply do canal (forwardedNewsletterMessageInfo) dos arquivos de mídia
 - ✅ **Comandos atualizados**:
-  - `.play` - Download do Spotify/YouTube via API Neext
-  - `play` - Download do YouTube
-  - `spotify` - Download direto do Spotify
-  - `playspotify` - Busca e download do Spotify
-  - `tiktok`/`tt` - Download do TikTok
-  - Instagram - Download de vídeos e imagens
-  - Facebook - Download de vídeos
-  - Twitter - Download de vídeos
-  - `spotifysearch` - Busca no Spotify
-- 🚫 **Removido**: `{ quoted: selinho2 }` de todos os comandos de download
-- ✅ **Mantido**: Reply do canal (forwardedNewsletterMessageInfo) em todos os comandos
-- 🎯 **Resultado**: Downloads enviados com contextInfo completo mas sem quoted selinho fake
+  - `.playspotify` - Áudio sem reply de canal
+  - `play` - Áudio sem reply de canal
+  - `spotify` - Áudio sem reply de canal
+  - `tiktok`/`tt` - Vídeo sem reply de canal (totalmente limpo)
+  - Instagram - Vídeo sem reply de canal
+  - Facebook - Vídeo sem reply de canal
+  - Twitter - Vídeo sem reply de canal
+  - `spotifysearch` - Texto mantém reply do canal
+- 🚫 **Removido dos arquivos**: forwardedNewsletterMessageInfo (reply de canal)
+- ✅ **Mantido**: externalAdReply para mostrar informações da música/vídeo
+- 🎯 **Resultado**: Áudios e vídeos enviados totalmente limpos, apenas com preview das informações
 
 ### 14/10/2025 - Figurinhas 100% Limpas (Sem Selinho, Reply e Caption) ✅
 - ✅ **Envio totalmente limpo** - Removido selinho (contato fake), reply e caption dos comandos de sticker

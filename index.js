@@ -3251,12 +3251,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         video: mediaBuffer,
                         caption: caption,
                         contextInfo: {
-                            isForwarded: true,
-                            forwardingScore: 100000,
-                            forwardedNewsletterMessageInfo: {
-                                newsletterJid: "120363289739581116@newsletter",
-                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                            },
                             externalAdReply: {
                                 title: "© NEEXT LTDA - Instagram Downloader",
                                 body: `📱 @${metadata.username || 'Instagram'}`,
@@ -3357,12 +3351,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         video: videoBuffer,
                         caption: caption,
                         contextInfo: {
-                            isForwarded: true,
-                            forwardingScore: 100000,
-                            forwardedNewsletterMessageInfo: {
-                                newsletterJid: "120363289739581116@newsletter",
-                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                            },
                             externalAdReply: {
                                 title: "© NEEXT LTDA - Facebook Downloader",
                                 body: "📱 Instagram: @neet.tk",
@@ -3472,12 +3460,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         caption: caption,
                         jpegThumbnail: thumbnailBuffer,
                         contextInfo: {
-                            isForwarded: true,
-                            forwardingScore: 100000,
-                            forwardedNewsletterMessageInfo: {
-                                newsletterJid: "120363289739581116@newsletter",
-                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                            },
                             externalAdReply: {
                                 title: "© NEEXT LTDA - Twitter Downloader",
                                 body: "📱 Instagram: @neet.tk",
@@ -3705,12 +3687,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         fileName: `${songName} - ${artistName}.mp3`,
                         jpegThumbnail: thumbnailBuffer,
                         contextInfo: {
-                            forwardingScore: 100000,
-                            isForwarded: true,
-                            forwardedNewsletterMessageInfo: {
-                                newsletterJid: "120363289739581116@newsletter",
-                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                            },
                             externalAdReply: {
                                 title: `🎵 ${songName}`,
                                 body: `🎤 ${artistName}`,
@@ -3837,12 +3813,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     caption: caption,
                     jpegThumbnail: thumbnailBuffer,
                     contextInfo: {
-                        forwardingScore: 100000,
-                        isForwarded: true,
-                        forwardedNewsletterMessageInfo: {
-                            newsletterJid: "120363289739581116@newsletter",
-                            newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                        },
                         externalAdReply: {
                             title: `🎵 ${metadata.title}`,
                             body: `🎬 ${metadata.channel} • ⏱️ ${metadata.duration}`,
@@ -3959,12 +3929,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     caption: caption,
                     jpegThumbnail: thumbnailBuffer,
                     contextInfo: {
-                        forwardingScore: 100000,
-                        isForwarded: true,
-                        forwardedNewsletterMessageInfo: {
-                            newsletterJid: "120363289739581116@newsletter",
-                            newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                        },
                         externalAdReply: {
                             title: `🎵 ${result.title}`,
                             body: `🎤 ${result.artist} • ⏱️ ${result.duration}`,
@@ -5947,15 +5911,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
                 await sock.sendMessage(from, {
                     video: videoBuffer,
-                    mimetype: 'video/mp4',
-                    contextInfo: {
-                        forwardingScore: 100000,
-                        isForwarded: true,
-                        forwardedNewsletterMessageInfo: {
-                            newsletterJid: "120363289739581116@newsletter",
-                            newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                        }
-                    }
+                    mimetype: 'video/mp4'
                 });
 
                 await reagirMensagem(sock, message, "✅");
