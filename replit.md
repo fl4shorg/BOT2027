@@ -137,20 +137,20 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
-### 19/10/2025 - Downloads Limpos (Sem Reply de Canal) ✅
-- ✅ **Áudios e vídeos 100% limpos** - Removido reply do canal (forwardedNewsletterMessageInfo) dos arquivos de mídia
+### 19/10/2025 - Downloads Limpos (Sem "Enviado via anúncio") ✅
+- ✅ **Áudios e vídeos sem marcação de anúncio** - Removido `showAdAttribution` de todos os downloads
 - ✅ **Comandos atualizados**:
-  - `.playspotify` - Áudio sem reply de canal
-  - `play` - Áudio sem reply de canal
-  - `spotify` - Áudio sem reply de canal
-  - `tiktok`/`tt` - Vídeo sem reply de canal (totalmente limpo)
-  - Instagram - Vídeo sem reply de canal
-  - Facebook - Vídeo sem reply de canal
-  - Twitter - Vídeo sem reply de canal
+  - `.playspotify` - Áudio limpo sem anúncio
+  - `play` - Áudio limpo sem anúncio
+  - `spotify` - Áudio limpo sem anúncio
+  - `tiktok`/`tt` - Vídeo totalmente limpo
+  - Instagram - Vídeo sem anúncio
+  - Facebook - Vídeo sem anúncio
+  - Twitter - Vídeo sem anúncio
   - `spotifysearch` - Texto mantém reply do canal
-- 🚫 **Removido dos arquivos**: forwardedNewsletterMessageInfo (reply de canal)
-- ✅ **Mantido**: externalAdReply para mostrar informações da música/vídeo
-- 🎯 **Resultado**: Áudios e vídeos enviados totalmente limpos, apenas com preview das informações
+- 🚫 **Removido**: forwardedNewsletterMessageInfo (reply de canal) e showAdAttribution (marcação de anúncio)
+- ✅ **Mantido**: externalAdReply para preview de informações
+- 🎯 **Resultado**: Downloads sem "Enviado via anúncio", apenas com preview limpo
 
 ### 14/10/2025 - Figurinhas 100% Limpas (Sem Selinho, Reply e Caption) ✅
 - ✅ **Envio totalmente limpo** - Removido selinho (contato fake), reply e caption dos comandos de sticker

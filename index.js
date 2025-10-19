@@ -3256,8 +3256,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 body: `📱 @${metadata.username || 'Instagram'}`,
                                 thumbnailUrl: "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
                                 mediaType: 1,
-                                sourceUrl: "https://www.neext.online",
-                                showAdAttribution: true
+                                sourceUrl: "https://www.neext.online"
                             }
                         }
                     });
@@ -3356,8 +3355,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 body: "📱 Instagram: @neet.tk",
                                 thumbnailUrl: "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
                                 mediaType: 1,
-                                sourceUrl: "https://www.neext.online",
-                                showAdAttribution: true
+                                sourceUrl: "https://www.neext.online"
                             }
                         }
                     });
@@ -3465,8 +3463,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 body: "📱 Instagram: @neet.tk",
                                 thumbnailUrl: thumbnail || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
                                 mediaType: 1,
-                                sourceUrl: "https://www.neext.online",
-                                showAdAttribution: true
+                                sourceUrl: "https://www.neext.online"
                             }
                         }
                     });
@@ -3692,8 +3689,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 body: `🎤 ${artistName}`,
                                 thumbnailUrl: result.img || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
                                 mediaType: 2,
-                                sourceUrl: spotifyLink,
-                                showAdAttribution: true
+                                sourceUrl: spotifyLink
                             }
                         }
                     });
@@ -3818,8 +3814,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             body: `🎬 ${metadata.channel} • ⏱️ ${metadata.duration}`,
                             thumbnailUrl: metadata.cover || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
                             mediaType: 2,
-                            sourceUrl: metadata.url,
-                            showAdAttribution: true
+                            sourceUrl: metadata.url
                         }
                     }
                 });
@@ -3934,8 +3929,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             body: `🎤 ${result.artist} • ⏱️ ${result.duration}`,
                             thumbnailUrl: result.cover || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
                             mediaType: 2,
-                            sourceUrl: spotifyUrl,
-                            showAdAttribution: true
+                            sourceUrl: spotifyUrl
                         }
                     }
                 });
