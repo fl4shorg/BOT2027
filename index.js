@@ -3266,7 +3266,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 showAdAttribution: true
                             }
                         }
-                    }, { quoted: selinho2 });
+                    });
                 } else {
                     await sock.sendMessage(from, {
                         image: mediaBuffer,
@@ -3287,7 +3287,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 showAdAttribution: true
                             }
                         }
-                    }, { quoted: selinho2 });
+                    });
                 }
 
                 await reagirMensagem(sock, message, "✅");
@@ -3372,7 +3372,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 showAdAttribution: true
                             }
                         }
-                    }, { quoted: selinho2 });
+                    });
 
                     await reagirMensagem(sock, message, "✅");
 
@@ -3487,7 +3487,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 showAdAttribution: true
                             }
                         }
-                    }, { quoted: selinho2 });
+                    });
 
                     await reagirMensagem(sock, message, "✅");
 
@@ -3566,7 +3566,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 showAdAttribution: true
                             }
                         }
-                    }, { quoted: selinho2 });
+                    });
 
                     await reagirMensagem(sock, message, "✅");
 
@@ -3720,7 +3720,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 showAdAttribution: true
                             }
                         }
-                    }, { quoted: selinho2 });
+                    });
 
                     console.log(`✅ [PLAY] Áudio enviado com sucesso!`);
                     await reagirMensagem(sock, message, "✅");
@@ -3852,7 +3852,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             showAdAttribution: true
                         }
                     }
-                }, { quoted: selinho2 });
+                });
 
                 await reagirMensagem(sock, message, "✅");
                 console.log(`✅ Música enviada: ${metadata.title} - ${metadata.channel}`);
@@ -3974,7 +3974,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             showAdAttribution: true
                         }
                     }
-                }, { quoted: selinho2 });
+                });
 
                 await reagirMensagem(sock, message, "✅");
                 console.log(`✅ Música Spotify enviada: ${result.title} - ${result.artist}`);
@@ -5956,7 +5956,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
                         }
                     }
-                }, { quoted: selinho2 });
+                });
 
                 await reagirMensagem(sock, message, "✅");
                 console.log(`✅ Vídeo do TikTok baixado com sucesso`);
