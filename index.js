@@ -2092,26 +2092,13 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     }
                 );
 
-                // Lê o sticker gerado e envia CITANDO a mensagem original
+                // Lê o sticker gerado e envia
                 const stickerBuffer = fs.readFileSync(webpFile);
 
-                // ContextInfo para fazer aparecer como "enviada via anúncio"
-                const contextAnuncio = {
-                    externalAdReply: {
-                        title: "© NEEXT LTDA",
-                        body: "📱 Instagram: @neet.tk",
-                        thumbnailUrl: "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
-                        mediaType: 1,
-                        sourceUrl: "https://www.neext.online",
-                        showAdAttribution: true
-                    }
-                };
-
-                // Envia a figurinha citando a mensagem original do usuário
+                // Envia a figurinha sem caption, reply ou context
                 const stickerMessage = await sock.sendMessage(from, {
-                    sticker: stickerBuffer,
-                    contextInfo: contextAnuncio
-                }, { quoted: message });
+                    sticker: stickerBuffer
+                });
 
                 // Cleanup do arquivo temporário
                 fs.unlinkSync(webpFile);

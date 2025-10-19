@@ -137,14 +137,21 @@ Se o bot mostrar erro 401/440 (credenciais inválidas):
 
 ## 📝 Mudanças Recentes
 
-### 14/10/2025 - Figurinhas Limpas (Sem Selinho e Reply) ✅
-- ✅ **Envio limpo de figurinhas** - Removido selinho (contato fake) e reply dos comandos `.s` e `.rename`
+### 14/10/2025 - Figurinhas 100% Limpas (Sem Selinho, Reply e Caption) ✅
+- ✅ **Envio totalmente limpo** - Removido selinho (contato fake), reply e caption dos comandos de sticker
 - ✅ **Sem contextAnuncio** - Removido "enviado via anúncio" das figurinhas
 - ✅ **Comandos afetados**:
   - `.s` - Criar figurinha de imagem/vídeo
   - `.rename` - Renomear figurinha existente
   - `.take` - Pegar figurinha com nome personalizado
-- 🎯 **Resultado**: Figurinhas são enviadas de forma pura, sem elementos extras
+- 🚫 **Removido do index.js (comando .s)**:
+  - contextInfo com externalAdReply
+  - { quoted: message }
+- 🚫 **Removido do arquivos/rename.js**:
+  - selinho (contato fake da NEEXT)
+  - contextAnuncio
+  - { quoted: selinho }
+- 🎯 **Resultado**: Figurinhas são enviadas TOTALMENTE PURAS, sem qualquer caption, reply ou context anexado
 
 ### 14/10/2025 - Mensagens de Ativação Simplificadas ✅
 - ✅ **Mensagens limpas e diretas** - Removidas informações técnicas das mensagens de ativação/desativação
