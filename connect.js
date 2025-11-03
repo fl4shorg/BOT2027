@@ -1,7 +1,4 @@
 // connect.js
-// Load environment variables
-require('dotenv').config();
-
 const { 
     default: makeWASocket, 
     useMultiFileAuthState, 
