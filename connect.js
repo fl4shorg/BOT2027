@@ -170,14 +170,15 @@ async function startBot() {
 
     const { state, saveCreds } = await useMultiFileAuthState(pastaConexao);
     
-    // Buscar versão mais recente do WhatsApp Web
+    // Buscar versão mais recente do WhatsApp Web (detecta automaticamente)
     let version;
     try {
         const versionInfo = await fetchLatestBaileysVersion();
         version = versionInfo.version;
+        console.log(`🌐 Versão Web detectada: ${version.join('.')}`);
     } catch (err) {
-        // Fallback para versão conhecida que funciona em 2025
-        version = [2, 3000, 1025190524];
+        console.log("⚠️ Não foi possível detectar versão web, usando padrão do Baileys");
+        version = undefined;
     }
 
     // Verificar arquivos de sessão existentes
