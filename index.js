@@ -113,16 +113,26 @@ async function retryWithBackoff(fn, maxRetries = 3, initialDelay = 1000) {
     }
 }
 
-// Limpa cache periodicamente (a cada 5 minutos)
-setInterval(() => {
-    const now = Date.now();
-    for (const [key, value] of metadataCache.entries()) {
-        if (now - value.timestamp > CACHE_DURATION) {
-            metadataCache.delete(key);
+// Limpa cache periodicamente (a cada 2 minutos - APENAS UMA VEZ)
+let metadataCacheInterval = null;
+if (!metadataCacheInterval) {
+    metadataCacheInterval = setInterval(() => {
+        const now = Date.now();
+        let cleaned = 0;
+        for (const [key, value] of metadataCache.entries()) {
+            if (now - value.timestamp > CACHE_DURATION) {
+                metadataCache.delete(key);
+                cleaned++;
+            }
         }
-    }
-    // Log removido - desnecessário
-}, 300000); // 5 minutos
+        // Limita tamanho máximo do cache
+        if (metadataCache.size > 100) {
+            const entries = Array.from(metadataCache.entries());
+            const toRemove = entries.slice(0, metadataCache.size - 100);
+            toRemove.forEach(([key]) => metadataCache.delete(key));
+        }
+    }, 120000); // 2 minutos
+}
 
 // Config do Bot - PRIORIZA settings.json sobre environment vars
 function obterConfiguracoes() {
@@ -230,9 +240,20 @@ const contextAnuncio = {
     }
 };
 
-// Mensagens já processadas (evita duplicadas) - Cache reduzido para 30 segundos
+// Mensagens já processadas (evita duplicadas) - Cache reduzido para 15 segundos
 const processedMessages = new Set();
-setInterval(() => processedMessages.clear(), 30 * 1000);
+const MAX_PROCESSED_MESSAGES = 500; // Limite máximo de mensagens no cache
+
+// Limpa periodicamente (APENAS UMA VEZ)
+let processedMessagesInterval = null;
+if (!processedMessagesInterval) {
+    processedMessagesInterval = setInterval(() => {
+        // Se passar de 500 mensagens, limpa tudo
+        if (processedMessages.size > MAX_PROCESSED_MESSAGES) {
+            processedMessages.clear();
+        }
+    }, 15 * 1000); // 15 segundos
+}
 
 // Sistema de Xadrez - Chess Games
 const chessGames = new Map();
@@ -317,22 +338,24 @@ function normalizeMessage(m) {
     return { normalized: { ...m, message }, quoted };
 }
 
-// Função reply genérica
+// Função reply genérica (com verificação de conexão)
 async function reply(sock, from, text, mentions = []) {
     try {
+        // Verifica se o socket está conectado
+        if (!sock || !sock.user) {
+            return; // Bot desconectado, ignora silenciosamente
+        }
+
         // Validação e correção do texto
         if (text === undefined || text === null) {
-            console.error("❌ [REPLY] Texto da reply é undefined/null - ignorando envio");
             return; // Não envia nada
         }
 
         if (typeof text !== 'string') {
-            console.error("❌ [REPLY] Texto da reply não é string:", typeof text, text);
             text = String(text || "");
         }
 
         if (text.trim().length === 0) {
-            console.error("❌ [REPLY] Texto da reply está vazio - ignorando envio");
             return; // Não envia nada
         }
 
@@ -352,11 +375,7 @@ async function reply(sock, from, text, mentions = []) {
             mentions: mentions || []
         });
     } catch (err) {
-        // Apenas loga erro se não for rate limit
-        if (!err.message || !err.message.includes('rate-overlimit')) {
-            console.error("❌ [REPLY] Erro ao enviar reply:", err.message || err);
-        }
-        // Não tenta enviar nada em caso de erro para evitar flood
+        // Silencioso - não loga erros de conexão
     }
 }
 
