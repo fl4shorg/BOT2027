@@ -287,9 +287,6 @@ async function startBot() {
                     groupSchedule.checkSchedules(sock);
                 }, 60000); // Verifica a cada 1 minuto
                 agendamentoIniciado = true;
-                console.log("⏰ Sistema de agendamento de grupos iniciado!");
-            } else {
-                console.log("⏭️ Agendamento já iniciado, pulando...");
             }
         } else if(connection==="close"){
             const statusCode = lastDisconnect?.error?.output?.statusCode;
@@ -303,7 +300,6 @@ async function startBot() {
                 clearInterval(agendamentoInterval);
                 agendamentoInterval = null;
                 agendamentoIniciado = false;
-                console.log("🧹 Limpeza: Interval de agendamento removido");
             }
             
             // Reseta flag de listeners para permitir re-registro no novo sock
