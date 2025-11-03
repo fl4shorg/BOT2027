@@ -24,7 +24,9 @@ database/grupos/
 database/registros/
 
 # Arquivos temporários do sistema
-.replit
 .upm
 .cache/
 .npm/
+
+# Replit config files (keep these)
+# .replit is needed for Replit configuration

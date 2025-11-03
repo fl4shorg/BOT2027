@@ -79,9 +79,27 @@ Localizado em `settings/settings.json`:
 - ✅ Reconexão automática
 
 ## Status Atual
-🟢 **Bot configurado e pronto para uso!**
+🟢 **Bot configurado e pronto para uso no Replit!**
 
-O workflow "WhatsApp Bot" está rodando. Conecte seu WhatsApp escolhendo o método de conexão no console.
+O workflow "WhatsApp Bot" está rodando automaticamente. O bot está configurado para usar QR Code por padrão.
+
+### Como Conectar seu WhatsApp
+1. Acesse o console do workflow "WhatsApp Bot"
+2. Você verá um QR Code gerado automaticamente
+3. Abra o WhatsApp no seu celular
+4. Vá em "Dispositivos Conectados" > "Conectar um dispositivo"
+5. Escaneie o QR Code mostrado no console
+6. Aguarde a conexão ser estabelecida
+
+### Alterando o Método de Conexão
+Se preferir usar código de pareamento ao invés de QR Code:
+1. Edite o arquivo `.env` na raiz do projeto
+2. Altere `BOT_CONNECTION_METHOD=qr` para `BOT_CONNECTION_METHOD=pairing`
+3. Adicione seu número: `BOT_OWNER_NUMBER=5521999999999`
+4. Reinicie o workflow
+
+### Persistência da Sessão
+Os dados de autenticação são salvos na pasta `/conexao` e persistem entre reinicializações, então você só precisa conectar uma vez.
 
 ## Última Atualização
-03 de Novembro de 2025
+03 de Novembro de 2025 - Importado e configurado para Replit
