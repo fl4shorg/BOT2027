@@ -848,10 +848,12 @@ async function handleCommand(sock, message, command, args, from, quoted) {
     const msg = message.message;
     if (!msg) return;
 
+    // Define se é grupo ou não
+    const isGroup = from.endsWith('@g.us') || from.endsWith('@lid');
+    const sender = isGroup ? message.key.participant : from;
+
     // Verifica antiflodcomando (apenas em grupos)
-    if (from.endsWith('@g.us') || from.endsWith('@lid')) {
-        const sender = message.key.participant || from;
-        
+    if (isGroup) {
         // Não aplica para dono e admins
         const ehDono = isDono(sender);
         const ehAdmin = await isAdmin(sock, from, sender);
