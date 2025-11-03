@@ -112,6 +112,10 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽🎲⃟ menurandom
 ╰──────────────────────⪨
 
+╭──〔 COMANDOS ESPECIAIS 〕──⪩
+│ 𖧈∘̥⸽🔫⃟ ${prefix}arma [nome] - Buscar armas
+╰──────────────────────⪨
+
 © NEEXT LTDA`;
     } catch (error) {
         console.error('Erro ao gerar menu principal:', error);

@@ -2365,6 +2365,94 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             break;
         }
 
+        case 'arma': {
+            const query = args.join(' ');
+            if (!query) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, { 
+                    text: `❌ Digite o nome da arma para buscar!\n\nExemplo: *${config.prefix}arma glock*` 
+                }, { quoted: message });
+                break;
+            }
+
+            console.log(`🔫 Buscando informações da arma: "${query}"`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const config = obterConfiguracoes();
+                
+                // API NEEXT para busca de armas
+                const response = await axios.get(`https://www.api.neext.online/arma?q=${encodeURIComponent(query)}`, {
+                    timeout: 20000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+                
+                console.log(`📥 Resposta da API Arma:`, response.data?.status, response.data?.resultados?.length);
+                
+                if (!response.data || response.data.status !== 200 || !Array.isArray(response.data.resultados) || response.data.resultados.length === 0) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: `❌ Nenhuma arma encontrada para: *${query}*\n\nTente buscar por outro nome ou modelo.`
+                    }, { quoted: message });
+                    break;
+                }
+
+                // Pega a primeira arma dos resultados
+                const arma = response.data.resultados[0];
+                console.log(`🔫 Arma encontrada: ${arma.titulo}`);
+
+                // Baixa a imagem da arma
+                const imageResponse = await axios.get(arma.imagem, { 
+                    responseType: 'arraybuffer', 
+                    timeout: 15000 
+                });
+                const imageBuffer = Buffer.from(imageResponse.data);
+
+                // Monta a mensagem com as informações
+                const caption = `🔫 *INFORMAÇÕES DA ARMA* 🔫\n\n` +
+                    `📌 *Modelo:* ${arma.titulo}\n` +
+                    `💰 *Preço:* ${arma.preco}\n` +
+                    `🔗 *Link:* ${arma.link}\n\n` +
+                    `© ${config.nomeDoBot}`;
+
+                // Envia a imagem com as informações
+                await sock.sendMessage(from, {
+                    image: imageBuffer,
+                    caption: caption
+                }, { quoted: message });
+                
+                await reagirMensagem(sock, message, "✅");
+                console.log(`✅ Informações da arma enviadas com sucesso!`);
+
+            } catch (error) {
+                console.error('❌ Erro ao buscar arma:', error.message);
+                
+                let errorMessage = '❌ Erro ao buscar informações da arma.';
+                
+                if (error.code === 'ENOTFOUND') {
+                    errorMessage += ' Problema de conexão com a API.';
+                } else if (error.code === 'ETIMEDOUT') {
+                    errorMessage += ' Timeout na requisição. Tente novamente.';
+                } else if (error.response?.status === 404) {
+                    errorMessage += ' Arma não encontrada.';
+                } else if (error.response?.status === 429) {
+                    errorMessage += ' Muitas requisições. Aguarde um momento.';
+                } else if (error.response?.status >= 500) {
+                    errorMessage += ' API temporariamente indisponível.';
+                } else {
+                    errorMessage += ' Tente novamente mais tarde.';
+                }
+                
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: errorMessage
+                }, { quoted: message });
+            }
+            break;
+        }
+
         case 'metadinha': {
             console.log('💑 Comando metadinha acionado');
             await reagirMensagem(sock, message, "⏳");
