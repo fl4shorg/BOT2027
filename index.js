@@ -8958,6 +8958,13 @@ function setupListeners(sock) {
                 
                 logMensagem(message, messageText, false, sock);
                 
+                // Marca mensagem como visualizada (tanto PV quanto grupos)
+                try {
+                    await sock.readMessages([message.key]);
+                } catch (err) {
+                    // Silencioso - ignora erro ao marcar como lida
+                }
+                
                 // Normaliza a mensagem
                 const { normalized, quoted } = normalizeMessage(message);
                 
