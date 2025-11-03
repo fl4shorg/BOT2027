@@ -889,6 +889,22 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
     }
 
+    // Verifica se modo SOADM está ativo (somente admins podem usar comandos)
+    if (isGroup) {
+        const configGrupo = antiSpam.carregarConfigGrupo(from);
+        if (configGrupo && configGrupo.soadm) {
+            // Verifica se o usuário é admin ou dono
+            const ehAdmin = await isAdmin(sock, from, sender);
+            const ehDono = isDono(sender);
+            
+            // Se não for admin nem dono, ignora o comando
+            if (!ehAdmin && !ehDono) {
+                // Ignora silenciosamente - não responde nada
+                return;
+            }
+        }
+    }
+
     switch (command) {
         case "ping": {
             const now = new Date();
@@ -1734,7 +1750,9 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         case "antiloc":
         case "antiimg":
         case "rankativo":
-        case "welcome1": {
+        case "welcome1":
+        case "soadm":
+        case "so_adm": {
             // Só funciona em grupos
             if (!from.endsWith('@g.us') && !from.endsWith('@lid')) {
                 await reply(sock, from, "❌ Este comando só pode ser usado em grupos.");
@@ -1767,7 +1785,9 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 'antiloc': '📍 ANTI-LOCALIZAÇÃO',
                 'antiimg': '🖼️ ANTI-IMAGEM',
                 'rankativo': '🔥 RANK DE ATIVOS',
-                'welcome1': '🎉 BEM-VINDO'
+                'welcome1': '🎉 BEM-VINDO',
+                'soadm': '👑 SÓ ADMIN',
+                'so_adm': '👑 SÓ ADMIN'
             };
 
             const featureName = featureNames[command];
@@ -1822,6 +1842,23 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         // Está inativo, mostra como ativar
                         await reagirMensagem(sock, message, "⚠️");
                         await reply(sock, from, `⚠️ *🎉 BEM-VINDO DESATIVADO*\n\n📱 O sistema de boas-vindas não está ativo neste grupo.\n\n📝 *Para ativar:*\n• \`.welcome1 on\` - Ativa o sistema\n\n✨ *Após ativar:*\n• Digite \`.welcome1\` para ver configurações\n• Use \`.mensagembemvindo1\` para personalizar\n• Boas-vindas automáticas para novos membros\n• Welcome card com foto e informações\n\n🎯 *Recursos inclusos:*\n• Mensagem de texto personalizada\n• Imagem de boas-vindas (API PopCat)\n• Placeholders dinâmicos\n• Foto de perfil do novo membro\n\n⚠️ Apenas admins podem ativar/desativar`);
+                    }
+                    break;
+                }
+            }
+
+            // Lógica especial para o comando soadm/so_adm
+            if (command === "soadm" || command === "so_adm") {
+                // Se não tem argumentos, verifica se está ativo para mostrar status
+                if (!acao) {
+                    if (estadoAtual) {
+                        // Está ativo, mostra status
+                        await reagirMensagem(sock, message, "👑");
+                        await reply(sock, from, `✅ *👑 SÓ ADMIN ATIVADO*\n\n🔒 *Status:* ATIVO\n\n⚠️ *MODO RESTRITO:*\n• Apenas admins podem usar comandos\n• Membros comuns estão bloqueados\n• Bot responde apenas para administradores\n\n📝 *Para desativar:*\n• \`.soadm off\` - Volta ao modo normal\n\n👥 Qualquer membro poderá usar comandos novamente após desativar.`);
+                    } else {
+                        // Está inativo, mostra como ativar
+                        await reagirMensagem(sock, message, "⚠️");
+                        await reply(sock, from, `⚠️ *👑 SÓ ADMIN DESATIVADO*\n\n🔓 *Status:* Modo normal\n\n✅ Todos os membros podem usar comandos do bot.\n\n📝 *Para ativar modo restrito:*\n• \`.soadm on\` - Ativa modo só admin\n\n⚠️ *Ao ativar:*\n• Apenas admins poderão usar comandos\n• Membros comuns serão ignorados\n• Útil para grupos grandes ou moderação\n\n👑 Apenas admins podem ativar/desativar este modo.`);
                     }
                     break;
                 }
