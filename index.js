@@ -232,8 +232,7 @@ async function audioLento(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -258,8 +257,7 @@ async function audioRapido(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -284,8 +282,7 @@ async function grave(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -310,8 +307,7 @@ async function grave2(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -336,8 +332,7 @@ async function esquilo(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -362,8 +357,7 @@ async function estourar(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -388,8 +382,7 @@ async function bass(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -414,8 +407,7 @@ async function bass2(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -440,8 +432,7 @@ async function vozMenino(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -466,8 +457,7 @@ async function vozRobo(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -492,8 +482,7 @@ async function vozRadio(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -518,8 +507,7 @@ async function vozFantasma(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -544,8 +532,7 @@ async function vozDistorcida(sock, from, quotedMsg) {
         
         await sock.sendMessage(from, {
             audio: fs.readFileSync(outputPath),
-            mimetype: 'audio/mpeg',
-            ptt: true
+            mimetype: 'audio/mpeg'
         });
         
         if (fs.existsSync(outputPath)) {
@@ -5693,161 +5680,209 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
         case "videolento": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const videoMsg = quotedMsg?.videoMessage || currentMsg?.videoMessage;
+            if (!videoMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um vídeo para aplicar o efeito!' });
                 break;
             }
-            await videoLento(sock, from, quotedMsg);
+            await videoLento(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "videorapido": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const videoMsg = quotedMsg?.videoMessage || currentMsg?.videoMessage;
+            if (!videoMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um vídeo para aplicar o efeito!' });
                 break;
             }
-            await videoRapido(sock, from, quotedMsg);
+            await videoRapido(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "videocontrario": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const videoMsg = quotedMsg?.videoMessage || currentMsg?.videoMessage;
+            if (!videoMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um vídeo para aplicar o efeito!' });
                 break;
             }
-            await videoContrario(sock, from, quotedMsg);
+            await videoContrario(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "audiolento": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await audioLento(sock, from, quotedMsg);
+            await audioLento(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "audiorapido": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await audioRapido(sock, from, quotedMsg);
+            await audioRapido(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "grave": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await grave(sock, from, quotedMsg);
+            await grave(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "grave2": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await grave2(sock, from, quotedMsg);
+            await grave2(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "esquilo": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await esquilo(sock, from, quotedMsg);
+            await esquilo(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "estourar": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await estourar(sock, from, quotedMsg);
+            await estourar(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "bass": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await bass(sock, from, quotedMsg);
+            await bass(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "bass2": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await bass2(sock, from, quotedMsg);
+            await bass2(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "vozmenino": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await vozMenino(sock, from, quotedMsg);
+            await vozMenino(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "vozrobo": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await vozRobo(sock, from, quotedMsg);
+            await vozRobo(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "vozradio": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await vozRadio(sock, from, quotedMsg);
+            await vozRadio(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "vozfantasma": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await vozFantasma(sock, from, quotedMsg);
+            await vozFantasma(sock, from, quotedMsg || currentMsg);
         }
         break;
 
         case "vozdistorcida": {
             const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
-                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+            const currentMsg = message.message;
+            
+            const audioMsg = quotedMsg?.audioMessage || quotedMsg?.videoMessage || currentMsg?.audioMessage || currentMsg?.videoMessage;
+            if (!audioMsg) {
+                await sock.sendMessage(from, { text: '❌ Envie ou marque um áudio/vídeo para aplicar o efeito!' });
                 break;
             }
-            await vozDistorcida(sock, from, quotedMsg);
+            await vozDistorcida(sock, from, quotedMsg || currentMsg);
         }
         break;
 
