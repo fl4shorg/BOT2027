@@ -1434,6 +1434,57 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "screenshotweb":
+        case "screenshot":
+        case "ssweb": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}screenshotweb [url]\n\n💡 Exemplos:\n• ${config.prefix}screenshotweb www.google.com\n• ${config.prefix}screenshotweb https://www.neext.online\n• ${config.prefix}screenshot twitter.com`);
+                break;
+            }
+
+            try {
+                let url = args.join(' ').trim();
+                
+                // Remove https:// ou http:// se o usuário incluiu
+                url = url.replace(/^https?:\/\//, '');
+                
+                await reagirMensagem(sock, message, "📸");
+                await reply(sock, from, `⏳ Tirando screenshot de *${url}*...\nAguarde um momento...`);
+                
+                // Faz a requisição para a API (a API retorna a imagem diretamente)
+                const response = await axios.get(`https://www.api.neext.online/tools/ssweb?url=${encodeURIComponent(url)}`, {
+                    responseType: 'arraybuffer'
+                });
+                
+                if (response.data) {
+                    const buffer = Buffer.from(response.data, 'binary');
+                    
+                    await sock.sendMessage(from, {
+                        image: buffer,
+                        caption: `📸 *SCREENSHOT WEB*\n\n🌐 URL: ${url}\n\n━━━━━━━━━━━━━━━\n© NEEXT LTDA`,
+                        contextInfo: {
+                            forwardingScore: 100000,
+                            isForwarded: true,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            }
+                        }
+                    }, { quoted: selinho });
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Não foi possível tirar screenshot de "${url}".`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao tirar screenshot:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao tirar screenshot! Verifique se a URL está correta e tente novamente.");
+            }
+        }
+        break;
+
             case 'dono':
     // garante que 'sender' está definido no escopo correto
     const sender = message.key.participant || from;
