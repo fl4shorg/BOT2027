@@ -1,0 +1,59 @@
+cria os seguintes comandos e coloca embaixo de screenshotweb no menu normal msm
+
+imdbfilme
+Method: GET
+URL: https://www.api.neext.online/imdb/filme?nome=Homem+aranha
+Status: 200
+{
+  "id": 557,
+  "titulo": "Homem-Aranha",
+  "descricao": "Peter Parker é um jovem estudioso que vive com seus tios, Ben e May, desde que seus pais faleceram. Peter tem dificuldade em se relacionar com seus colegas, por ser tímido e por eles o considerarem um nerd. Até que, em uma demonstração científica, um acidente inesperado faz com que uma aranha modificada
+  geneticamente pique Peter. A partir de então seu corpo é quimicamente alterado pela picada da aranha.",
+  "nota": 7.315,
+  "lancamento": "2002-05-01",
+  "capa": "https://image.tmdb.org/t/p/w500/2WIwz0qJpnVAiofTAhrmhbKxuvE.jpg"
+}
+
+
+e tmb imdbanime
+
+URL: https://www.api.neext.online/anime/anime?nome=Naruto
+Status: 200
+{
+  "id": "1555",
+  "titulo": "Naruto: Shippuuden",
+  "descricao": "Já se passaram dois anos e meio desde que Naruto Uzumaki deixou Konohagakure, a Vila Oculta da Folha, para um treinamento intenso após eventos que alimentaram seu desejo de ser mais forte. Agora a Akatsuki, a misteriosa organização
+  mesmo que às custas do próprio corpo, na continuação da saga do garoto que deseja se tornar Hokage. \n\n(Fonte: MAL Reescrita)",
+  "nota": "84.05",
+  "lancamento": "2007-02-15",
+  "capa": "https://media.kitsu.app/anime/poster_images/1555/original.jpg"
+}
+
+e tmb imdbtopfilmes
+
+Method: GET
+URL: https://www.api.neext.online/imdb/top10?
+Status: 200
+[
+  {
+    "id": 507244,
+    "titulo": "Caçadores do Fim do Mundo",
+    "nota": 6.821,
+    "lancamento": "2025-08-20",
+    "capa": "https://image.tmdb.org/t/p/w500/1ZhnVSuIPj0u1UBsrgkihYznbky.jpg"
+  },
+  {
+ e tmb imdbtopanimes
+Method: GET
+URL: https://www.api.neext.online/anime/top10?
+Status: 200
+[
+  {
+    "id": "7442",
+    "titulo": "Attack on Titan",
+    "descricao": "Séculos atrás, ta": "84.58",
+    "lancamento": "2013-04-07",
+    "capa": "htoster_images/7442/original.jpg"
+  },
+  {
+

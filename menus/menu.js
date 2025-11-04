@@ -120,6 +120,10 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽👤⃟ ${prefix}significadonome [nome] - Significado de nomes
 │ 𖧈∘̥⸽🌤️⃟ ${prefix}tempo [cidade] - Previsão do tempo
 │ 𖧈∘̥⸽📸⃟ ${prefix}screenshotweb [url] - Screenshot de sites
+│ 𖧈∘̥⸽🎬⃟ ${prefix}imdbfilme [nome] - Buscar filmes
+│ 𖧈∘̥⸽📺⃟ ${prefix}imdbanime [nome] - Buscar animes
+│ 𖧈∘̥⸽🏆⃟ ${prefix}imdbtopfilmes - Top 10 filmes
+│ 𖧈∘̥⸽⭐⃟ ${prefix}imdbtopanimes - Top 10 animes
 ╰──────────────────────⪨
 
 © NEEXT LTDA`;

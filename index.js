@@ -1485,6 +1485,236 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "imdbfilme":
+        case "filme": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}imdbfilme [nome do filme]\n\n💡 Exemplos:\n• ${config.prefix}imdbfilme Homem aranha\n• ${config.prefix}filme Vingadores\n• ${config.prefix}imdbfilme Matrix`);
+                break;
+            }
+
+            try {
+                const nomeFilme = args.join(' ').trim();
+                await reagirMensagem(sock, message, "🎬");
+                
+                const response = await axios.get(`https://www.api.neext.online/imdb/filme?nome=${encodeURIComponent(nomeFilme)}`);
+                
+                if (response.data && response.data.titulo) {
+                    const { titulo, descricao, nota, lancamento, capa } = response.data;
+                    
+                    const dataLancamento = new Date(lancamento).toLocaleDateString('pt-BR');
+                    
+                    let mensagem = `🎬 *${titulo.toUpperCase()}*\n\n`;
+                    mensagem += `📝 *Descrição:*\n${descricao}\n\n`;
+                    mensagem += `⭐ *Nota:* ${nota}/10\n`;
+                    mensagem += `📅 *Lançamento:* ${dataLancamento}\n`;
+                    mensagem += `\n━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📡 Fonte: IMDB`;
+                    
+                    if (capa) {
+                        const imagemResponse = await axios.get(capa, { responseType: 'arraybuffer' });
+                        const buffer = Buffer.from(imagemResponse.data, 'binary');
+                        
+                        await sock.sendMessage(from, {
+                            image: buffer,
+                            caption: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, {
+                            text: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    }
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Não foi possível encontrar o filme "${nomeFilme}".`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar filme:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar filme! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "imdbanime":
+        case "anime": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}imdbanime [nome do anime]\n\n💡 Exemplos:\n• ${config.prefix}imdbanime Naruto\n• ${config.prefix}anime One Piece\n• ${config.prefix}imdbanime Death Note`);
+                break;
+            }
+
+            try {
+                const nomeAnime = args.join(' ').trim();
+                await reagirMensagem(sock, message, "📺");
+                
+                const response = await axios.get(`https://www.api.neext.online/anime/anime?nome=${encodeURIComponent(nomeAnime)}`);
+                
+                if (response.data && response.data.titulo) {
+                    const { titulo, descricao, nota, lancamento, capa } = response.data;
+                    
+                    const dataLancamento = new Date(lancamento).toLocaleDateString('pt-BR');
+                    
+                    let mensagem = `📺 *${titulo.toUpperCase()}*\n\n`;
+                    mensagem += `📝 *Descrição:*\n${descricao}\n\n`;
+                    mensagem += `⭐ *Nota:* ${nota}%\n`;
+                    mensagem += `📅 *Lançamento:* ${dataLancamento}\n`;
+                    mensagem += `\n━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📡 Fonte: MyAnimeList`;
+                    
+                    if (capa) {
+                        const imagemResponse = await axios.get(capa, { responseType: 'arraybuffer' });
+                        const buffer = Buffer.from(imagemResponse.data, 'binary');
+                        
+                        await sock.sendMessage(from, {
+                            image: buffer,
+                            caption: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, {
+                            text: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    }
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Não foi possível encontrar o anime "${nomeAnime}".`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar anime:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar anime! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "imdbtopfilmes":
+        case "topfilmes": {
+            try {
+                await reagirMensagem(sock, message, "🏆");
+                
+                const response = await axios.get(`https://www.api.neext.online/imdb/top10`);
+                
+                if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+                    let mensagem = `🏆 *TOP 10 FILMES - IMDB*\n\n`;
+                    
+                    response.data.forEach((filme, index) => {
+                        const dataLancamento = new Date(filme.lancamento).toLocaleDateString('pt-BR');
+                        
+                        mensagem += `━━━━━━━━━━━━━━━\n`;
+                        mensagem += `${index + 1}. 🎬 *${filme.titulo}*\n`;
+                        mensagem += `⭐ Nota: ${filme.nota}/10\n`;
+                        mensagem += `📅 Lançamento: ${dataLancamento}\n`;
+                        if (index < response.data.length - 1) mensagem += `\n`;
+                    });
+                    
+                    mensagem += `\n━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📡 Fonte: IMDB`;
+                    
+                    await sock.sendMessage(from, {
+                        text: mensagem,
+                        contextInfo: {
+                            forwardingScore: 100000,
+                            isForwarded: true,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            }
+                        }
+                    }, { quoted: selinho });
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Não foi possível buscar o top 10 de filmes.`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar top filmes:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar top filmes! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "imdbtopanimes":
+        case "topanimes": {
+            try {
+                await reagirMensagem(sock, message, "⭐");
+                
+                const response = await axios.get(`https://www.api.neext.online/anime/top10`);
+                
+                if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+                    let mensagem = `⭐ *TOP 10 ANIMES - MAL*\n\n`;
+                    
+                    response.data.forEach((anime, index) => {
+                        const dataLancamento = new Date(anime.lancamento).toLocaleDateString('pt-BR');
+                        
+                        mensagem += `━━━━━━━━━━━━━━━\n`;
+                        mensagem += `${index + 1}. 📺 *${anime.titulo}*\n`;
+                        mensagem += `⭐ Nota: ${anime.nota}%\n`;
+                        mensagem += `📅 Lançamento: ${dataLancamento}\n`;
+                        if (index < response.data.length - 1) mensagem += `\n`;
+                    });
+                    
+                    mensagem += `\n━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📡 Fonte: MyAnimeList`;
+                    
+                    await sock.sendMessage(from, {
+                        text: mensagem,
+                        contextInfo: {
+                            forwardingScore: 100000,
+                            isForwarded: true,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            }
+                        }
+                    }, { quoted: selinho });
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Não foi possível buscar o top 10 de animes.`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar top animes:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar top animes! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
             case 'dono':
     // garante que 'sender' está definido no escopo correto
     const sender = message.key.participant || from;
