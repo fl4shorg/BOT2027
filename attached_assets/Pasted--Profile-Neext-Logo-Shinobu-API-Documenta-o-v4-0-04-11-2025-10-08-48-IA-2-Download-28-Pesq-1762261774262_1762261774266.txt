@@ -1,0 +1,408 @@
+
+
+Profile
+Neext Logo
+Shinobu API
+Documentação v4.0
+
+04/11/2025 • 10:08:48
+
+IA
+
+2
+
+Download
+
+28
+
+Pesquisa
+
+31
+
+GET
+Xvideos Search
+/search/xvideos
+
+
+GET
+SnackVídeo Search
+/search/snack/search
+
+
+GET
+Freepik Search
+/freepik/search
+
+
+GET
+Pinterest Search
+/search/pinterest
+
+
+GET
+StickerLy Search
+/stickerly/search
+
+
+GET
+Xnxx Search
+/search/xnxx
+
+
+GET
+Lyrics Search
+/lyrics/search
+
+
+GET
+Wikipedia
+/search/wiki
+
+
+GET
+TikTok Search
+/api/tiktok
+
+
+GET
+Mediafire Search
+/mediafire
+
+
+GET
+Playstore
+/playstore
+
+
+GET
+Google Image
+/pesquisa/googleimage
+
+
+GET
+Reels
+/pesquisa/reels
+
+
+GET
+FDroid
+/api/fdroid
+
+
+GET
+Pinterest 2
+/pesquisa/pinterest2
+
+
+GET
+Google
+/api/google
+
+
+GET
+Wattpad
+/pesquisa/wattpad
+
+
+GET
+Wikipedia 2
+/pesquisa/wikipedia2
+
+
+GET
+Bing Image
+/search/bingimage
+
+
+GET
+Bing Search
+/search/bingsearch
+
+
+GET
+DaFont Search
+/api/dafont/search
+
+
+GET
+Bing Videos
+/search/bing/videos
+
+
+GET
+Significado do Nome
+/pesquisa/significadonome
+
+
+GET
+Deezer
+/pesquisa/deezer
+
+
+GET
+Pinterest 4
+/search/pinterest4
+
+
+GET
+Book Search
+/book
+
+
+GET
+Signo
+/signo
+
+
+GET
+Dicionário
+/dicionario
+
+
+GET
+Amazon
+/amazon
+
+
+GET
+Arma
+/arma
+
+
+GET
+Genshin Impact
+/genshin
+
+
+Frases
+
+6
+
+Wallpaper
+
+2
+
+Figurinhas
+
+34
+
+Canvas
+
+5
+
+Jornal
+
+15
+
+Anime
+
+4
+
+Stalker
+
+5
+
+ephoto360
+
+37
+
+metadinha
+
+6
+
+Hentai
+
+92
+
+Random
+
+95
+
+nsfwhub
+
+37
+
+sfmcompile
+
+23
+
+Plaquinha
+
+10
+
+Consultas
+
+4
+
+FlamingText
+
+17
+
+Textpro
+
+30
+
+IMDB
+
+4
+
+Tools
+
+16
+
+GET
+AccuWeather
+/accuweather
+
+
+GET
+Screenshot Web
+/tools/ssweb
+
+
+GET
+Proxy
+/tools/proxy
+
+
+GET
+WhatsApp Me
+/wame
+
+
+GET
+Consultar CEP
+/cep
+
+
+GET
+Consultar IP
+/ip
+
+
+GET
+Gerar Pessoa
+/pessoa
+
+
+GET
+Gerar CPF
+/cpf
+
+
+GET
+Encurtar URL
+/encurtar
+
+
+GET
+Consultar DDD
+/ddd
+
+
+GET
+Fake Pessoa
+/tools/fakepessoa
+
+
+GET
+Calcular ICMS
+/tools/icms/calcular
+
+
+GET
+Rastreio Correios
+/tools/correio
+
+
+GET
+Antiporno
+/tools/antiporno
+
+
+GET
+Tradutor
+/tradutor
+
+
+GET
+YouTube Transcrição
+/api/ytranscript
+
+Neext Logo
+Live Documentation • v4.0
+Shinobu API
+Plataforma completa de REST API com monitoramento de saúde em tempo real.
+Teste endpoints instantaneamente com nossa documentação interativa e veja atualizações de status ao vivo.
+
+WhatsApp Channel
+Instagram
+Site Oficial
+Selecionar Servidor
+
+
+https://www.api.neext.online - Production Server
+sistema.endpoints
+503
+rotas
+sistema.categorias
+22
+grupos
+sistema.bots
+GODDARD
+ativo dev
+sistema.bots
+MUZAN
+dev off
+VISITANTES DIÁRIOS
+Clique aqui para ver todos os detalhes e estatisticas do site
+Seja bem-vindo, aproveite! ✨
+
+INFORMAÇÕES DE CONEXÃO
+Seu IP:
+
+201.182.219.71
+
+
+GET
+/accuweather
+AccuWeather
+Testar Endpoint
+cidade*
+Nome da cidade
+São Paulo
+Execute
+Clear
+Resposta
+Method: GET
+URL: https://www.api.neext.online/accuweather?cidade=S%C3%A3o+Paulo
+Status: 200
+{
+  "cidade": "São Paulo",
+  "clima_atual": {
+    "temperatura": "19°C",
+    "descricao": "Névoa",
+    "umidade": "94%",
+    "vento": "5 km/h"
+  },
+  "previsao_3_dias": [
+    {
+      "data": "2025-11-04",
+      "minima": "19°C",
+      "maxima": "26°C",
+      "descricao": "Surtos trovejantes nas proximidades"
+    },
+    {
+      "data": "2025-11-05",
+      "minima": "19°C",
+      "maxima": "32°C",
+      "descricao": "Parcialmente Nublado"
+    },
+    {
+      "data": "2025-11-06",
+      "minima": "17°C",
+      "maxima": "22°C",
+      "descricao": "Chuva irregular nas proximidades"
+    }
+  ]
+}
