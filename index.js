@@ -1094,6 +1094,145 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "dicionario":
+        case "dicio": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}dicionario [palavra]\n\n💡 Exemplo: ${config.prefix}dicionario água`);
+                break;
+            }
+
+            try {
+                const palavra = args.join(' ').trim();
+                await reagirMensagem(sock, message, "📖");
+                
+                // Faz a requisição para a API
+                const response = await axios.get(`https://www.api.neext.online/dicionario?q=${encodeURIComponent(palavra)}`);
+                
+                if (response.data && response.data.palavra) {
+                    const { palavra: palavraEncontrada, definicao, imagem } = response.data;
+                    
+                    const mensagem = `📖 *DICIONÁRIO*\n\n` +
+                        `📝 Palavra: *${palavraEncontrada}*\n\n` +
+                        `💬 Definição:\n${definicao}`;
+                    
+                    // Envia a imagem com a definição se houver imagem
+                    if (imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: imagem },
+                            caption: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    } else {
+                        // Se não houver imagem, envia apenas o texto
+                        await sock.sendMessage(from, {
+                            text: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    }
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Palavra "${palavra}" não encontrada no dicionário.`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar no dicionário:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar no dicionário! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "amazon": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}amazon [produto]\n\n💡 Exemplo: ${config.prefix}amazon iPhone 16`);
+                break;
+            }
+
+            try {
+                const produto = args.join(' ').trim();
+                await reagirMensagem(sock, message, "🛒");
+                
+                // Faz a requisição para a API
+                const response = await axios.get(`https://www.api.neext.online/amazon?q=${encodeURIComponent(produto)}`);
+                
+                if (response.data && response.data.status === 200 && response.data.resultados && response.data.resultados.length > 0) {
+                    const resultados = response.data.resultados.slice(0, 5); // Pega os primeiros 5 resultados
+                    
+                    let mensagem = `🛒 *AMAZON - Resultados para "${produto}"*\n\n`;
+                    
+                    resultados.forEach((item, index) => {
+                        mensagem += `━━━━━━━━━━━━━━━\n`;
+                        mensagem += `*${index + 1}. ${item.titulo}*\n`;
+                        mensagem += `💰 Preço: ${item.preco}\n`;
+                        if (item.avaliacao) {
+                            mensagem += `⭐ Avaliação: ${item.avaliacao}\n`;
+                        }
+                        if (item.link) {
+                            mensagem += `🔗 Link: ${item.link}\n`;
+                        }
+                        mensagem += `\n`;
+                    });
+                    
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📦 Total de resultados: ${response.data.resultados.length}`;
+                    
+                    // Envia a primeira imagem com a mensagem
+                    if (resultados[0].imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: resultados[0].imagem },
+                            caption: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    } else {
+                        // Se não houver imagem, envia apenas o texto
+                        await sock.sendMessage(from, {
+                            text: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    }
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Nenhum produto encontrado para "${produto}" na Amazon.`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar na Amazon:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar produtos na Amazon! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
             case 'dono':
     // garante que 'sender' está definido no escopo correto
     const sender = message.key.participant || from;
