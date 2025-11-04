@@ -5692,6 +5692,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         // ============================================
 
         case "videolento": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um vídeo para aplicar o efeito!' });
                 break;
@@ -5701,6 +5702,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "videorapido": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um vídeo para aplicar o efeito!' });
                 break;
@@ -5710,6 +5712,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "videocontrario": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um vídeo para aplicar o efeito!' });
                 break;
@@ -5719,6 +5722,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "audiolento": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5728,6 +5732,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "audiorapido": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5737,6 +5742,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "grave": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5746,6 +5752,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "grave2": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5755,6 +5762,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "esquilo": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5764,6 +5772,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "estourar": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5773,6 +5782,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "bass": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5782,6 +5792,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "bass2": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5791,6 +5802,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "vozmenino": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5800,6 +5812,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "vozrobo": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5809,6 +5822,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "vozradio": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5818,6 +5832,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "vozfantasma": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
@@ -5827,6 +5842,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         break;
 
         case "vozdistorcida": {
+            const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
             if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
                 await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
                 break;
