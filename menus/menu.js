@@ -110,6 +110,7 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽🧑‍🤝‍🧑⃟ menuMembro
 │ 𖧈∘̥⸽🎮⃟ menuGamer
 │ 𖧈∘̥⸽🎲⃟ menurandom
+│ 𖧈∘̥⸽🎚️⃟ menualteradores
 ╰──────────────────────⪨
 
 ╭──〔 COMANDOS ESPECIAIS 〕──⪩
@@ -922,6 +923,47 @@ function obterMenuRandom() {
 ╰⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓╯`;
 }
 
+// ========================
+// MENU ALTERADORES (efeitos de vídeo e áudio)
+// ========================
+function obterMenuAlteradores() {
+    const { prefix } = obterConfiguracoes();
+    return `
+╭═══════════════════ ⪩
+╎╭╌❅̸╌══⊱⋇⊰🐦‍🔥⊱⋇⊰══╌❅̸╌╮
+╎║ な ⃝̸̷͓᪺⃔͜🪷𝚫𝐋𝐓𝛴𝐑𝐀𝐑 𝐕𝐈𝐃𝚵❍̸🪷̷᪺͓̅ ⃝̸⃔͜な
+╎╰╌❅̸╌══⊱⋇⊰🐦‍🔥⊱⋇⊰══╌❅̸╌╯
+╎
+╎╭╌❅̸╌═⊱⋇⊰🐦‍🔥⊱⋇⊰═╌❅̸╌╮
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}videolento (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}videorapido (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}videocontrario (marca)
+╎╰╌❅̸╌═⊱⋇⊰🐦‍🔥⊱⋇⊰═╌❅̸╌╯
+╎
+╎╭╌❅̸╌══⊱⋇⊰☠⊱⋇⊰══╌❅̸╌╮
+╎║ な ⃝̸̷͓᪺⃔͜🪷𝚫𝐋𝐓𝛴𝐑𝐀𝐑 𝐀𝐔𝐃𝐈❍̸🪷̷᪺͓̅ ⃝̸⃔͜な
+╎╰╌❅̸╌══⊱⋇⊰🐦‍🔥⊱⋇⊰══╌❅̸╌╯
+╎
+╎╭╌❅̸╌═⊱⋇⊰🐦‍🔥⊱⋇⊰═╌❅̸╌╮
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}audiolento (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}audiorapido (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}grave (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}grave2 (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}esquilo (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}estourar (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}bass (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}bass2 (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}vozmenino (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}vozrobo (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}vozradio (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}vozfantasma (marca)
+╎║な ⃟̸̷᪺͓͡🎚️ ${prefix}vozdistorcida (marca)
+╎╰╌❅̸╌═⊱⋇⊰🐦‍🔥⊱⋇⊰═╌❅̸╌╯
+╰═══════════════════ ⪨
+
+© NEEXT LTDA`;
+}
+
 module.exports = {
     obterMenuPrincipal,
     obterMenuMembro,
@@ -938,5 +980,6 @@ module.exports = {
     obterMenuHentai,
     obterMenuDonoAvancado,
     obterConfigurarBot,
-    obterMenuRandom
+    obterMenuRandom,
+    obterMenuAlteradores
 };

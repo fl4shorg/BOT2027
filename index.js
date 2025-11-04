@@ -48,6 +48,9 @@ const akinator = require("./arquivos/akinator.js");
 // Sistema de Hentai
 const hentai = require("./arquivos/hentai.js");
 
+// Sistema de Alteradores (efeitos de vídeo e áudio)
+const alteradores = require("./arquivos/alteradores.js");
+
 // importa banner + logger centralizados
 const { mostrarBanner, logMensagem } = require("./export");
 
@@ -5077,6 +5080,16 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "menualteradores": {
+            const menus = require('./menus/menu.js');
+            const config = obterConfiguracoes();
+            await sock.sendMessage(from, {
+                image: { url: config.fotoDoBot },
+                caption: menus.obterMenuAlteradores()
+            }, { quoted: message });
+        }
+        break;
+
         // ============================================
         // COMANDOS DANBOORU - RANDOM IMAGES (89 comandos)
         // ============================================
@@ -5172,6 +5185,158 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
         // ============================================
         // FIM DOS COMANDOS DANBOORU
+        // ============================================
+
+        // ============================================
+        // COMANDOS DE ALTERADORES - EFEITOS DE VÍDEO E ÁUDIO
+        // ============================================
+
+        case "videolento": {
+            if (!quotedMsg || (!quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.videoLento(sock, from, quotedMsg);
+        }
+        break;
+
+        case "videorapido": {
+            if (!quotedMsg || (!quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.videoRapido(sock, from, quotedMsg);
+        }
+        break;
+
+        case "videocontrario": {
+            if (!quotedMsg || (!quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.videoContrario(sock, from, quotedMsg);
+        }
+        break;
+
+        case "audiolento": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.audioLento(sock, from, quotedMsg);
+        }
+        break;
+
+        case "audiorapido": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.audioRapido(sock, from, quotedMsg);
+        }
+        break;
+
+        case "grave": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.grave(sock, from, quotedMsg);
+        }
+        break;
+
+        case "grave2": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.grave2(sock, from, quotedMsg);
+        }
+        break;
+
+        case "esquilo": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.esquilo(sock, from, quotedMsg);
+        }
+        break;
+
+        case "estourar": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.estourar(sock, from, quotedMsg);
+        }
+        break;
+
+        case "bass": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.bass(sock, from, quotedMsg);
+        }
+        break;
+
+        case "bass2": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.bass2(sock, from, quotedMsg);
+        }
+        break;
+
+        case "vozmenino": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.vozMenino(sock, from, quotedMsg);
+        }
+        break;
+
+        case "vozrobo": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.vozRobo(sock, from, quotedMsg);
+        }
+        break;
+
+        case "vozradio": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.vozRadio(sock, from, quotedMsg);
+        }
+        break;
+
+        case "vozfantasma": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.vozFantasma(sock, from, quotedMsg);
+        }
+        break;
+
+        case "vozdistorcida": {
+            if (!quotedMsg || (!quotedMsg.audioMessage && !quotedMsg.videoMessage)) {
+                await sock.sendMessage(from, { text: '❌ Marque um áudio ou vídeo para aplicar o efeito!' });
+                break;
+            }
+            await alteradores.vozDistorcida(sock, from, quotedMsg);
+        }
+        break;
+
+        // ============================================
+        // FIM DOS COMANDOS DE ALTERADORES
         // ============================================
 
         case "menuanti": {
