@@ -1358,6 +1358,82 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "tempo":
+        case "clima":
+        case "previsao": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}tempo [cidade]\n\n💡 Exemplos:\n• ${config.prefix}tempo São Paulo\n• ${config.prefix}tempo Rio de Janeiro\n• ${config.prefix}tempo Belo Horizonte`);
+                break;
+            }
+
+            try {
+                const cidade = args.join(' ').trim();
+                await reagirMensagem(sock, message, "🌤️");
+                
+                // Faz a requisição para a API
+                const response = await axios.get(`https://www.api.neext.online/accuweather?cidade=${encodeURIComponent(cidade)}`);
+                
+                if (response.data && response.data.cidade) {
+                    const { cidade: cidadeEncontrada, clima_atual, previsao_3_dias } = response.data;
+                    
+                    let mensagem = `🌤️ *PREVISÃO DO TEMPO - ${cidadeEncontrada.toUpperCase()}*\n\n`;
+                    
+                    // Clima atual
+                    if (clima_atual) {
+                        mensagem += `📍 *CLIMA ATUAL:*\n`;
+                        mensagem += `🌡️ Temperatura: ${clima_atual.temperatura}\n`;
+                        mensagem += `☁️ Condição: ${clima_atual.descricao}\n`;
+                        mensagem += `💧 Umidade: ${clima_atual.umidade}\n`;
+                        mensagem += `💨 Vento: ${clima_atual.vento}\n\n`;
+                    }
+                    
+                    // Previsão para os próximos dias
+                    if (previsao_3_dias && previsao_3_dias.length > 0) {
+                        mensagem += `📅 *PREVISÃO PARA OS PRÓXIMOS DIAS:*\n\n`;
+                        
+                        previsao_3_dias.forEach((dia, index) => {
+                            const dataFormatada = new Date(dia.data + 'T00:00:00').toLocaleDateString('pt-BR', { 
+                                day: '2-digit', 
+                                month: '2-digit'
+                            });
+                            
+                            mensagem += `━━━━━━━━━━━━━━━\n`;
+                            mensagem += `📆 *${dataFormatada}*\n`;
+                            mensagem += `🔵 Mínima: ${dia.minima}\n`;
+                            mensagem += `🔴 Máxima: ${dia.maxima}\n`;
+                            mensagem += `☁️ ${dia.descricao}\n`;
+                            if (index < previsao_3_dias.length - 1) mensagem += `\n`;
+                        });
+                    }
+                    
+                    mensagem += `\n━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📡 Fonte: AccuWeather`;
+                    
+                    await sock.sendMessage(from, {
+                        text: mensagem,
+                        contextInfo: {
+                            forwardingScore: 100000,
+                            isForwarded: true,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            }
+                        }
+                    }, { quoted: selinho });
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Não foi possível encontrar a previsão do tempo para "${cidade}".`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar previsão do tempo:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar previsão do tempo! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
             case 'dono':
     // garante que 'sender' está definido no escopo correto
     const sender = message.key.participant || from;

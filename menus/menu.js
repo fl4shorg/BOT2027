@@ -118,6 +118,7 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽🛒⃟ ${prefix}amazon [produto] - Buscar produtos Amazon
 │ 𖧈∘̥⸽♏⃟ ${prefix}signo [signo] - Informações sobre signos
 │ 𖧈∘̥⸽👤⃟ ${prefix}significadonome [nome] - Significado de nomes
+│ 𖧈∘̥⸽🌤️⃟ ${prefix}tempo [cidade] - Previsão do tempo
 ╰──────────────────────⪨
 
 © NEEXT LTDA`;
