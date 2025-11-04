@@ -1295,6 +1295,69 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "significadonome":
+        case "significado": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}significadonome [nome]\n\n💡 Exemplo: ${config.prefix}significadonome Maria`);
+                break;
+            }
+
+            try {
+                const nome = args.join(' ').trim();
+                await reagirMensagem(sock, message, "👤");
+                
+                // Faz a requisição para a API
+                const response = await axios.get(`https://www.api.neext.online/pesquisa/significadonome?nome=${encodeURIComponent(nome)}`);
+                
+                if (response.data && response.data.status === 200 && response.data.resultado) {
+                    const { nome: nomeEncontrado, resultado, imagem } = response.data;
+                    
+                    const mensagem = `👤 *SIGNIFICADO DO NOME - ${nomeEncontrado.toUpperCase()}*\n\n` +
+                        `📜 ${resultado}\n\n` +
+                        `📚 Fonte: ${response.data.fonte || 'Dicionário de Nomes Próprios'}`;
+                    
+                    // Envia a imagem com o significado se houver imagem
+                    if (imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: imagem },
+                            caption: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    } else {
+                        // Se não houver imagem, envia apenas o texto
+                        await sock.sendMessage(from, {
+                            text: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    }
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Não foi possível encontrar o significado do nome "${nome}".`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar significado do nome:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar significado do nome! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
             case 'dono':
     // garante que 'sender' está definido no escopo correto
     const sender = message.key.participant || from;
