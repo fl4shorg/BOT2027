@@ -1233,6 +1233,68 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "signo": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                const signos = "áries, touro, gêmeos, câncer, leão, virgem, libra, escorpião, sagitário, capricórnio, aquário, peixes";
+                await reply(sock, from, `❌ Use: ${config.prefix}signo [signo]\n\n♏ Signos disponíveis:\n${signos}\n\n💡 Exemplo: ${config.prefix}signo escorpião`);
+                break;
+            }
+
+            try {
+                const signoInput = args.join(' ').trim().toLowerCase();
+                await reagirMensagem(sock, message, "♏");
+                
+                // Faz a requisição para a API
+                const response = await axios.get(`https://www.api.neext.online/signo?q=${encodeURIComponent(signoInput)}`);
+                
+                if (response.data && response.data.signo) {
+                    const { signo, imagem, descricao } = response.data;
+                    
+                    const mensagem = `♏ *SIGNO - ${signo.toUpperCase()}*\n\n` +
+                        `📜 Descrição:\n${descricao}`;
+                    
+                    // Envia a imagem com a descrição se houver imagem
+                    if (imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: imagem },
+                            caption: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    } else {
+                        // Se não houver imagem, envia apenas o texto
+                        await sock.sendMessage(from, {
+                            text: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    }
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Signo "${signoInput}" não encontrado. Verifique se digitou corretamente.`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar signo:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar informações do signo! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
             case 'dono':
     // garante que 'sender' está definido no escopo correto
     const sender = message.key.participant || from;
