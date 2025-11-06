@@ -5457,6 +5457,110 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             break;
         }
 
+        // Comando AudioMeme - Pesquisa e envia áudio aleatório
+        case 'audiomeme':
+        case 'audio': {
+            const pesquisa = args.join(' ');
+            if (!pesquisa) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, {
+                    text: `🎵 *AUDIOMEME - Pesquise e receba um áudio!*\n\n📝 *Como usar:*\n${config.prefix}audiomeme [pesquisa]\n${config.prefix}audio [pesquisa]\n\n💡 *Exemplos:*\n${config.prefix}audiomeme lula\n${config.prefix}audio neymar\n\n🔍 Digite o que deseja pesquisar!`
+                }, { quoted: message });
+                break;
+            }
+
+            console.log(`🎵 Pesquisando áudio: ${pesquisa}`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const apiUrl = `https://www.api.neext.online/audiomeme?q=${encodeURIComponent(pesquisa)}`;
+                console.log(`🔗 Chamando API AudioMeme: ${apiUrl}`);
+
+                const response = await axios.get(apiUrl, {
+                    timeout: 15000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+
+                console.log(`📥 Resposta API AudioMeme recebida`);
+
+                if (!response.data || !response.data.resultados || response.data.resultados.length === 0) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: `❌ Nenhum áudio encontrado para "${pesquisa}".\n\n💡 Tente outro termo de pesquisa!`
+                    }, { quoted: message });
+                    break;
+                }
+
+                const dados = response.data;
+                const total = dados.total || dados.resultados.length;
+                
+                // Seleciona um áudio aleatório dos resultados
+                const audioAleatorio = dados.resultados[Math.floor(Math.random() * dados.resultados.length)];
+                const titulo = audioAleatorio.titulo || 'Áudio';
+                const audioUrl = audioAleatorio.audio_direct;
+
+                if (!audioUrl) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: `❌ URL do áudio não disponível. Tente novamente!`
+                    }, { quoted: message });
+                    break;
+                }
+
+                console.log(`🎵 Baixando áudio: ${titulo}`);
+
+                // Baixa o áudio
+                const audioResponse = await axios.get(audioUrl, {
+                    responseType: 'arraybuffer',
+                    timeout: 30000
+                });
+
+                const audioBuffer = Buffer.from(audioResponse.data);
+
+                await reagirMensagem(sock, message, "✅");
+
+                // Envia o áudio
+                await sock.sendMessage(from, {
+                    audio: audioBuffer,
+                    mimetype: 'audio/mpeg',
+                    ptt: false,
+                    fileName: `${titulo}.mp3`
+                }, { quoted: message });
+
+                // Envia informação sobre o áudio
+                await sock.sendMessage(from, {
+                    text: `🎵 *${titulo}*\n\n🔍 Pesquisa: "${pesquisa}"\n📊 Total encontrado: ${total} áudios\n\n© NEEXT LTDA`
+                }, { quoted: message });
+
+                console.log(`✅ Áudio enviado: ${titulo}`);
+
+            } catch (error) {
+                console.error('❌ Erro ao buscar áudio:', error.message);
+                
+                let errorMessage = '❌ Erro ao buscar áudio.';
+                
+                if (error.code === 'ENOTFOUND') {
+                    errorMessage += ' API indisponível.';
+                } else if (error.code === 'ETIMEDOUT') {
+                    errorMessage += ' Timeout. Tente novamente.';
+                } else if (error.response?.status === 404) {
+                    errorMessage = `❌ Nenhum áudio encontrado para "${pesquisa}".\n\n💡 Tente outro termo!`;
+                } else if (error.response?.status >= 500) {
+                    errorMessage += ' Servidor fora do ar.';
+                } else {
+                    errorMessage += ' Tente novamente.';
+                }
+                
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: errorMessage
+                }, { quoted: message });
+            }
+            break;
+        }
+
         case 'rename': {
             if (!args.length) {
                 await sock.sendMessage(from, {

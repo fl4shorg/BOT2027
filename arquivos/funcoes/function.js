@@ -268,14 +268,14 @@ function contarComandos() {
             
             // Se estamos dentro do switch
             if (inSwitch) {
-                // Procura cases com exatamente 8 espaços no início (primeiro nível)
-                const caseMatch = line.match(/^        case "([^"]+)"/);
+                // Procura cases com QUALQUER quantidade de espaços (aceita qualquer indentação)
+                const caseMatch = line.match(/^\s+case\s+["']([^"']+)["']/);
                 if (caseMatch) {
                     comandosPrincipais.add(caseMatch[1]);
                 }
                 
                 // Detecta default (fim do switch)
-                if (line.match(/^        default:/)) {
+                if (line.match(/^\s+default:/)) {
                     inSwitch = false;
                     break;
                 }
