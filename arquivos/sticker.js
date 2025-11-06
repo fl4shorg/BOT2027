@@ -16,17 +16,17 @@ async function recodeVideo(inputPath) {
     
     await new Promise((resolve, reject) => {
         ff(inputPath)
-            .duration(5)
-            .fps(15)
-            .videoBitrate('500k')
             .outputOptions([
+                '-t', '5',
+                '-r', '15',
                 '-c:v', 'libx264',
                 '-preset', 'ultrafast',
                 '-crf', '28',
                 '-pix_fmt', 'yuv420p',
-                '-vf', 'scale=512:512:force_original_aspect_ratio=decrease',
+                '-vf', 'scale=\'min(512,iw)\':\'min(512,ih)\':force_original_aspect_ratio=decrease',
                 '-movflags', '+faststart',
-                '-an'
+                '-an',
+                '-y'
             ])
             .on("error", (err) => {
                 console.error('❌ Erro ao recodificar vídeo:', err.message);
