@@ -107,7 +107,6 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽🔞⃟ menuhentai
 │ 𖧈∘̥⸽🛠️⃟ menuadm
 │ 𖧈∘̥⸽👑⃟ menudono
-│ 𖧈∘̥⸽🧑‍🤝‍🧑⃟ menuMembro
 │ 𖧈∘̥⸽🎮⃟ menuGamer
 │ 𖧈∘̥⸽🎲⃟ menurandom
 │ 𖧈∘̥⸽🎚️⃟ menualteradores
@@ -126,6 +125,10 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽📺⃟ ${prefix}imdbanime [nome] - Buscar animes
 │ 𖧈∘̥⸽🏆⃟ ${prefix}imdbtopfilmes - Top 10 filmes
 │ 𖧈∘̥⸽⭐⃟ ${prefix}imdbtopanimes - Top 10 animes
+│ 𖧈∘̥⸽📮⃟ ${prefix}correio [número]/[mensagem] - Correio elegante
+│ 𖧈∘̥⸽💭⃟ ${prefix}pensador [personagem] - Frases do pensador
+│ 𖧈∘̥⸽🎌⃟ ${prefix}frasesanime - Frases de anime
+│ 𖧈∘̥⸽🎲⃟ ${prefix}chance [texto] - Calcular chance
 ╰──────────────────────⪨
 
 ╭──〔 COMANDOS PESQUISA 〕──⪩
@@ -142,6 +145,12 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽🎮⃟ ${prefix}stalkerroblox [user] - Stalk Roblox
 ╰──────────────────────⪨
 
+╭──〔 COMANDOS FIGURINHAS 〕──⪩
+│ 𖧈∘̥⸽🎨⃟ ${prefix}brat [texto] - Criar sticker brat
+│ 𖧈∘̥⸽🏷️⃟ ${prefix}s - Criar sticker de mídia
+│ 𖧈∘̥⸽✏️⃟ ${prefix}rename [pack|author] - Renomear sticker
+╰──────────────────────⪨
+
 © NEEXT LTDA`;
     } catch (error) {
         console.error('Erro ao gerar menu principal:', error);
@@ -150,48 +159,6 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
     }
 }
 
-// ========================
-// MENU MEMBRO (comandos básicos)
-// ========================
-function obterMenuMembro() {
-    const { prefix, nomeDoBot, nickDoDono } = obterConfiguracoes();
-    return `
-╭─━─━⋆｡°✩🦋✩°｡⋆ ━─━─╮
-│     𝐌𝐄𝐍𝐔 𝐌𝐄𝐌𝐁𝐑𝐎 - 𝐍𝐄𝐄𝐗𝐓
-╰─━─━⋆｡°✩🦋✩°｡⋆ ━─━─╯
-╎
-╭⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓╮
-
-│╭─━─⋆｡°✩🤖✩°｡⋆ ━─━╮
-│┊𖥨ํ∘̥⃟⸽⃟🦋￫ ${prefix}ping
-│┊𖥨ํ∘̥⃟⸽⃟🦋￫ ${prefix}hora
-│╰─━─⋆｡°✩🤖✩°｡⋆ ━─━╯
-
-│╭─━─⋆｡°✩📝✩°｡⋆ ━─━╮
-│┊𖥨ํ∘̥⃟⸽⃟🦋￫ ${prefix}rg
-│╰─━─⋆｡°✩📝✩°｡⋆ ━─━╯
-
-│╭─━─⋆｡°✩📚✩°｡⋆ ━─━╮
-│┊𖥨ํ∘̥⃟⸽⃟🦋￫ ${prefix}pensador [personagem]
-│┊𖥨ํ∘̥⃟⸽⃟🦋￫ ${prefix}frasesanime
-│┊𖥨ํ∘̥⃟⸽⃟🦋￫ ${prefix}wikipedia [assunto]
-│╰─━─⋆｡°✩📚✩°｡⋆ ━─━╯
-
-│╭─━─⋆｡°✩🎲✩°｡⋆ ━─━╮
-│┊𖥨ํ∘̥⃟⸽⃟🦋￫ ${prefix}chance [texto]
-│┊𖥨ํ∘̥⃟⸽⃟🦋￫ ${prefix}correio [número]/[mensagem]
-│╰─━─⋆｡°✩🎲✩°｡⋆ ━─━╯
-
-│╭─━─⋆｡°✩🏷️✩°｡⋆ ━─━╮
-│┊𖥨ํ∘̥⃟⸽⃟🦋￫ ${prefix}s
-│┊𖥨ํ∘̥⃟⸽⃟🦋￫ ${prefix}rename [pack|author]
-│╰─━─⋆｡°✩🏷️✩°｡⋆ ━─━╯
-
-╰⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓⎔⎓╯
-━━━━━━━━━━━━━━━
-© NEEXT LTDA - Flash
-`;
-}
 
 // ========================
 // MENU ADMIN (comandos administrativos)

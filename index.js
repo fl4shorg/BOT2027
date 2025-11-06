@@ -1619,7 +1619,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 // Outros jogos
                 'jogodavelha', 'roletarussa', 'disparar', 'jogodaforca',
                 // Comandos de sistema básicos
-                'ping', 'menu', 'menuadm', 'menudono', 'menumembro', 'menugamer',
+                'ping', 'menu', 'menuadm', 'menudono', 'menugamer',
                 'menudownload', 'menufigurinhas', 'menuhentai', 'menurandom',
                 // Comandos de agendamento e grupo
                 'time-status', 'opengp', 'closegp', 'linkgrupo', 'linkdogrupo', 'link'
@@ -6778,16 +6778,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             } catch (err) {
                 console.error("🧪 TESTE: ERRO =", err);
             }
-        }
-        break;
-
-        case "menumembro": {
-            const menus = require('./menus/menu.js');
-            const config = obterConfiguracoes();
-            await sock.sendMessage(from, {
-                image: { url: config.fotoDoBot },
-                caption: menus.obterMenuMembro()
-            }, { quoted: message });
         }
         break;
 
