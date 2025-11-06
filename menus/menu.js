@@ -134,6 +134,13 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽🔎⃟ ${prefix}bingimagem [busca] - Buscar imagens no Bing
 ╰──────────────────────⪨
 
+╭──〔 COMANDOS STALKER 〕──⪩
+│ 𖧈∘̥⸽📸⃟ ${prefix}stalkerinstagram [user] - Stalk Instagram
+│ 𖧈∘̥⸽📺⃟ ${prefix}stalkeryoutube [canal] - Stalk YouTube
+│ 𖧈∘̥⸽🎵⃟ ${prefix}stalkertiktok [user] - Stalk TikTok
+│ 𖧈∘̥⸽🎮⃟ ${prefix}stalkerroblox [user] - Stalk Roblox
+╰──────────────────────⪨
+
 © NEEXT LTDA`;
     } catch (error) {
         console.error('Erro ao gerar menu principal:', error);

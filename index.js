@@ -3757,6 +3757,336 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             break;
         }
 
+        case 'stalkerinstagram':
+        case 'stalkig':
+        case 'igstalk': {
+            const username = args.join(' ').replace('@', '');
+            if (!username) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, { 
+                    text: `❌ Digite o username do Instagram!\n\nExemplo: *${config.prefix}stalkerinstagram neet.tk*` 
+                }, { quoted: message });
+                break;
+            }
+
+            console.log(`📸 Stalkando Instagram: "${username}"`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const config = obterConfiguracoes();
+                
+                const response = await axios.get(`https://www.api.neext.online/api/insta-stalk?username=${encodeURIComponent(username)}`, {
+                    timeout: 20000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+                
+                console.log(`📥 Resposta Instagram Stalk:`, response.data?.success);
+                
+                if (!response.data || !response.data.success || !response.data.result) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: `❌ Usuário *${username}* não encontrado no Instagram.`
+                    }, { quoted: message });
+                    break;
+                }
+
+                const result = response.data.result;
+                const mensagem = `📸 *INSTAGRAM STALKER* 📸\n\n` +
+                    `👤 Username: @${result.username}\n` +
+                    `📝 Nome: ${result.fullname || 'Não informado'}\n` +
+                    `📄 Bio: ${result.bio || 'Sem biografia'}\n` +
+                    `📊 Posts: ${result.posts}\n` +
+                    `👥 Seguidores: ${result.followers}\n` +
+                    `➕ Seguindo: ${result.following}\n\n` +
+                    `© ${config.nomeDoBot}`;
+
+                // Baixa a foto de perfil se disponível
+                if (result.profilePic) {
+                    try {
+                        const imageResponse = await axios.get(result.profilePic, {
+                            responseType: 'arraybuffer',
+                            timeout: 10000
+                        });
+                        
+                        await sock.sendMessage(from, {
+                            image: Buffer.from(imageResponse.data),
+                            caption: mensagem
+                        }, { quoted: message });
+                    } catch (imgError) {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                    }
+                } else {
+                    await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                }
+                
+                await reagirMensagem(sock, message, "✅");
+                console.log(`✅ Instagram Stalk realizado com sucesso!`);
+
+            } catch (error) {
+                console.error('❌ Erro ao stalkar Instagram:', error.message);
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: '❌ Erro ao buscar informações do Instagram. Tente novamente.'
+                }, { quoted: message });
+            }
+            break;
+        }
+
+        case 'stalkeryoutube':
+        case 'ytstalk':
+        case 'stalkyoutube': {
+            const channel = args.join(' ').replace('@', '');
+            if (!channel) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, { 
+                    text: `❌ Digite o nome do canal do YouTube!\n\nExemplo: *${config.prefix}stalkeryoutube neetk1*` 
+                }, { quoted: message });
+                break;
+            }
+
+            console.log(`📺 Stalkando YouTube: "${channel}"`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const config = obterConfiguracoes();
+                
+                const response = await axios.get(`https://www.api.neext.online/stalk/youtube?channel=${encodeURIComponent(channel)}`, {
+                    timeout: 20000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+                
+                console.log(`📥 Resposta YouTube Stalk:`, response.data?.status);
+                
+                if (!response.data || !response.data.status) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: `❌ Canal *${channel}* não encontrado no YouTube.`
+                    }, { quoted: message });
+                    break;
+                }
+
+                const result = response.data;
+                const mensagem = `📺 *YOUTUBE STALKER* 📺\n\n` +
+                    `📢 Canal: ${result.Canal}\n` +
+                    `👥 Inscritos: ${result.Inscritos}\n` +
+                    `🎬 Vídeos: ${result.Vídeos}\n` +
+                    `👁️ Visualizações: ${result.Visualizações}\n` +
+                    `📅 Criado em: ${result.CriadoEm}\n` +
+                    `🔗 Link: ${result.url}\n\n` +
+                    `© ${config.nomeDoBot}`;
+
+                // Baixa a foto de perfil se disponível
+                if (result.Perfil) {
+                    try {
+                        const imageResponse = await axios.get(result.Perfil, {
+                            responseType: 'arraybuffer',
+                            timeout: 10000
+                        });
+                        
+                        await sock.sendMessage(from, {
+                            image: Buffer.from(imageResponse.data),
+                            caption: mensagem
+                        }, { quoted: message });
+                    } catch (imgError) {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                    }
+                } else {
+                    await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                }
+                
+                await reagirMensagem(sock, message, "✅");
+                console.log(`✅ YouTube Stalk realizado com sucesso!`);
+
+            } catch (error) {
+                console.error('❌ Erro ao stalkar YouTube:', error.message);
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: '❌ Erro ao buscar informações do YouTube. Tente novamente.'
+                }, { quoted: message });
+            }
+            break;
+        }
+
+        case 'stalkertiktok':
+        case 'ttstalk':
+        case 'stalktiktok': {
+            const username = args.join(' ').replace('@', '');
+            if (!username) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, { 
+                    text: `❌ Digite o username do TikTok!\n\nExemplo: *${config.prefix}stalkertiktok neet.chat*` 
+                }, { quoted: message });
+                break;
+            }
+
+            console.log(`🎵 Stalkando TikTok: "${username}"`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const config = obterConfiguracoes();
+                
+                const response = await axios.get(`https://www.api.neext.online/stalk/ttstalk?username=${encodeURIComponent(username)}`, {
+                    timeout: 20000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+                
+                console.log(`📥 Resposta TikTok Stalk:`, response.data?.status);
+                
+                if (!response.data || response.data.status !== 200 || !response.data.result) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: `❌ Usuário *${username}* não encontrado no TikTok.`
+                    }, { quoted: message });
+                    break;
+                }
+
+                const result = response.data.result;
+                const mensagem = `🎵 *TIKTOK STALKER* 🎵\n\n` +
+                    `👤 Username: @${result.uniqueId}\n` +
+                    `📝 Nome: ${result.nickname}\n` +
+                    `📄 Bio: ${result.bio || 'Sem biografia'}\n` +
+                    `✅ Verificado: ${result.verified ? 'Sim ✓' : 'Não'}\n` +
+                    `🔒 Privado: ${result.private ? 'Sim' : 'Não'}\n` +
+                    `👥 Seguidores: ${result.followers.toLocaleString()}\n` +
+                    `➕ Seguindo: ${result.following.toLocaleString()}\n` +
+                    `❤️ Curtidas: ${result.hearts.toLocaleString()}\n` +
+                    `🎬 Vídeos: ${result.videos}\n` +
+                    `🔗 Link: ${result.profile_link}\n\n` +
+                    `© ${config.nomeDoBot}`;
+
+                // Baixa a foto de perfil se disponível
+                if (result.avatar) {
+                    try {
+                        const imageResponse = await axios.get(result.avatar, {
+                            responseType: 'arraybuffer',
+                            timeout: 10000
+                        });
+                        
+                        await sock.sendMessage(from, {
+                            image: Buffer.from(imageResponse.data),
+                            caption: mensagem
+                        }, { quoted: message });
+                    } catch (imgError) {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                    }
+                } else {
+                    await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                }
+                
+                await reagirMensagem(sock, message, "✅");
+                console.log(`✅ TikTok Stalk realizado com sucesso!`);
+
+            } catch (error) {
+                console.error('❌ Erro ao stalkar TikTok:', error.message);
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: '❌ Erro ao buscar informações do TikTok. Tente novamente.'
+                }, { quoted: message });
+            }
+            break;
+        }
+
+        case 'stalkerroblox':
+        case 'robloxstalk':
+        case 'stalkroblox': {
+            const username = args.join(' ');
+            if (!username) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, { 
+                    text: `❌ Digite o username do Roblox!\n\nExemplo: *${config.prefix}stalkerroblox kfl4sh*` 
+                }, { quoted: message });
+                break;
+            }
+
+            console.log(`🎮 Stalkando Roblox: "${username}"`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const config = obterConfiguracoes();
+                
+                const response = await axios.get(`https://www.api.neext.online/stalk/stalkroblox?user=${encodeURIComponent(username)}`, {
+                    timeout: 20000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+                
+                console.log(`📥 Resposta Roblox Stalk:`, response.data?.statusCode);
+                
+                if (!response.data || response.data.statusCode !== 200 || !response.data.result) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: `❌ Usuário *${username}* não encontrado no Roblox.`
+                    }, { quoted: message });
+                    break;
+                }
+
+                const result = response.data.result;
+                const basic = result.basic;
+                const social = result.social;
+                const presence = result.presence?.userPresences?.[0];
+                
+                // Status de presença
+                let presenceStatus = 'Offline';
+                if (presence) {
+                    if (presence.userPresenceType === 1) presenceStatus = 'Online';
+                    else if (presence.userPresenceType === 2) presenceStatus = 'Jogando';
+                    else if (presence.lastLocation) presenceStatus = presence.lastLocation;
+                }
+
+                const mensagem = `🎮 *ROBLOX STALKER* 🎮\n\n` +
+                    `👤 Username: ${basic.name}\n` +
+                    `📝 Display Name: ${basic.displayName}\n` +
+                    `🆔 ID: ${basic.id}\n` +
+                    `📄 Descrição: ${basic.description || 'Sem descrição'}\n` +
+                    `📅 Criado em: ${new Date(basic.created).toLocaleDateString('pt-BR')}\n` +
+                    `✅ Verificado: ${basic.hasVerifiedBadge ? 'Sim ✓' : 'Não'}\n` +
+                    `🚫 Banido: ${basic.isBanned ? 'Sim' : 'Não'}\n` +
+                    `🟢 Status: ${presenceStatus}\n\n` +
+                    `👥 *SOCIAL*\n` +
+                    `🤝 Amigos: ${social.friends.count}\n` +
+                    `👥 Seguidores: ${social.followers.count}\n` +
+                    `➕ Seguindo: ${social.following.count}\n\n` +
+                    `© ${config.nomeDoBot}`;
+
+                // Baixa a foto de perfil se disponível
+                if (result.avatar?.headshot?.data?.[0]?.imageUrl) {
+                    try {
+                        const imageResponse = await axios.get(result.avatar.headshot.data[0].imageUrl, {
+                            responseType: 'arraybuffer',
+                            timeout: 10000
+                        });
+                        
+                        await sock.sendMessage(from, {
+                            image: Buffer.from(imageResponse.data),
+                            caption: mensagem
+                        }, { quoted: message });
+                    } catch (imgError) {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                    }
+                } else {
+                    await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                }
+                
+                await reagirMensagem(sock, message, "✅");
+                console.log(`✅ Roblox Stalk realizado com sucesso!`);
+
+            } catch (error) {
+                console.error('❌ Erro ao stalkar Roblox:', error.message);
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: '❌ Erro ao buscar informações do Roblox. Tente novamente.'
+                }, { quoted: message });
+            }
+            break;
+        }
+
         case 'arma': {
             const query = args.join(' ');
             if (!query) {

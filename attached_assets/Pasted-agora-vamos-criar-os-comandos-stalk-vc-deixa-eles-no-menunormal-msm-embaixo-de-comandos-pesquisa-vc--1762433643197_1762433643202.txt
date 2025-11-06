@@ -1,0 +1,128 @@
+agora vamos criar os comandos stalk vc deixa eles no menunormal msm embaixo de comandos pesquisa vc faz um escrito comandos stalker
+
+o primeiro comando é stalkerInstagram aí a api com os resultados 
+
+Method: GET
+URL: https://www.api.neext.online/api/insta-stalk?username=neet.tk
+Status: 200
+{
+  "success": true,
+  "result": {
+    "username": "neet.tk",
+    "fullname": "𝗡𝗘𝗘𝗫𝗧",
+    "bio": null,
+    "profilePic": "https://pic8.anon-viewer.com/media.php?media=https%3A%2F%2Fscontent.cdninstagram.com%2Fv%2Ft51.2885-19%2F511565696_17994196604805631_6967763631898122813_n.jpg%3Fstp%3Ddst-jpg_s150x150_tt6%26efg%3DeyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0%26_nc_ht%3Dscontent-iad3-1.cdninstagram.com%26_nc_cat%3D107%26_nc_oc%3DQ6cZ2QFbq_kjyywMC6DsWGiR0r0tN-9SYG-p-biQxGYKxosSvUS8wADN7ESVnpUCOxyXw8T0LP5hvUMifrmu0ZOxzybK%26_nc_ohc%3Dg4e2aRWFVTEQ7kNvwHo94-2%26_nc_gid%3D4azbFfIjy9bI-d4x7os27w%26edm%3DALGbJPMBAAAA%26ccb%3D7-5%26oh%3D00_Afia5CCgDBTeieWdWlwBFP-OdzKJj8vxJwH5g-9PY3ZRAQ%26oe%3D69125194%26_nc_sid%3D7d3ac5",
+    "posts": "0",
+    "followers": "536",
+    "following": "4"
+  }
+}
+
+o segundo comando é stalkeryoutube
+
+Method: GET
+URL: https://www.api.neext.online/stalk/youtube?channel=neetk1
+
+JSON Response:
+{
+  "status": true,
+  "Canal": "neetk",
+  "Perfil": "https://images.socialblade.com/256x,q75/https://yt3.ggpht.com/WVv3a_UByUz1i2c7mRJw1G8S6OY5HO9LZNYRne-w70vyoGigz7hjbo-KaRwbliomQi4HHD7Xtw=s192-c-k-c0x00ffffff-no-rj",
+  "Inscritos": "278",
+  "Vídeos": "0",
+  "Visualizações": "0",
+  "CriadoEm": "May 30, 2019",
+  "url": "https://www.youtube.com/@neetk1"
+}
+
+o terceiro comando é stalkertiktok
+Method: GET
+URL: https://www.api.neext.online/stalk/ttstalk?username=neet.chat
+Status: 200
+{
+  "status": 200,
+  "result": {
+    "id": "6765121918461002758",
+    "uniqueId": "neet.chat",
+    "nickname": "neext",
+    "bio": "vídeo de grupos de amizades diariamente, link dos grupos 👇",
+    "verified": false,
+    "private": false,
+    "avatar": "https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/53ecb7a8167e00a7386233a19aeb851c~tplv-tiktokx-cropcenter:1080:1080.jpeg?dr=14579&refresh_token=68f10cfd&x-expires=1762603200&x-signature=LVolj8BAvo6YKYxxdYAgo7QjMO0%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=maliva",
+    "followers": 53900,
+    "following": 121,
+    "hearts": 3325,
+    "videos": 47,
+    "profile_link": "https://www.tiktok.com/@neet.chat"
+  }
+}
+
+o quarto comando é stalkerroblox vc faz ele pegar só as informações úteis 
+
+Method: GET
+URL: https://www.api.neext.online/stalk/stalkroblox?user=kfl4sh
+Status: 200
+JSON Response:
+{
+  "statusCode": 200,
+  "result": {
+    "userId": 4835982248,
+    "basic": {
+      "description": "",
+      "created": "2023-07-21T01:22:10.447Z",
+      "isBanned": false,
+      "externalAppDisplayName": null,
+      "hasVerifiedBadge": false,
+      "id": 4835982248,
+      "name": "kfl4sh",
+      "displayName": "kfl4sh"
+    },
+    "status": null,
+    "presence": {
+      "userPresences": [
+        {
+          "userPresenceType": 0,
+          "lastLocation": "Website",
+          "placeId": null,
+          "rootPlaceId": null,
+          "gameId": null,
+          "universeId": null,
+          "userId": 4835982248
+        }
+      ]
+    },
+    "social": {
+      "friends": {
+        "count": 2
+      },
+      "followers": {
+        "count": 0
+      },
+      "following": {
+        "count": 0
+      }
+    },
+    "groups": {
+      "list": {
+        "data": []
+      },
+      "primary": null
+    },
+    "games": {
+      "favorites": null,
+      "recent": null
+    },
+    "avatar": {
+      "headshot": {
+        "data": [
+          {
+            "targetId": 4835982248,
+            "state": "Completed",
+            "imageUrl": "https://tr.rbxcdn.com/30DAY-AvatarHeadshot-3D576919D9D4B49A2E3B5C9CF54B5FE4-Png/420/420/AvatarHeadshot/Png/noFilter",
+            "version": "TN3"
+          }
+        ]
+      },
+
+
+
