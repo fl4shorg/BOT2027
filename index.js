@@ -2840,8 +2840,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
-        case "playstore":
-        case "play": {
+        case "playstore": {
             if (args.length === 0) {
                 const config = obterConfiguracoes();
                 await reply(sock, from, `❌ Use: ${config.prefix}playstore [app]\n\n💡 Exemplo: ${config.prefix}playstore whatsapp`);

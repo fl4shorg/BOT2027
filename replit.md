@@ -103,7 +103,14 @@ Os dados de autenticação são salvos na pasta `/conexao` e persistem entre rei
 
 ## Atualizações Recentes
 
-### 06 de Novembro de 2025 - Noite
+### 06 de Novembro de 2025 - Noite (Parte 2)
+- ✅ **Conflito entre comandos play e playstore resolvido**:
+  - O comando `.play` agora funciona APENAS para música (download de áudio/vídeo do YouTube)
+  - O comando `.playstore` funciona APENAS para buscar apps na Play Store
+  - Antes, ambos os comandos compartilhavam o alias "play", causando conflito
+  - Agora cada comando tem sua função específica sem interferências
+
+### 06 de Novembro de 2025 - Noite (Parte 1)
 - ✅ **Comando attp adicionado**: Novo comando `.attp [texto]` para texto animado colorido
   - Cria figurinha animada com texto colorido e animações
   - API: https://www.api.neext.online/attp
