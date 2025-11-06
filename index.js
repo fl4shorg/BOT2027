@@ -3143,107 +3143,180 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 const agora = new Date();
                 const dataHora = `${agora.toLocaleDateString('pt-BR')} ${agora.toLocaleTimeString('pt-BR')}`;
 
-                // Tenta detectar mídia de diferentes formas
-                let mediaMessage = null;
-                let mimetype = null;
-                let isQuotedSticker = false;
-
-                // 1. Verifica se é uma mensagem marcada (quotada)
-                let quotedMsg = message.message.extendedTextMessage?.contextInfo?.quotedMessage;
-                if (quotedMsg) {
-                    // Unwrap ephemeral/viewOnce wrappers para mensagens quotadas (todas as versões)
-                    if (quotedMsg.ephemeralMessage) quotedMsg = quotedMsg.ephemeralMessage.message;
-                    if (quotedMsg.viewOnceMessage) quotedMsg = quotedMsg.viewOnceMessage.message;
-                    if (quotedMsg.viewOnceMessageV2) quotedMsg = quotedMsg.viewOnceMessageV2.message;
-                    if (quotedMsg.viewOnceMessageV2Extension) quotedMsg = quotedMsg.viewOnceMessageV2Extension.message;
-
-                    // Suporte a stickers citados também
-                    if (quotedMsg.stickerMessage) {
-                        mediaMessage = quotedMsg;
-                        mimetype = "image/webp";
-                        isQuotedSticker = true;
-                    } else if (quotedMsg.imageMessage || quotedMsg.videoMessage) {
-                        mediaMessage = quotedMsg;
-                        mimetype = quotedMsg.imageMessage?.mimetype || quotedMsg.videoMessage?.mimetype;
+                // Verifica se tem link do Pinterest nos argumentos
+                const textInput = args.join(' ');
+                const pinterestRegex = /(https?:\/\/)?(www\.)?(pinterest\.com|pin\.it)\/[^\s]+/gi;
+                const pinterestMatch = textInput.match(pinterestRegex);
+                
+                let buffer = null;
+                let finalMimetype = null;
+                
+                // Se encontrou link do Pinterest, processa ele
+                if (pinterestMatch && pinterestMatch.length > 0) {
+                    const pinterestUrl = pinterestMatch[0];
+                    console.log(`📌 Link do Pinterest detectado: ${pinterestUrl}`);
+                    
+                    await reagirMensagem(sock, message, "⏳");
+                    
+                    try {
+                        // Faz request para a API do Pinterest
+                        const apiUrl = `https://www.api.neext.online/savepin?url=${encodeURIComponent(pinterestUrl)}`;
+                        console.log(`🔗 Chamando API Pinterest: ${apiUrl}`);
+                        
+                        const response = await axios.get(apiUrl, {
+                            timeout: 30000,
+                            headers: {
+                                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                            }
+                        });
+                        
+                        if (!response.data || !response.data.success || !response.data.results || response.data.results.length === 0) {
+                            throw new Error('API não retornou resultados válidos');
+                        }
+                        
+                        const mediaResult = response.data.results[0];
+                        const downloadLink = mediaResult.downloadLink;
+                        const mediaFormat = mediaResult.format?.toLowerCase() || 'jpg';
+                        
+                        console.log(`📥 Baixando mídia do Pinterest: ${downloadLink} (${mediaFormat})`);
+                        
+                        // Baixa a mídia
+                        const mediaResponse = await axios.get(downloadLink, {
+                            responseType: 'arraybuffer',
+                            timeout: 60000,
+                            headers: {
+                                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                            }
+                        });
+                        
+                        buffer = Buffer.from(mediaResponse.data);
+                        console.log(`✅ Mídia baixada: ${buffer.length} bytes`);
+                        
+                        // Define o mimetype baseado no formato
+                        if (mediaFormat === 'mp4' || mediaFormat === 'video') {
+                            finalMimetype = 'video/mp4';
+                        } else if (mediaFormat === 'gif') {
+                            finalMimetype = 'image/gif';
+                        } else if (mediaFormat === 'png') {
+                            finalMimetype = 'image/png';
+                        } else if (mediaFormat === 'webp') {
+                            finalMimetype = 'image/webp';
+                        } else {
+                            finalMimetype = 'image/jpeg';
+                        }
+                        
+                    } catch (pinterestError) {
+                        console.error('❌ Erro ao processar Pinterest:', pinterestError);
+                        await reagirMensagem(sock, message, "❌");
+                        return await sock.sendMessage(from, {
+                            text: `❌ Erro ao baixar do Pinterest:\n${pinterestError.message || 'Tente novamente'}\n\n💡 *Certifique-se de usar um link válido do Pinterest!*`
+                        }, { quoted: message });
                     }
                 }
 
-                // 2. Se não tem quotada, verifica se a própria mensagem tem mídia (enviada diretamente)
-                if (!mediaMessage && (message.message.imageMessage || message.message.videoMessage)) {
-                    mediaMessage = message.message;
-                    mimetype = message.message.imageMessage?.mimetype || message.message.videoMessage?.mimetype;
-                }
+                // Se não veio do Pinterest, processa mídia do WhatsApp
+                if (!buffer) {
+                    // Tenta detectar mídia de diferentes formas
+                    let mediaMessage = null;
+                    let mimetype = null;
+                    let isQuotedSticker = false;
 
-                // Se não encontrou nenhuma mídia
-                if (!mediaMessage) {
-                    await reagirMensagem(sock, message, "❌");
-                    return await sock.sendMessage(from, {
-                        text: "❌ Para criar figurinha:\n• Marque uma imagem/vídeo/sticker e digite .s\n• Ou envie uma imagem/vídeo com legenda .s"
-                    }, { quoted: message });
-                }
+                    // 1. Verifica se é uma mensagem marcada (quotada)
+                    let quotedMsg = message.message.extendedTextMessage?.contextInfo?.quotedMessage;
+                    if (quotedMsg) {
+                        // Unwrap ephemeral/viewOnce wrappers para mensagens quotadas (todas as versões)
+                        if (quotedMsg.ephemeralMessage) quotedMsg = quotedMsg.ephemeralMessage.message;
+                        if (quotedMsg.viewOnceMessage) quotedMsg = quotedMsg.viewOnceMessage.message;
+                        if (quotedMsg.viewOnceMessageV2) quotedMsg = quotedMsg.viewOnceMessageV2.message;
+                        if (quotedMsg.viewOnceMessageV2Extension) quotedMsg = quotedMsg.viewOnceMessageV2Extension.message;
 
-                // Determina o tipo de mídia
-                let isImage, isVideo, type;
-                if (isQuotedSticker) {
-                    isImage = false;
-                    isVideo = false;
-                    type = "sticker";
-                } else {
-                    isImage = !!mediaMessage.imageMessage;
-                    isVideo = !!mediaMessage.videoMessage;
-                    type = isImage ? "image" : isVideo ? "video" : null;
-                }
+                        // Suporte a stickers citados também
+                        if (quotedMsg.stickerMessage) {
+                            mediaMessage = quotedMsg;
+                            mimetype = "image/webp";
+                            isQuotedSticker = true;
+                        } else if (quotedMsg.imageMessage || quotedMsg.videoMessage) {
+                            mediaMessage = quotedMsg;
+                            mimetype = quotedMsg.imageMessage?.mimetype || quotedMsg.videoMessage?.mimetype;
+                        }
+                    }
 
-                if (!type) {
-                    await reagirMensagem(sock, message, "❌");
-                    return await sock.sendMessage(from, {
-                        text: "❌ Apenas imagens, vídeos, GIFs e stickers são suportados para figurinhas"
-                    }, { quoted: message });
-                }
+                    // 2. Se não tem quotada, verifica se a própria mensagem tem mídia (enviada diretamente)
+                    if (!mediaMessage && (message.message.imageMessage || message.message.videoMessage)) {
+                        mediaMessage = message.message;
+                        mimetype = message.message.imageMessage?.mimetype || message.message.videoMessage?.mimetype;
+                    }
 
-                // Reage indicando que está processando
-                await reagirMensagem(sock, message, "⏳");
+                    // Se não encontrou mídia do WhatsApp, mostra erro
+                    if (!mediaMessage) {
+                        await reagirMensagem(sock, message, "❌");
+                        return await sock.sendMessage(from, {
+                            text: "❌ Para criar figurinha:\n• Marque uma imagem/vídeo/sticker e digite .s\n• Ou envie uma imagem/vídeo com legenda .s\n• Ou envie .s [link do Pinterest]"
+                        }, { quoted: message });
+                    }
+                    // Determina o tipo de mídia
+                    let isImage, isVideo, type;
+                    if (isQuotedSticker) {
+                        isImage = false;
+                        isVideo = false;
+                        type = "sticker";
+                    } else {
+                        isImage = !!mediaMessage.imageMessage;
+                        isVideo = !!mediaMessage.videoMessage;
+                        type = isImage ? "image" : isVideo ? "video" : null;
+                    }
 
-                // Faz download da mídia - CORRIGIDO para usar o nó específico
-                const mediaNode = isQuotedSticker ? mediaMessage.stickerMessage :
-                                 isImage ? mediaMessage.imageMessage : mediaMessage.videoMessage;
+                    if (!type) {
+                        await reagirMensagem(sock, message, "❌");
+                        return await sock.sendMessage(from, {
+                            text: "❌ Apenas imagens, vídeos, GIFs e stickers são suportados para figurinhas"
+                        }, { quoted: message });
+                    }
 
-                // Verifica se o mediaNode tem as chaves necessárias para download (incluindo Buffer/string vazios)
-                const hasValidMediaKey = mediaNode.mediaKey &&
-                    !(Buffer.isBuffer(mediaNode.mediaKey) && mediaNode.mediaKey.length === 0) &&
-                    !(typeof mediaNode.mediaKey === 'string' && mediaNode.mediaKey.length === 0);
+                    // Reage indicando que está processando
+                    await reagirMensagem(sock, message, "⏳");
 
-                const hasValidPath = mediaNode.directPath || mediaNode.url;
+                    // Faz download da mídia - CORRIGIDO para usar o nó específico
+                    const mediaNode = isQuotedSticker ? mediaMessage.stickerMessage :
+                                     isImage ? mediaMessage.imageMessage : mediaMessage.videoMessage;
 
-                if (!hasValidMediaKey || !hasValidPath) {
-                    await reagirMensagem(sock, message, "❌");
-                    return await sock.sendMessage(from, {
-                        text: "❌ Não foi possível acessar esta mídia marcada.\nTente:\n• Enviar a imagem/vídeo diretamente com legenda .s\n• Marcar uma mídia mais recente"
-                    }, { quoted: message });
-                }
+                    // Verifica se o mediaNode tem as chaves necessárias para download (incluindo Buffer/string vazios)
+                    const hasValidMediaKey = mediaNode.mediaKey &&
+                        !(Buffer.isBuffer(mediaNode.mediaKey) && mediaNode.mediaKey.length === 0) &&
+                        !(typeof mediaNode.mediaKey === 'string' && mediaNode.mediaKey.length === 0);
 
-                const stream = await downloadContentFromMessage(mediaNode, isQuotedSticker ? "sticker" : type);
-                let buffer = Buffer.from([]);
-                for await (const chunk of stream) {
-                    buffer = Buffer.concat([buffer, chunk]);
-                }
+                    const hasValidPath = mediaNode.directPath || mediaNode.url;
 
-                console.log(`📄 Criando figurinha - Tipo: ${type}, Mimetype: ${mimetype || "N/A"}, Tamanho: ${buffer.length} bytes`);
+                    if (!hasValidMediaKey || !hasValidPath) {
+                        await reagirMensagem(sock, message, "❌");
+                        return await sock.sendMessage(from, {
+                            text: "❌ Não foi possível acessar esta mídia marcada.\nTente:\n• Enviar a imagem/vídeo diretamente com legenda .s\n• Marcar uma mídia mais recente"
+                        }, { quoted: message });
+                    }
 
-                // Detecta tipo de mídia corretamente
-                let finalMimetype;
-                
-                // Se for sticker citado, já é WebP
-                if (isQuotedSticker) {
-                    finalMimetype = 'image/webp';
-                } else {
-                    // Detecta se é vídeo baseado no mimetype
-                    const isVideoType = mimetype && (
-                        mimetype.includes('video') ||
-                        mimetype.includes('gif') ||
-                        mimetype === 'image/gif'
-                    );
-                    finalMimetype = mimetype || (isVideoType ? 'video/mp4' : 'image/jpeg');
+                    const stream = await downloadContentFromMessage(mediaNode, isQuotedSticker ? "sticker" : type);
+                    buffer = Buffer.from([]);
+                    for await (const chunk of stream) {
+                        buffer = Buffer.concat([buffer, chunk]);
+                    }
+
+                    console.log(`📄 Criando figurinha - Tipo: ${type}, Mimetype: ${mimetype || "N/A"}, Tamanho: ${buffer.length} bytes`);
+
+                    // Detecta tipo de mídia corretamente se ainda não foi definido
+                    if (!finalMimetype) {
+                        // Se for sticker citado, já é WebP
+                        if (isQuotedSticker) {
+                            finalMimetype = 'image/webp';
+                        } else {
+                            // Detecta se é vídeo baseado no mimetype
+                            const isVideoType = mimetype && (
+                                mimetype.includes('video') ||
+                                mimetype.includes('gif') ||
+                                mimetype === 'image/gif'
+                            );
+                            finalMimetype = mimetype || (isVideoType ? 'video/mp4' : 'image/jpeg');
+                        }
+                    }
                 }
 
                 // Obtém informações para os metadados
