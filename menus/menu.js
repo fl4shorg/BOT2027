@@ -111,6 +111,7 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽🎮⃟ menuGamer
 │ 𖧈∘̥⸽🎲⃟ menurandom
 │ 𖧈∘̥⸽🎚️⃟ menualteradores
+│ 𖧈∘̥⸽🎨⃟ menulogos
 ╰──────────────────────⪨
 
 ╭──〔 COMANDOS ESPECIAIS 〕──⪩

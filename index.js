@@ -892,6 +892,137 @@ async function reagirMensagem(sock, normalized, emoji = "🤖") {
     }
 }
 
+// ===================================
+// FUNÇÕES HELPER PARA LOGOS
+// ===================================
+
+// Processa logos simples (1 texto)
+async function processarLogo(sock, from, message, args, apiUrl, nomeEfeito, emoji) {
+    const texto = args.join(' ');
+    if (!texto) {
+        const config = obterConfiguracoes();
+        await sock.sendMessage(from, { 
+            text: `❌ Digite o texto para criar o logo!\n\nExemplo: *${config.prefix}${nomeEfeito.toLowerCase().replace(/ /g, '')} Flash*` 
+        }, { quoted: message });
+        return;
+    }
+
+    console.log(`${emoji} Criando logo ${nomeEfeito}: "${texto}"`);
+    await reagirMensagem(sock, message, "⏳");
+
+    try {
+        const config = obterConfiguracoes();
+        
+        const response = await axios.get(`${apiUrl}?text=${encodeURIComponent(texto)}`, {
+            timeout: 30000,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+        });
+        
+        console.log(`📥 Resposta API Logo:`, response.data);
+        
+        if (!response.data || !response.data.localstream) {
+            await reagirMensagem(sock, message, "❌");
+            await sock.sendMessage(from, {
+                text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
+            }, { quoted: message });
+            return;
+        }
+
+        const imageUrl = response.data.localstream;
+        console.log(`🖼️ Baixando imagem do logo: ${imageUrl}`);
+
+        const imageResponse = await axios.get(imageUrl, {
+            responseType: 'arraybuffer',
+            timeout: 20000
+        });
+        
+        await sock.sendMessage(from, {
+            image: Buffer.from(imageResponse.data),
+            caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto: "${texto}"\n\n© ${config.nomeDoBot}`
+        }, { quoted: message });
+        
+        await reagirMensagem(sock, message, "✅");
+        console.log(`✅ Logo ${nomeEfeito} criado com sucesso!`);
+
+    } catch (error) {
+        console.error(`❌ Erro ao criar logo ${nomeEfeito}:`, error.message);
+        await reagirMensagem(sock, message, "❌");
+        await sock.sendMessage(from, {
+            text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
+        }, { quoted: message });
+    }
+}
+
+// Processa logos duplos (2 textos)
+async function processarLogoDuplo(sock, from, message, args, apiUrl, nomeEfeito, emoji) {
+    const texto = args.join(' ');
+    if (!texto) {
+        const config = obterConfiguracoes();
+        await sock.sendMessage(from, { 
+            text: `❌ Digite os textos para criar o logo!\n\nExemplo: *${config.prefix}${nomeEfeito.toLowerCase().replace(/ /g, '')} Flash|Neext*\n\n💡 Use | para separar os dois textos` 
+        }, { quoted: message });
+        return;
+    }
+
+    const textos = texto.split('|').map(t => t.trim());
+    if (textos.length < 2) {
+        const config = obterConfiguracoes();
+        await sock.sendMessage(from, { 
+            text: `❌ Você precisa fornecer 2 textos separados por |\n\nExemplo: *${config.prefix}${nomeEfeito.toLowerCase().replace(/ /g, '')} Flash|Neext*` 
+        }, { quoted: message });
+        return;
+    }
+
+    console.log(`${emoji} Criando logo ${nomeEfeito}: "${textos[0]}" | "${textos[1]}"`);
+    await reagirMensagem(sock, message, "⏳");
+
+    try {
+        const config = obterConfiguracoes();
+        
+        const response = await axios.get(`${apiUrl}?text1=${encodeURIComponent(textos[0])}&text2=${encodeURIComponent(textos[1])}`, {
+            timeout: 30000,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+        });
+        
+        console.log(`📥 Resposta API Logo:`, response.data);
+        
+        if (!response.data || !response.data.localstream) {
+            await reagirMensagem(sock, message, "❌");
+            await sock.sendMessage(from, {
+                text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
+            }, { quoted: message });
+            return;
+        }
+
+        const imageUrl = response.data.localstream;
+        console.log(`🖼️ Baixando imagem do logo: ${imageUrl}`);
+
+        const imageResponse = await axios.get(imageUrl, {
+            responseType: 'arraybuffer',
+            timeout: 20000
+        });
+        
+        await sock.sendMessage(from, {
+            image: Buffer.from(imageResponse.data),
+            caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto 1: "${textos[0]}"\n📝 Texto 2: "${textos[1]}"\n\n© ${config.nomeDoBot}`
+        }, { quoted: message });
+        
+        await reagirMensagem(sock, message, "✅");
+        console.log(`✅ Logo ${nomeEfeito} criado com sucesso!`);
+
+    } catch (error) {
+        console.error(`❌ Erro ao criar logo ${nomeEfeito}:`, error.message);
+        await reagirMensagem(sock, message, "❌");
+        await sock.sendMessage(from, {
+            text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
+        }, { quoted: message });
+    }
+}
+
 // Detecta links na mensagem (MELHORADO - MENOS FALSOS POSITIVOS)
 function detectarLinks(texto) {
     if (!texto) return false;
@@ -4087,6 +4218,364 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             break;
         }
 
+        // ===================================
+        // COMANDOS DE LOGOS - EPHOTO360
+        // ===================================
+        
+        case 'glitchtext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/glitchtext', 'Glitch Text', '✨');
+            break;
+        }
+        
+        case 'writetext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/writetext', 'Write Text', '✍️');
+            break;
+        }
+        
+        case 'advancedglow': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/advancedglow', 'Advanced Glow', '💫');
+            break;
+        }
+        
+        case 'typographytext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/typographytext', 'Typography Text', '📝');
+            break;
+        }
+        
+        case 'pixelglitch': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/pixelglitch', 'Pixel Glitch', '🎮');
+            break;
+        }
+        
+        case 'neonglitch': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/neonglitch', 'Neon Glitch', '🌟');
+            break;
+        }
+        
+        case 'flagtext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/flagtext', 'Flag Text', '🚩');
+            break;
+        }
+        
+        case 'flag3dtext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/flag3dtext', 'Flag 3D Text', '🏴');
+            break;
+        }
+        
+        case 'deletingtext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/deletingtext', 'Deleting Text', '🗑️');
+            break;
+        }
+        
+        case 'blackpinkstyle': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/blackpinkstyle', 'BlackPink Style', '🖤');
+            break;
+        }
+        
+        case 'glowingtext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/glowingtext', 'Glowing Text', '✨');
+            break;
+        }
+        
+        case 'underwatertext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/underwatertext', 'Underwater Text', '🌊');
+            break;
+        }
+        
+        case 'logomaker': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/logomaker', 'Logo Maker', '🎨');
+            break;
+        }
+        
+        case 'cartoonstyle': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/cartoonstyle', 'Cartoon Style', '🎭');
+            break;
+        }
+        
+        case 'papercutstyle': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/papercutstyle', 'Papercut Style', '✂️');
+            break;
+        }
+        
+        case 'watercolortext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/watercolortext', 'Watercolor Text', '🎨');
+            break;
+        }
+        
+        case 'effectclouds': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/effectclouds', 'Effect Clouds', '☁️');
+            break;
+        }
+        
+        case 'blackpinklogo': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/blackpinklogo', 'BlackPink Logo', '💗');
+            break;
+        }
+        
+        case 'gradienttext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/gradienttext', 'Gradient Text', '🌈');
+            break;
+        }
+        
+        case 'summerbeach': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/summerbeach', 'Summer Beach', '🏖️');
+            break;
+        }
+        
+        case 'luxurygold': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/luxurygold', 'Luxury Gold', '👑');
+            break;
+        }
+        
+        case 'multicoloredneon': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/multicoloredneon', 'Multicolored Neon', '🌈');
+            break;
+        }
+        
+        case 'sandsummer': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/sandsummer', 'Sand Summer', '🏝️');
+            break;
+        }
+        
+        case 'galaxywallpaper': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/galaxywallpaper', 'Galaxy Wallpaper', '🌌');
+            break;
+        }
+        
+        case '1917style': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/1917style', '1917 Style', '🎖️');
+            break;
+        }
+        
+        case 'makingneon': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/makingneon', 'Making Neon', '💡');
+            break;
+        }
+        
+        case 'royaltext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/royaltext', 'Royal Text', '👑');
+            break;
+        }
+        
+        case 'freecreate': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/freecreate', 'Free Create', '🆓');
+            break;
+        }
+        
+        case 'galaxystyle': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/galaxystyle', 'Galaxy Style', '🌠');
+            break;
+        }
+        
+        case 'amongustext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/amongustext', 'Among Us Text', '👾');
+            break;
+        }
+        
+        case 'rainytext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/rainytext', 'Rainy Text', '🌧️');
+            break;
+        }
+        
+        case 'lighteffects': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/lighteffects', 'Light Effects', '💫');
+            break;
+        }
+        
+        case 'shadowtext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/shadowtext', 'Shadow Text', '👤');
+            break;
+        }
+        
+        case 'neontext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/neontext', 'Neon Text', '🔆');
+            break;
+        }
+        
+        case 'firetext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/firetext', 'Fire Text', '🔥');
+            break;
+        }
+        
+        case 'ice3dtext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/ice3dtext', 'Ice 3D Text', '❄️');
+            break;
+        }
+        
+        case 'gold3dtext': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/ephoto/gold3dtext', 'Gold 3D Text', '🥇');
+            break;
+        }
+
+        // ===================================
+        // COMANDOS DE LOGOS - TEXTPRO
+        // ===================================
+        
+        case 'logoneon': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/neon', 'Logo Neon', '💡');
+            break;
+        }
+        
+        case 'logofrozen': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/frozen', 'Logo Frozen', '❄️');
+            break;
+        }
+        
+        case 'logodeadpool': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/deadpool', 'Logo Deadpool', '💀');
+            break;
+        }
+        
+        case 'logopornhub': {
+            await processarLogoDuplo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/pornhub', 'Logo Pornhub', '🔞');
+            break;
+        }
+        
+        case 'logomatrix': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/matrix', 'Logo Matrix', '💚');
+            break;
+        }
+        
+        case 'logothor': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/thor', 'Logo Thor', '⚡');
+            break;
+        }
+        
+        case 'logopokemon': {
+            await processarLogoDuplo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/pokemon', 'Logo Pokemon', '⚡');
+            break;
+        }
+        
+        case 'logobatman': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/batman', 'Logo Batman', '🦇');
+            break;
+        }
+        
+        case 'logogreenhorror': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/greenhorror', 'Logo Green Horror', '👻');
+            break;
+        }
+        
+        case 'logomagma': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/magma', 'Logo Magma', '🌋');
+            break;
+        }
+        
+        case 'logoharrypotter': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/harrypotter', 'Logo Harry Potter', '⚡');
+            break;
+        }
+        
+        case 'logoglowing': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/glowing', 'Logo Glowing', '✨');
+            break;
+        }
+        
+        case 'logomarvel': {
+            await processarLogoDuplo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/marvel', 'Logo Marvel', '🦸');
+            break;
+        }
+        
+        case 'logoglitch': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/glitch', 'Logo Glitch', '📺');
+            break;
+        }
+        
+        case 'logohorror': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/horror', 'Logo Horror', '😱');
+            break;
+        }
+        
+        case 'logobearlogo': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/bearlogo', 'Logo Bear', '🐻');
+            break;
+        }
+        
+        case 'logograffiti': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/graffiti', 'Logo Graffiti', '🎨');
+            break;
+        }
+        
+        case 'logothunder': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/thunder', 'Logo Thunder', '⚡');
+            break;
+        }
+        
+        case 'logosketch': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/sketch', 'Logo Sketch', '✏️');
+            break;
+        }
+        
+        case 'logothreeDchrome': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/threeDchrome', 'Logo 3D Chrome', '🔷');
+            break;
+        }
+        
+        case 'logogold': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/gold', 'Logo Gold', '🥇');
+            break;
+        }
+        
+        case 'logocandy': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/candy', 'Logo Candy', '🍬');
+            break;
+        }
+        
+        case 'logonaruto': {
+            await processarLogoDuplo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/naruto', 'Logo Naruto', '🍥');
+            break;
+        }
+        
+        case 'logoblackpink': {
+            await processarLogoDuplo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/blackpink', 'Logo BlackPink', '💖');
+            break;
+        }
+        
+        case 'logostone': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/stone', 'Logo Stone', '🪨');
+            break;
+        }
+        
+        case 'logowater': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/water', 'Logo Water', '💧');
+            break;
+        }
+        
+        case 'logometal': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/metal', 'Logo Metal', '⚙️');
+            break;
+        }
+        
+        case 'logolava': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/lava', 'Logo Lava', '🌋');
+            break;
+        }
+        
+        case 'logojuice': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/juice', 'Logo Juice', '🧃');
+            break;
+        }
+        
+        case 'logogalaxy': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/galaxy', 'Logo Galaxy', '🌌');
+            break;
+        }
+        
+        case 'logoplasma': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/plasma', 'Logo Plasma', '⚡');
+            break;
+        }
+        
+        case 'logotransformer': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/transformer', 'Logo Transformer', '🤖');
+            break;
+        }
+        
+        case 'logoneon2': {
+            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/neon2', 'Logo Neon 2', '🔆');
+            break;
+        }
+
         case 'arma': {
             const query = args.join(' ');
             if (!query) {
@@ -6119,6 +6608,16 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             await sock.sendMessage(from, {
                 image: { url: config.fotoDoBot },
                 caption: menus.obterMenuGamer()
+            }, { quoted: message });
+        }
+        break;
+
+        case "menulogos": {
+            const menulogos = require('./menus/menulogos.js');
+            const config = obterConfiguracoes();
+            await sock.sendMessage(from, {
+                image: { url: config.fotoDoBot },
+                caption: menulogos.gerarMenuLogos(config.prefix, config.nomeDoBot)
             }, { quoted: message });
         }
         break;

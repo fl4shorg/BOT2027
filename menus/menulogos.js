@@ -1,0 +1,86 @@
+function gerarMenuLogos(prefix, nomeDoBot) {
+    return `╭━━━━⊱ 🎨 *MENU LOGOS* 🎨 ⊰━━━━╮
+
+╭──〔 EPHOTO LOGOS 〕──⪩
+│ 𖧈∘̥⸽✨⃟ ${prefix}glitchtext [texto]
+│ 𖧈∘̥⸽✍️⃟ ${prefix}writetext [texto]
+│ 𖧈∘̥⸽💫⃟ ${prefix}advancedglow [texto]
+│ 𖧈∘̥⸽📝⃟ ${prefix}typographytext [texto]
+│ 𖧈∘̥⸽🎮⃟ ${prefix}pixelglitch [texto]
+│ 𖧈∘̥⸽🌟⃟ ${prefix}neonglitch [texto]
+│ 𖧈∘̥⸽🚩⃟ ${prefix}flagtext [texto]
+│ 𖧈∘̥⸽🏴⃟ ${prefix}flag3dtext [texto]
+│ 𖧈∘̥⸽🗑️⃟ ${prefix}deletingtext [texto]
+│ 𖧈∘̥⸽🖤⃟ ${prefix}blackpinkstyle [texto]
+│ 𖧈∘̥⸽✨⃟ ${prefix}glowingtext [texto]
+│ 𖧈∘̥⸽🌊⃟ ${prefix}underwatertext [texto]
+│ 𖧈∘̥⸽🎨⃟ ${prefix}logomaker [texto]
+│ 𖧈∘̥⸽🎭⃟ ${prefix}cartoonstyle [texto]
+│ 𖧈∘̥⸽✂️⃟ ${prefix}papercutstyle [texto]
+│ 𖧈∘̥⸽🎨⃟ ${prefix}watercolortext [texto]
+│ 𖧈∘̥⸽☁️⃟ ${prefix}effectclouds [texto]
+│ 𖧈∘̥⸽💗⃟ ${prefix}blackpinklogo [texto]
+│ 𖧈∘̥⸽🌈⃟ ${prefix}gradienttext [texto]
+│ 𖧈∘̥⸽🏖️⃟ ${prefix}summerbeach [texto]
+│ 𖧈∘̥⸽👑⃟ ${prefix}luxurygold [texto]
+│ 𖧈∘̥⸽🌈⃟ ${prefix}multicoloredneon [texto]
+│ 𖧈∘̥⸽🏝️⃟ ${prefix}sandsummer [texto]
+│ 𖧈∘̥⸽🌌⃟ ${prefix}galaxywallpaper [texto]
+│ 𖧈∘̥⸽🎖️⃟ ${prefix}1917style [texto]
+│ 𖧈∘̥⸽💡⃟ ${prefix}makingneon [texto]
+│ 𖧈∘̥⸽👑⃟ ${prefix}royaltext [texto]
+│ 𖧈∘̥⸽🆓⃟ ${prefix}freecreate [texto]
+│ 𖧈∘̥⸽🌠⃟ ${prefix}galaxystyle [texto]
+│ 𖧈∘̥⸽👾⃟ ${prefix}amongustext [texto]
+│ 𖧈∘̥⸽🌧️⃟ ${prefix}rainytext [texto]
+│ 𖧈∘̥⸽💫⃟ ${prefix}lighteffects [texto]
+│ 𖧈∘̥⸽👤⃟ ${prefix}shadowtext [texto]
+│ 𖧈∘̥⸽🔆⃟ ${prefix}neontext [texto]
+│ 𖧈∘̥⸽🔥⃟ ${prefix}firetext [texto]
+│ 𖧈∘̥⸽❄️⃟ ${prefix}ice3dtext [texto]
+│ 𖧈∘̥⸽🥇⃟ ${prefix}gold3dtext [texto]
+╰──────────────────────⪨
+
+╭──〔 TEXTPRO LOGOS 〕──⪩
+│ 𖧈∘̥⸽💡⃟ ${prefix}logoneon [texto]
+│ 𖧈∘̥⸽❄️⃟ ${prefix}logofrozen [texto]
+│ 𖧈∘̥⸽💀⃟ ${prefix}logodeadpool [texto]
+│ 𖧈∘̥⸽🔞⃟ ${prefix}logopornhub [texto1|texto2]
+│ 𖧈∘̥⸽💚⃟ ${prefix}logomatrix [texto]
+│ 𖧈∘̥⸽⚡⃟ ${prefix}logothor [texto]
+│ 𖧈∘̥⸽⚡⃟ ${prefix}logopokemon [texto1|texto2]
+│ 𖧈∘̥⸽🦇⃟ ${prefix}logobatman [texto]
+│ 𖧈∘̥⸽👻⃟ ${prefix}logogreenhorror [texto]
+│ 𖧈∘̥⸽🌋⃟ ${prefix}logomagma [texto]
+│ 𖧈∘̥⸽⚡⃟ ${prefix}logoharrypotter [texto]
+│ 𖧈∘̥⸽✨⃟ ${prefix}logoglowing [texto]
+│ 𖧈∘̥⸽🦸⃟ ${prefix}logomarvel [texto1|texto2]
+│ 𖧈∘̥⸽📺⃟ ${prefix}logoglitch [texto]
+│ 𖧈∘̥⸽😱⃟ ${prefix}logohorror [texto]
+│ 𖧈∘̥⸽🐻⃟ ${prefix}logobearlogo [texto]
+│ 𖧈∘̥⸽🎨⃟ ${prefix}logograffiti [texto]
+│ 𖧈∘̥⸽⚡⃟ ${prefix}logothunder [texto]
+│ 𖧈∘̥⸽✏️⃟ ${prefix}logosketch [texto]
+│ 𖧈∘̥⸽🔷⃟ ${prefix}logothreeDchrome [texto]
+│ 𖧈∘̥⸽🥇⃟ ${prefix}logogold [texto]
+│ 𖧈∘̥⸽🍬⃟ ${prefix}logocandy [texto]
+│ 𖧈∘̥⸽🍥⃟ ${prefix}logonaruto [texto1|texto2]
+│ 𖧈∘̥⸽💖⃟ ${prefix}logoblackpink [texto1|texto2]
+│ 𖧈∘̥⸽🪨⃟ ${prefix}logostone [texto]
+│ 𖧈∘̥⸽💧⃟ ${prefix}logowater [texto]
+│ 𖧈∘̥⸽⚙️⃟ ${prefix}logometal [texto]
+│ 𖧈∘̥⸽🌋⃟ ${prefix}logolava [texto]
+│ 𖧈∘̥⸽🧃⃟ ${prefix}logojuice [texto]
+│ 𖧈∘̥⸽🌌⃟ ${prefix}logogalaxy [texto]
+│ 𖧈∘̥⸽⚡⃟ ${prefix}logoplasma [texto]
+│ 𖧈∘̥⸽🤖⃟ ${prefix}logotransformer [texto]
+│ 𖧈∘̥⸽🔆⃟ ${prefix}logoneon2 [texto]
+╰──────────────────────⪨
+
+💡 *Dica:* Para logos com 2 textos, use |
+📌 *Exemplo:* ${prefix}logopornhub Flash|Neext
+
+© ${nomeDoBot}`;
+}
+
+module.exports = { gerarMenuLogos };
