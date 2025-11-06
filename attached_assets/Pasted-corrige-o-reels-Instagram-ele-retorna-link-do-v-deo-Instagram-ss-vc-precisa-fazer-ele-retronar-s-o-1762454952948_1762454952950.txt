@@ -1,0 +1,63 @@
+corrige o reels Instagram ele retorna link do vídeo Instagram ss, vc precisa fazer ele retronar só o vídeo com as informações, aqui o resultado da api é assim o onde retorna o vídeo é essa url: GET
+/pesquisa/reels
+Reels
+Testar Endpoint
+q*
+Termo de pesquisa
+naruto
+Execute
+Clear
+Resposta
+Method: GET
+URL: https://www.api.neext.online/pesquisa/reels?q=naruto
+Status: 200
+JSON Response:
+{
+  "statusCode": 200,
+  "author": "Neext",
+  "results": {
+    "count": 12,
+    "query": "naruto",
+    "search_data": [
+      {
+        "id": "DEpOwsoPlH6",
+        "caption": "Madara Uchiha 🗿🔥\n#madara #madarauchiha #boruto #uzumaki #naruto #narutoshippuden #narutoedits #narutouzumaki #narutoedit",
+        "mentions": [],
+        "hashtags": [
+          "#madara",
+          "#madarauchiha",
+          "#boruto",
+          "#uzumaki",
+          "#naruto",
+          "#narutoshippuden",
+          "#narutoedits",
+          "#narutouzumaki",
+          "#narutoedit"
+        ],
+        "created_at": 1736510365,
+        "taken_at": 1736510364,
+        "thumbnail": "https://scontent-vie1-1.cdninstagram.com/v/t51.75761-15/473050189_17928806997002748_5721812833312449787_n.jpg?stp=dst-jpg_e15_p360x360_tt6&_nc_cat=109&ig_cache_key=MzU0MjQyNzUwMTAwOTQ1NzY1OA%3D%3D.3-ccb1-7&ccb=1-7&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjEyMTV4MjE2MC5zZHIuQzIifQ%3D%3D&_nc_ohc=0Jda5OcJSpUQ7kNvwEOhyyE&_nc_oc=AdkN6ltn5TJ4fRlAleIWXNa-f_Gg_yyKH2eMYiq5wi_fRZuIlADlSctJCI0vwXiZd-IIQ0eqPILtJ8wIVOaRTizL&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_gid=g7M34xQd_zZFruUfpVZ5-w&oh=00_AfiXLa8vt2PtwaB57fpntfIfFmcOLT6sWfS3XPNc2TQY_Q&oe=6912AA97",
+        "duration": 24.933000564575195,
+        "links": "https://www.instagram.com/reel/DEpOwsoPlH6",
+        "statistics": {
+          "comment_count": 522,
+          "play_count": 1508767,
+          "like_count": 255893,
+          "share_count": 42567
+        },
+        "profile": {
+          "id": "60159986747",
+          "full_name": "Minato Ediitzz",
+          "username": "minato_ediitzz",
+          "is_verified": false,
+          "is_private": false,
+          "profile_pic_url": "https://scontent-vie1-1.cdninstagram.com/v/t51.2885-19/488013226_1190615239383368_378733894313082411_n.jpg?stp=dst-jpg_e0_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmV4cGVyaW1lbnRhbCJ9&_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_cat=108&_nc_oc=Q6cZ2QGUkR2vtX9qd_3DN8JMLeECb14eFh5n5q-Uk6KIXu2hLuoDYvj-x6AcYiEMBHIVbb41aozrbPmergxyMIlj6f73&_nc_ohc=x5nk8MHCB2oQ7kNvwFuOYFq&_nc_gid=g7M34xQd_zZFruUfpVZ5-w&edm=AL2I2h8BAAAA&ccb=7-5&ig_cache_key=GKp9Fh1IWWi22zoEACt_7mJ4iEEFbkULAAAB1501500j-ccb7-5&oh=00_Afj7H41occ3mdS99en8DNRus18YkHiFUILx16VuSIhoYPQ&oe=6912D097&_nc_sid=026283"
+        },
+        "reels": {
+          "video_subtitles_locale": "-",
+          "height": 1280,
+          "width": 720,
+          "url": "https://scontent-vie1-1.cdninstagram.com/o1/v/t2/f2/m367/AQPdfC8AsfqqG6obFQUhyLlGH-EyFjig5mxgWjLnL9fMQpF-V1bdVcNK93Q6FLBK9BBIFNMmNgn3mX4MiYTy5WhwQdFfuCLBJLB9cwc.mp4?_nc_cat=101&_nc_sid=5e9851&_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_ohc=Xhr7X6woZy8Q7kNvwFjbEDG&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzIuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTM2OTU0MzE3NDIwODg1MSwiYXNzZXRfYWdlX2RheXMiOjMwMCwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjI0LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&vs=c3420cee00a80a6f&_nc_vs=HBksFQIYQGlnX2VwaGVtZXJhbC85OTQyRjU2QkMwM0ZCNEExNDREQTgwQTQ0RUFENkRBN192aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYOnBhc3N0aHJvdWdoX2V2ZXJzdG9yZS9HSW9WS1J3eDdreE1md29HQUY0RHpiREpEaXdZYnFfRUFBQUYVAgLIARIAKAAYABsCiAd1c2Vfb2lsATEScHJvZ3Jlc3NpdmVfcmVjaXBlATEVAAAmpvW55vPl7gQVAigCQzIsF0A47tkWhysCGBJkYXNoX2Jhc2VsaW5lXzFfdjERAHX-B2XmnQEA&_nc_gid=g7M34xQd_zZFruUfpVZ5-w&_nc_zt=28&oh=00_AfjE2dVio-SP4MKc-4IlhjxYJ74WkbC5_37jjn3EZlr1hw&oe=6912D752"
+        }
+      },
+      {

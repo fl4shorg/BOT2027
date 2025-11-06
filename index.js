@@ -2387,39 +2387,30 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     const randomIndex = Math.floor(Math.random() * response.data.results.search_data.length);
                     const reel = response.data.results.search_data[randomIndex];
                     
-                    // Baixa o reel usando o link
-                    const downloadResponse = await axios.get(`https://www.api.neext.online/download/instagram?url=${encodeURIComponent(reel.links)}`);
-                    
-                    if (downloadResponse.data && downloadResponse.data.resultado) {
-                        const videoUrl = downloadResponse.data.resultado.url || downloadResponse.data.resultado.video;
-                        
-                        if (videoUrl) {
-                            let caption = `📸 *@${reel.profile.username}*\n\n`;
-                            if (reel.caption) {
-                                caption += `${reel.caption.substring(0, 200)}`;
-                            }
-                            
-                            await sock.sendMessage(from, {
-                                video: { url: videoUrl },
-                                caption: caption,
-                                contextInfo: {
-                                    forwardingScore: 100000,
-                                    isForwarded: true,
-                                    forwardedNewsletterMessageInfo: {
-                                        newsletterJid: "120363289739581116@newsletter",
-                                        newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                                    }
-                                }
-                            }, { quoted: selinho });
-                            
-                            await reagirMensagem(sock, message, "✅");
-                        } else {
-                            await reagirMensagem(sock, message, "❌");
-                            await reply(sock, from, `❌ Não foi possível baixar o reel.`);
+                    // Pega a URL do vídeo direto da resposta
+                    if (reel.reels && reel.reels.url) {
+                        let caption = `📸 *@${reel.profile.username}*\n\n`;
+                        if (reel.caption) {
+                            caption += `${reel.caption.substring(0, 200)}`;
                         }
+                        
+                        await sock.sendMessage(from, {
+                            video: { url: reel.reels.url },
+                            caption: caption,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                        
+                        await reagirMensagem(sock, message, "✅");
                     } else {
                         await reagirMensagem(sock, message, "❌");
-                        await reply(sock, from, `❌ Não foi possível baixar o reel.`);
+                        await reply(sock, from, `❌ Não foi possível obter o vídeo do reel.`);
                     }
                 } else {
                     await reagirMensagem(sock, message, "❌");
