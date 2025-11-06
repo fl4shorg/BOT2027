@@ -3413,14 +3413,12 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 // Se encontrou link do Pinterest, processa ele
                 if (pinterestMatch && pinterestMatch.length > 0) {
                     const pinterestUrl = pinterestMatch[0];
-                    console.log(`📌 Link do Pinterest detectado: ${pinterestUrl}`);
                     
                     await reagirMensagem(sock, message, "⏳");
                     
                     try {
                         // Faz request para a API do Pinterest
                         const apiUrl = `https://www.api.neext.online/savepin?url=${encodeURIComponent(pinterestUrl)}`;
-                        console.log(`🔗 Chamando API Pinterest: ${apiUrl}`);
                         
                         const response = await axios.get(apiUrl, {
                             timeout: 30000,
@@ -3437,8 +3435,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         const downloadLink = mediaResult.downloadLink;
                         const mediaFormat = mediaResult.format?.toLowerCase() || 'jpg';
                         
-                        console.log(`📥 Baixando mídia do Pinterest: ${downloadLink} (${mediaFormat})`);
-                        
                         // Baixa a mídia
                         const mediaResponse = await axios.get(downloadLink, {
                             responseType: 'arraybuffer',
@@ -3449,7 +3445,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         });
                         
                         buffer = Buffer.from(mediaResponse.data);
-                        console.log(`✅ Mídia baixada: ${buffer.length} bytes`);
                         
                         // Define o mimetype baseado no formato
                         if (mediaFormat === 'mp4' || mediaFormat === 'video') {
@@ -3465,7 +3460,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         }
                         
                     } catch (pinterestError) {
-                        console.error('❌ Erro ao processar Pinterest:', pinterestError);
                         await reagirMensagem(sock, message, "❌");
                         return await sock.sendMessage(from, {
                             text: `❌ Erro ao baixar do Pinterest:\n${pinterestError.message || 'Tente novamente'}\n\n💡 *Certifique-se de usar um link válido do Pinterest!*`
@@ -3559,8 +3553,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         buffer = Buffer.concat([buffer, chunk]);
                     }
 
-                    console.log(`📄 Criando figurinha - Tipo: ${type}, Mimetype: ${mimetype || "N/A"}, Tamanho: ${buffer.length} bytes`);
-
                     // Detecta tipo de mídia corretamente se ainda não foi definido
                     if (!finalMimetype) {
                         // Se for sticker citado, já é WebP
@@ -3586,9 +3578,13 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 var pack = `↧ ❪🎨ฺ࣭࣪͘ꕸ▸ 𝐂𝐫𝐢𝐚𝐝𝐚 𝐩𝐨𝐫:\n• ↳ ${config.nomeDoBot}\n—\n↧ ❪🕵🏻‍♂️ฺ࣭࣪͘ꕸ▸ 𝐏𝐫𝐨𝐩𝐫𝐢𝐞𝐭𝐚𝐫𝐢𝐨:\n• ↳ ${config.nickDoDono}\n—`;
                 var author2 = `↧ ❪🏮ฺ࣭࣪͘ꕸ▸ 𝐒𝐨𝐥𝐢𝐜𝐢𝐭𝐚𝐝𝐨 𝐩𝐨𝐫:\n• ↳ ${senderName}\n—\n↧ ❪🐦‍🔥ฺ࣭࣪͘ꕸ▸ 𝐕𝐢𝐬𝐢𝐭𝐞 𝐧𝐨𝐬𝐬𝐨 𝐬𝐢𝐭𝐞:\n• ↳ www.api.neext.online`;
 
+                // Marca se é vídeo do Pinterest (veio do link e é vídeo)
+                const isPinterestVideo = (pinterestMatch && pinterestMatch.length > 0) && 
+                                        finalMimetype && finalMimetype.includes('video');
+
                 // Usa writeExif que suporta vídeos e webp
                 const webpFile = await writeExif(
-                    { mimetype: finalMimetype, data: buffer },
+                    { mimetype: finalMimetype, data: buffer, isPinterestVideo: isPinterestVideo },
                     {
                         packname: pack,
                         author: author2,
@@ -3607,12 +3603,9 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 // Cleanup do arquivo temporário
                 fs.unlinkSync(webpFile);
 
-
                 await reagirMensagem(sock, message, "✅");
-                console.log("✅ Figurinha NEEXT criada e enviada com sucesso!");
 
             } catch (err) {
-                console.log("❌ Erro ao criar figurinha:", err);
                 await reagirMensagem(sock, message, "❌");
                 await sock.sendMessage(from, {
                     text: "❌ Erro ao processar sua figurinha. Tente novamente ou use uma imagem/vídeo menor."

@@ -10,8 +10,32 @@ function getRandomFile(ext) {
     return path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}${ext}`);
 }
 
+// Recodifica vídeo para garantir compatibilidade (especialmente para Pinterest)
+async function recodeVideo(inputPath) {
+    const outputPath = getRandomFile(".mp4");
+    
+    await new Promise((resolve, reject) => {
+        ff(inputPath)
+            .outputOptions([
+                '-c:v', 'libx264',
+                '-preset', 'fast',
+                '-crf', '23',
+                '-pix_fmt', 'yuv420p',
+                '-movflags', '+faststart',
+                '-an'
+            ])
+            .on("error", (err) => {
+                reject(err);
+            })
+            .on("end", () => resolve())
+            .save(outputPath);
+    });
+    
+    return outputPath;
+}
+
 // Converte Buffer para WebP preservando transparência
-async function bufferToWebp(buffer, isVideo = false, mimetype = null) {
+async function bufferToWebp(buffer, isVideo = false, mimetype = null, isPinterestVideo = false) {
     // Se já é WebP, apenas salva e retorna (não reprocessa)
     const isWebP = mimetype && mimetype.includes('webp');
     if (isWebP) {
@@ -32,10 +56,22 @@ async function bufferToWebp(buffer, isVideo = false, mimetype = null) {
         inputExt = ".jpg";
     }
 
-    const input = getRandomFile(inputExt);
+    let input = getRandomFile(inputExt);
     const output = getRandomFile(".webp");
 
     fs.writeFileSync(input, buffer);
+    
+    // Se for vídeo do Pinterest, recodifica primeiro para garantir compatibilidade
+    if (isVideo && isPinterestVideo) {
+        try {
+            const recodedInput = await recodeVideo(input);
+            if (fs.existsSync(input)) fs.unlinkSync(input);
+            input = recodedInput;
+        } catch (err) {
+            if (fs.existsSync(input)) fs.unlinkSync(input);
+            throw err;
+        }
+    }
 
     await new Promise((resolve, reject) => {
         const ffmpegCommand = ff(input)
@@ -86,7 +122,7 @@ async function bufferToWebp(buffer, isVideo = false, mimetype = null) {
 
 // Função writeExif para compatibilidade com index.js
 async function writeExif(media, metadata) {
-    const { mimetype, data } = media;
+    const { mimetype, data, isPinterestVideo } = media;
     
     // Para comando RENAME: usa EXATAMENTE os valores fornecidos sem fallbacks
     // Para outros comandos: usa fallbacks NEEXT se não houver valores
@@ -111,7 +147,7 @@ async function writeExif(media, metadata) {
         mimetype === 'image/gif'
     );
     
-    const webpFile = await bufferToWebp(data, isVideo, mimetype);
+    const webpFile = await bufferToWebp(data, isVideo, mimetype, isPinterestVideo || false);
     const img = new webp.Image();
     await img.load(webpFile);
 
