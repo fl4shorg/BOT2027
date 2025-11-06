@@ -139,6 +139,11 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽🔎⃟ ${prefix}bingimagem [busca] - Buscar imagens no Bing
 ╰──────────────────────⪨
 
+╭──〔 COMANDOS TOOLS 〕──⪩
+│ 𖧈∘̥⸽📮⃟ ${prefix}cep [número] - Consultar CEP
+│ 𖧈∘̥⸽🌐⃟ ${prefix}ip [endereço] - Consultar IP
+╰──────────────────────⪨
+
 ╭──〔 COMANDOS STALKER 〕──⪩
 │ 𖧈∘̥⸽📸⃟ ${prefix}stalkerinstagram [user] - Stalk Instagram
 │ 𖧈∘̥⸽📺⃟ ${prefix}stalkeryoutube [canal] - Stalk YouTube

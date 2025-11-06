@@ -1982,6 +1982,143 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "cep": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}cep [número]\n\n💡 Exemplo: ${config.prefix}cep 01001000`);
+                break;
+            }
+
+            try {
+                const cep = args[0].replace(/\D/g, ''); // Remove tudo que não é número
+                
+                if (cep.length !== 8) {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ CEP inválido! O CEP deve conter 8 dígitos.\n\n💡 Exemplo: 01001000");
+                    break;
+                }
+
+                await reagirMensagem(sock, message, "📮");
+                
+                // Faz a requisição para a API
+                const response = await axios.get(`https://www.api.neext.online/cep?cep=${cep}`);
+                
+                if (response.data && response.data.cep) {
+                    const data = response.data;
+                    
+                    let mensagem = `📮 *CONSULTA CEP*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📍 CEP: ${data.cep}\n`;
+                    mensagem += `🛣️ Logradouro: ${data.logradouro || 'N/A'}\n`;
+                    if (data.complemento) {
+                        mensagem += `📝 Complemento: ${data.complemento}\n`;
+                    }
+                    mensagem += `🏘️ Bairro: ${data.bairro || 'N/A'}\n`;
+                    mensagem += `🏙️ Cidade: ${data.localidade || 'N/A'}\n`;
+                    mensagem += `🗺️ Estado: ${data.estado || data.uf || 'N/A'}\n`;
+                    mensagem += `🌎 Região: ${data.regiao || 'N/A'}\n`;
+                    mensagem += `📞 DDD: ${data.ddd || 'N/A'}\n`;
+                    if (data.ibge) {
+                        mensagem += `🔢 IBGE: ${data.ibge}\n`;
+                    }
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    await sock.sendMessage(from, {
+                        text: mensagem,
+                        contextInfo: {
+                            forwardingScore: 100000,
+                            isForwarded: true,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            }
+                        }
+                    }, { quoted: selinho });
+                    
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ CEP "${cep}" não encontrado!`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao consultar CEP:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao consultar CEP! Verifique se o CEP está correto e tente novamente.");
+            }
+        }
+        break;
+
+        case "ip": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}ip [endereço IP]\n\n💡 Exemplo: ${config.prefix}ip 8.8.8.8`);
+                break;
+            }
+
+            try {
+                const ip = args[0].trim();
+                await reagirMensagem(sock, message, "🌐");
+                
+                // Faz a requisição para a API
+                const response = await axios.get(`https://www.api.neext.online/ip?ip=${encodeURIComponent(ip)}`);
+                
+                if (response.data && response.data.ip) {
+                    const data = response.data;
+                    
+                    let mensagem = `🌐 *CONSULTA IP*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `🔢 IP: ${data.ip}\n`;
+                    mensagem += `📡 Versão: ${data.version || 'N/A'}\n`;
+                    mensagem += `🏙️ Cidade: ${data.city || 'N/A'}\n`;
+                    mensagem += `📍 Região: ${data.region || 'N/A'} (${data.region_code || 'N/A'})\n`;
+                    mensagem += `🌍 País: ${data.country_name || data.country || 'N/A'} (${data.country_code || 'N/A'})\n`;
+                    mensagem += `🗺️ Continente: ${data.continent_code || 'N/A'}\n`;
+                    if (data.postal) {
+                        mensagem += `📮 CEP: ${data.postal}\n`;
+                    }
+                    if (data.latitude && data.longitude) {
+                        mensagem += `📌 Coordenadas: ${data.latitude}, ${data.longitude}\n`;
+                    }
+                    mensagem += `⏰ Timezone: ${data.timezone || 'N/A'}\n`;
+                    if (data.utc_offset) {
+                        mensagem += `🕐 UTC Offset: ${data.utc_offset}\n`;
+                    }
+                    mensagem += `💰 Moeda: ${data.currency_name || 'N/A'} (${data.currency || 'N/A'})\n`;
+                    if (data.asn) {
+                        mensagem += `🏢 ASN: ${data.asn}\n`;
+                    }
+                    if (data.org) {
+                        mensagem += `🏢 Organização: ${data.org}\n`;
+                    }
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    await sock.sendMessage(from, {
+                        text: mensagem,
+                        contextInfo: {
+                            forwardingScore: 100000,
+                            isForwarded: true,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            }
+                        }
+                    }, { quoted: selinho });
+                    
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ IP "${ip}" inválido ou não encontrado!`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao consultar IP:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao consultar IP! Verifique se o IP está correto e tente novamente.");
+            }
+        }
+        break;
+
         case "signo": {
             if (args.length === 0) {
                 const config = obterConfiguracoes();
