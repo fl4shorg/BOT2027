@@ -3549,6 +3549,176 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             break;
         }
 
+        case 'googleimagem':
+        case 'googleimage': {
+            const query = args.join(' ');
+            if (!query) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, { 
+                    text: `❌ Digite uma palavra-chave para buscar imagens!\n\nExemplo: *${config.prefix}googleimagem naruto*` 
+                }, { quoted: message });
+                break;
+            }
+
+            console.log(`🔍 Buscando imagens no Google: "${query}"`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const config = obterConfiguracoes();
+                
+                // API NEEXT para Google Images
+                const response = await axios.get(`https://www.api.neext.online/pesquisa/googleimage?q=${encodeURIComponent(query)}`, {
+                    timeout: 20000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                    }
+                });
+                
+                console.log(`📥 Resposta da API Google Images:`, response.data?.statusCode, response.data?.results?.count);
+                
+                if (!response.data || response.data.statusCode !== 200 || !response.data.results || !Array.isArray(response.data.results.search_data) || response.data.results.search_data.length === 0) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: '❌ Nenhuma imagem encontrada para essa busca. Tente uma palavra-chave diferente.'
+                    }, { quoted: message });
+                    break;
+                }
+
+                // Seleciona uma imagem aleatória
+                const randomIndex = Math.floor(Math.random() * response.data.results.search_data.length);
+                const randomImageUrl = response.data.results.search_data[randomIndex];
+                console.log(`📥 Encontradas ${response.data.results.count} imagens, enviando imagem aleatória #${randomIndex + 1}`);
+
+                // Baixa a imagem aleatória
+                const imageResponse = await axios.get(randomImageUrl, { 
+                    responseType: 'arraybuffer', 
+                    timeout: 15000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+
+                const imageBuffer = Buffer.from(imageResponse.data);
+
+                // Envia a imagem
+                await sock.sendMessage(from, {
+                    image: imageBuffer,
+                    caption: `🔍 *GOOGLE IMAGES* 🔍\n\n🔍 Busca: "${query}"\n📸 Total: ${response.data.results.count} imagens\n🎲 Imagem aleatória\n\n© ${config.nomeDoBot}`
+                }, { quoted: message });
+                
+                await reagirMensagem(sock, message, "✅");
+                console.log(`✅ Google Images - Imagem aleatória enviada com sucesso!`);
+
+            } catch (error) {
+                console.error('❌ Erro ao buscar no Google Images:', error.message);
+                
+                let errorMessage = '❌ Erro ao buscar imagens no Google.';
+                
+                if (error.code === 'ENOTFOUND') {
+                    errorMessage += ' Problema de conexão com a API.';
+                } else if (error.code === 'ETIMEDOUT') {
+                    errorMessage += ' Timeout na requisição. Tente novamente.';
+                } else if (error.response?.status === 429) {
+                    errorMessage += ' Muitas requisições. Aguarde um momento.';
+                } else if (error.response?.status >= 500) {
+                    errorMessage += ' API temporariamente indisponível.';
+                } else {
+                    errorMessage += ' Tente novamente mais tarde.';
+                }
+                
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: errorMessage
+                }, { quoted: message });
+            }
+            break;
+        }
+
+        case 'bingimagem':
+        case 'bingimage': {
+            const query = args.join(' ');
+            if (!query) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, { 
+                    text: `❌ Digite uma palavra-chave para buscar imagens!\n\nExemplo: *${config.prefix}bingimagem naruto*` 
+                }, { quoted: message });
+                break;
+            }
+
+            console.log(`🔍 Buscando imagens no Bing: "${query}"`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const config = obterConfiguracoes();
+                
+                // API NEEXT para Bing Images
+                const response = await axios.get(`https://www.api.neext.online/search/bingimage?query=${encodeURIComponent(query)}`, {
+                    timeout: 20000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                    }
+                });
+                
+                console.log(`📥 Resposta da API Bing Images:`, response.data?.status, response.data?.total);
+                
+                if (!response.data || response.data.status !== 200 || !Array.isArray(response.data.results) || response.data.results.length === 0) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: '❌ Nenhuma imagem encontrada para essa busca. Tente uma palavra-chave diferente.'
+                    }, { quoted: message });
+                    break;
+                }
+
+                // Seleciona uma imagem aleatória
+                const randomIndex = Math.floor(Math.random() * response.data.results.length);
+                const randomImageUrl = response.data.results[randomIndex];
+                console.log(`📥 Encontradas ${response.data.total} imagens, enviando imagem aleatória #${randomIndex + 1}`);
+
+                // Baixa a imagem aleatória
+                const imageResponse = await axios.get(randomImageUrl, { 
+                    responseType: 'arraybuffer', 
+                    timeout: 15000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+
+                const imageBuffer = Buffer.from(imageResponse.data);
+
+                // Envia a imagem
+                await sock.sendMessage(from, {
+                    image: imageBuffer,
+                    caption: `🔎 *BING IMAGES* 🔎\n\n🔍 Busca: "${query}"\n📸 Total: ${response.data.total} imagens\n🎲 Imagem aleatória\n\n© ${config.nomeDoBot}`
+                }, { quoted: message });
+                
+                await reagirMensagem(sock, message, "✅");
+                console.log(`✅ Bing Images - Imagem aleatória enviada com sucesso!`);
+
+            } catch (error) {
+                console.error('❌ Erro ao buscar no Bing Images:', error.message);
+                
+                let errorMessage = '❌ Erro ao buscar imagens no Bing.';
+                
+                if (error.code === 'ENOTFOUND') {
+                    errorMessage += ' Problema de conexão com a API.';
+                } else if (error.code === 'ETIMEDOUT') {
+                    errorMessage += ' Timeout na requisição. Tente novamente.';
+                } else if (error.response?.status === 429) {
+                    errorMessage += ' Muitas requisições. Aguarde um momento.';
+                } else if (error.response?.status >= 500) {
+                    errorMessage += ' API temporariamente indisponível.';
+                } else {
+                    errorMessage += ' Tente novamente mais tarde.';
+                }
+                
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: errorMessage
+                }, { quoted: message });
+            }
+            break;
+        }
+
         case 'arma': {
             const query = args.join(' ');
             if (!query) {

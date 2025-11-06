@@ -130,6 +130,8 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 ╭──〔 COMANDOS PESQUISA 〕──⪩
 │ 𖧈∘̥⸽📚⃟ ${prefix}wikipedia [assunto] - Pesquisar na Wikipedia
 │ 𖧈∘̥⸽📚⃟ ${prefix}wiki [assunto] - Pesquisar na Wikipedia
+│ 𖧈∘̥⸽🔍⃟ ${prefix}googleimagem [busca] - Buscar imagens no Google
+│ 𖧈∘̥⸽🔎⃟ ${prefix}bingimagem [busca] - Buscar imagens no Bing
 ╰──────────────────────⪨
 
 © NEEXT LTDA`;
