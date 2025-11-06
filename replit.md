@@ -103,6 +103,12 @@ Os dados de autenticação são salvos na pasta `/conexao` e persistem entre rei
 
 ## Atualizações Recentes
 
+### 06 de Novembro de 2025 - Noite
+- ✅ **Comando DDD adicionado**: Novo comando `.ddd [número]` para consultar códigos DDD brasileiros
+  - Retorna o estado e todas as cidades que usam aquele DDD
+  - API integrada: https://www.api.neext.online/ddd
+  - Adicionado na seção "COMANDOS TOOLS" do menu
+
 ### 06 de Novembro de 2025 - Tarde
 - ✅ **Comando audiomeme adicionado**: Pesquisa e envia áudio aleatório via `.audiomeme` ou `.audio`
 - ✅ **Contador de comandos corrigido**: Agora conta corretamente independente da indentação

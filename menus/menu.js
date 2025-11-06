@@ -146,6 +146,7 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 ╭──〔 COMANDOS TOOLS 〕──⪩
 │ 𖧈∘̥⸽📮⃟ ${prefix}cep [número] - Consultar CEP
 │ 𖧈∘̥⸽🌐⃟ ${prefix}ip [endereço] - Consultar IP
+│ 𖧈∘̥⸽📞⃟ ${prefix}ddd [número] - Consultar DDD
 ╰──────────────────────⪨
 
 ╭──〔 COMANDOS STALKER 〕──⪩

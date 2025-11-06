@@ -2119,6 +2119,71 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "ddd": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}ddd [número]\n\n💡 Exemplo: ${config.prefix}ddd 11`);
+                break;
+            }
+
+            try {
+                const ddd = args[0].replace(/\D/g, '');
+                
+                if (ddd.length < 2 || ddd.length > 3) {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ DDD inválido! O DDD deve conter 2 ou 3 dígitos.\n\n💡 Exemplo: 11, 21, 85");
+                    break;
+                }
+
+                await reagirMensagem(sock, message, "📞");
+                
+                const response = await axios.get(`https://www.api.neext.online/ddd?numero=${ddd}`);
+                
+                if (response.data && response.data.status === 200 && response.data.estado) {
+                    const data = response.data;
+                    
+                    let mensagem = `📞 *CONSULTA DDD*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📍 DDD: ${ddd}\n`;
+                    mensagem += `🗺️ Estado: ${data.estado}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `🏙️ *CIDADES (${data.cidades.length}):*\n\n`;
+                    
+                    const cidadesPorLinha = [];
+                    for (let i = 0; i < data.cidades.length; i += 3) {
+                        const grupo = data.cidades.slice(i, i + 3);
+                        cidadesPorLinha.push(grupo.join(', '));
+                    }
+                    
+                    mensagem += cidadesPorLinha.join('\n');
+                    mensagem += `\n━━━━━━━━━━━━━━━`;
+                    
+                    await sock.sendMessage(from, {
+                        text: mensagem,
+                        contextInfo: {
+                            forwardingScore: 100000,
+                            isForwarded: true,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            }
+                        }
+                    }, { quoted: selinho });
+                    
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ DDD "${ddd}" não encontrado!`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao consultar DDD:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao consultar DDD! Verifique se o DDD está correto e tente novamente.");
+            }
+        }
+        break;
+
         case "signo": {
             if (args.length === 0) {
                 const config = obterConfiguracoes();
