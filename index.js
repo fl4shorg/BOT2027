@@ -2244,6 +2244,293 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "playstore":
+        case "play": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}playstore [app]\n\n💡 Exemplo: ${config.prefix}playstore whatsapp`);
+                break;
+            }
+
+            try {
+                const busca = args.join(' ').trim();
+                await reagirMensagem(sock, message, "📱");
+                
+                const response = await axios.get(`https://www.api.neext.online/playstore?q=${encodeURIComponent(busca)}`);
+                
+                if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+                    const resultados = response.data.slice(0, 5);
+                    
+                    let mensagem = `📱 *PLAY STORE - "${busca}"*\n\n`;
+                    
+                    resultados.forEach((app, index) => {
+                        mensagem += `━━━━━━━━━━━━━━━\n`;
+                        mensagem += `*${index + 1}. ${app.nama}*\n`;
+                        mensagem += `👨‍💻 Dev: ${app.developer}\n`;
+                        if (app.rate2) {
+                            mensagem += `⭐ Nota: ${app.rate2}/5\n`;
+                        }
+                        mensagem += `🔗 Link: ${app.link}\n\n`;
+                    });
+                    
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📦 Total: ${response.data.length} apps encontrados`;
+                    
+                    if (resultados[0].img) {
+                        await sock.sendMessage(from, {
+                            image: { url: resultados[0].img },
+                            caption: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, {
+                            text: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    }
+                    
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Nenhum app encontrado para "${busca}".`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar na Play Store:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar apps! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "tiktoksearch":
+        case "ttsearch": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}tiktoksearch [busca]\n\n💡 Exemplo: ${config.prefix}tiktoksearch edit anime`);
+                break;
+            }
+
+            try {
+                const busca = args.join(' ').trim();
+                await reagirMensagem(sock, message, "🎵");
+                
+                const response = await axios.get(`https://www.api.neext.online/api/tiktok?q=${encodeURIComponent(busca)}`);
+                
+                if (response.data && response.data.success && response.data.videos && response.data.videos.length > 0) {
+                    const video = response.data.videos[0];
+                    
+                    let mensagem = `🎵 *TIKTOK SEARCH*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📝 Título: ${video.title.substring(0, 200)}\n`;
+                    mensagem += `⏱️ Duração: ${video.duration}\n`;
+                    mensagem += `🌍 Região: ${video.region}\n`;
+                    if (video.author) {
+                        mensagem += `👤 Autor: ${video.author.id}\n`;
+                    }
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📦 Total: ${response.data.total} vídeos encontrados\n\n`;
+                    mensagem += `⬇️ Enviando vídeo...`;
+                    
+                    await sock.sendMessage(from, {
+                        text: mensagem,
+                        contextInfo: {
+                            forwardingScore: 100000,
+                            isForwarded: true,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            }
+                        }
+                    }, { quoted: selinho });
+                    
+                    if (video.play) {
+                        await sock.sendMessage(from, {
+                            video: { url: video.play },
+                            caption: `🎵 *${video.title.substring(0, 100)}*`,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    }
+                    
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Nenhum vídeo encontrado para "${busca}".`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar no TikTok:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar vídeos! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "reels":
+        case "reelssearch": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}reels [busca]\n\n💡 Exemplo: ${config.prefix}reels edits`);
+                break;
+            }
+
+            try {
+                const busca = args.join(' ').trim();
+                await reagirMensagem(sock, message, "📸");
+                
+                const response = await axios.get(`https://www.api.neext.online/pesquisa/reels?q=${encodeURIComponent(busca)}`);
+                
+                if (response.data && response.data.results && response.data.results.search_data && response.data.results.search_data.length > 0) {
+                    const reels = response.data.results.search_data.slice(0, 5);
+                    
+                    let mensagem = `📸 *REELS - "${busca}"*\n\n`;
+                    mensagem += `🔍 Total: ${response.data.results.count} reels\n\n`;
+                    
+                    reels.forEach((reel, index) => {
+                        mensagem += `━━━━━━━━━━━━━━━\n`;
+                        mensagem += `*${index + 1}. ${reel.profile.username}*\n`;
+                        mensagem += `📝 ${reel.caption.substring(0, 100)}...\n`;
+                        mensagem += `⏱️ Duração: ${Math.round(reel.duration)}s\n`;
+                        if (reel.statistics) {
+                            mensagem += `❤️ Likes: ${reel.statistics.like_count.toLocaleString()}\n`;
+                            mensagem += `👁️ Views: ${reel.statistics.play_count.toLocaleString()}\n`;
+                        }
+                        mensagem += `🔗 ${reel.links}\n\n`;
+                    });
+                    
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (reels[0].thumbnail) {
+                        await sock.sendMessage(from, {
+                            image: { url: reels[0].thumbnail },
+                            caption: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, {
+                            text: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    }
+                    
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Nenhum reel encontrado para "${busca}".`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar reels:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar reels! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "wattpad": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}wattpad [busca]\n\n💡 Exemplo: ${config.prefix}wattpad naruto`);
+                break;
+            }
+
+            try {
+                const busca = args.join(' ').trim();
+                await reagirMensagem(sock, message, "📚");
+                
+                const response = await axios.get(`https://www.api.neext.online/pesquisa/wattpad?q=${encodeURIComponent(busca)}`);
+                
+                if (response.data && response.data.status === 200 && response.data.results && response.data.results.length > 0) {
+                    const historias = response.data.results.slice(0, 5);
+                    
+                    let mensagem = `📚 *WATTPAD - "${busca}"*\n\n`;
+                    
+                    historias.forEach((historia, index) => {
+                        mensagem += `━━━━━━━━━━━━━━━\n`;
+                        mensagem += `*${index + 1}. ${historia.titulo}*\n`;
+                        mensagem += `📝 ${historia.description.substring(0, 150)}...\n`;
+                        mensagem += `🔗 ${historia.link}\n\n`;
+                    });
+                    
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📦 Total: ${response.data.results.length} histórias`;
+                    
+                    if (historias[0].imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: historias[0].imagem },
+                            caption: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, {
+                            text: mensagem,
+                            contextInfo: {
+                                forwardingScore: 100000,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: "120363289739581116@newsletter",
+                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                }
+                            }
+                        }, { quoted: selinho });
+                    }
+                    
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, `❌ Nenhuma história encontrada para "${busca}".`);
+                }
+
+            } catch (error) {
+                console.error("❌ Erro ao buscar no Wattpad:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar histórias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
         case "tempo":
         case "clima":
         case "previsao": {

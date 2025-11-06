@@ -1,0 +1,134 @@
+cria os seguintes comandos novos e coloca lá no menu normal na parte de comandos de pesquisa pesquisa 
+
+
+Playstore
+
+Method: GET
+URL: https://www.api.neext.online/playstore?q=whatsapp+
+Status: 200
+JSON Response:
+[
+  {
+    "link": "https://play.google.com/store/apps/details?id=com.whatsapp.w4b",
+    "nama": "WhatsApp Business",
+    "developer": "WhatsApp LLC",
+    "img": "https://play-lh.googleusercontent.com/K6L_Ixmw0J9oTktAoHyEHvzQIfxEF1CIQ5aE0WHhdUeOgfAmn7KLhe47Q5XxZaXQ0g=s64-rw",
+    "rate": "Rated 4.4 stars out of five stars",
+    "rate2": "4.4",
+    "link_dev": "https://play.google.com/store/apps/developer?id=WhatsApp+LLC"
+  },
+  {
+
+
+tiktoksearch
+
+
+Method: GET
+URL: https://www.api.neext.online/api/tiktok?q=edit+anime
+Status: 200
+{
+  "success": true,
+  "total": 12,
+  "videos": [
+    {
+      "id": "7561802096304049430",
+      "title": "the light triad🔥 || song:boom boom boom boom!!Zak Conner || #itadori#jjk#jjkedit#mangaedit#animeedit  ",
+      "region": "GE",
+      "duration": "16s",
+      "cover": "https://tikwm.com/video/cover/7561802096304049430.webp",
+      "play": "https://tikwm.com/video/media/play/7561802096304049430.mp4",
+      "wmplay": "https://tikwm.com/video/media/wmplay/7561802096304049430.mp4",
+      "size": 2007665,
+      "wm_size": 2016757,
+      "music": {
+        "id": "7561802072312662806",
+        "title": "original sound - va1tedits",
+        "author": "𝕍𝕒𝕝𝕥 🇬🇪",
+        "play": "https://sf19-music.tiktokcdn-eu.com/obj/ies-music-eu2-no/7561802124447845142.mp3"
+      },
+      "author": {
+        "id": "7533665433875416086",
+
+reels
+
+Method: GET
+URL: https://www.api.neext.online/pesquisa/reels?q=Edits
+Status: 200
+JSON Response:
+{
+  "statusCode": 200,
+  "author": "Neext",
+  "results": {
+    "count": 12,
+    "query": "Edits",
+    "search_data": [
+      {
+        "id": "DNr2_iJWMMn",
+        "caption": "Black Flash 💀 #edit #fyp #blackflash #flash #blackflashedit #fyyp #editz #edits",
+        "mentions": [],
+        "hashtags": [
+          "#edit",
+          "#fyp",
+          "#blackflash",
+          "#flash",
+          "#blackflashedit",
+          "#fyyp",
+          "#editz",
+          "#edits"
+        ],
+        "created_at": 1755925923,
+        "taken_at": 1755925922,
+        "thumbnail": "https://scontent-vie1-1.cdninstagram.com/v/t51.82787-15/537734273_17993947910823951_8815738444305415438_n.jpg?stp=dst-jpg_e15_p360x360_tt6&_nc_cat=105&ig_cache_key=MzcwNTI5Njk3ODk0NTAzMjk5OTE3OTkzOTQ3OTA0ODIzOTUx.3-ccb1-7&ccb=1-7&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjcyMHgxMjgwLnNkci5DMyJ9&_nc_ohc=wx5Cd7SSt8AQ7kNvwFoeIpi&_nc_oc=AdmsTr9v8sF912iRzrWS51OsAE-NuNhRBEDT385VUR50nuBcgeVVB8fKk92UUur5I0I&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_gid=GPZ5gpI1FK1qmoEs3KkyDA&oh=00_AfhWUnzLbfRuJwuMERXyfYkxd4cb6oHC27TpWXEAeAnjjA&oe=6912BBC6",
+        "duration": 17.554000854492188,
+        "links": "https://www.instagram.com/reel/DNr2_iJWMMn",
+        "statistics": {
+          "comment_count": 1472,
+          "play_count": 602452,
+          "like_count": 63374,
+          "share_count": 12687
+        },
+        "profile": {
+          "id": "54537503950",
+          "full_name": "【ＢＥＮＤＹ３０３】",
+          "username": "bendy303evil",
+          "is_verified": false,
+          "is_private": false,
+          "profile_pic_url": "https://scontent-vie1-1.cdninstagram.com/v/t51.2885-19/549548736_17996591192823951_695450503811449249_n.jpg?stp=dst-jpg_e0_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_cat=103&_nc_oc=Q6cZ2QFv6Pnt3rKg9OF67zZriqZDt7lQ2k71_Q9uyWvN1CG5DCENAIfoY__pE7xm2RqJ4tw&_nc_ohc=qIecElXu_QEQ7kNvwFC1fOZ&_nc_gid=GPZ5gpI1FK1qmoEs3KkyDA&edm=AL2I2h8BAAAA&ccb=7-5&ig_cache_key=GMBywSCPWDfpze8-AKFBjG6MvKYJbmNDAQAB1501500j-ccb7-5&oh=00_AfjbyJEv0VpQ36c3rbIOiVpp0prCDrLh5Tg98Aq6vzE53g&oe=6912D823&_nc_sid=026283"
+        },
+        "reels": {
+
+wattpad
+
+Method: GET
+URL: https://www.api.neext.online/pesquisa/wattpad?q=naruto
+Status: 200
+Carregando imagem...
+JSON Response:
+{
+  "status": 200,
+  "results": [
+    {
+      "titulo": "Hatake Naruto",
+      "link": "https://www.wattpad.com/story/328675409",
+      "imagem": "https://img.wattpad.com/cover/328675409-256-k487713.jpg",
+      "description": "E se Naruto tivesse sido criado por Kakashi durante toda a sua vida e como criar Naruto mudaria a vida de Kakashi também? NaruHina"
+    },
+    {
+      "titulo": "Stuck in Naruto (naruto fan-fic)",
+      "link": "https://www.wattpad.com/story/703679",
+      "imagem": "https://img.wattpad.com/cover/703679-256-k486215.jpg",
+      "description": "Alison é apenas uma garota normal... Ou tão normal quanto você pode crescer com uma família que realmente não te amava. Ao descobrir que é adotada, ela começa a se perguntar de onde ela poderia ser. Como ela deseja estar no lugar ao qual pertence, ela se encontra em nada menos que o mundo de Naruto – algum programa sobre ninjas que seu primo gostava de assistir na Terra. Ela poderia realmente ser a pessoa que o pergaminho diz? Siga Alison enquanto ela conhece todos os ninjas malucos e únicos de Konoha, enquanto ela mesma começa a se tornar uma ninja."
+    },
+    {
+      "titulo": "Baby Naruto",
+      "link": "https://www.wattpad.com/story/146607456",
+      "imagem": "https://img.wattpad.com/cover/146607456-256-k153961.jpg",
+      "description": "Naruto foi atingido por um Jutsu estranho que o transformou em um bebê, de 2 anos para ser exato. Ele é encontrado por ninguém menos que Uchiha Itachi. O que Itachi vai fazer com um bebê Naruto e onde ou como ele vai escondê-lo dos membros da Akatsuki? #765 - naruto #385 - naruto #42 - akatsuki"
+    },
+    {
+      "titulo": "QUIRK | naruto. u ✔",
+      "link": "https://www.wattpad.com/story/208834289",
+      "imagem": "https://img.wattpad.com/cover/208834289-256-k910064.jpg",
+      "description": "❝ ʜᴇ ɪꜱ ᴛʜᴇ ᴏɴʟʏ ᴏɴᴇ ᴡʜᴏ ɴᴏᴛɪᴄᴇᴅ ʜᴇʀ Qᴜɪʀᴋ ᴀɴᴅ ꜰᴇʟʟ ɪɴ ʟᴏᴠᴇ ᴡɪᴛʜ ɪᴛ ❞ ─── QUIRK ─── .·:·.個性.·:·. em que um garoto idiota se apaixona profundamente pela garota obcecada pelos horóscopos de Oha Asa. | naruto uzumaki x oc | | naruto-naruto shippuuden! leve au |"
+    },
+    {

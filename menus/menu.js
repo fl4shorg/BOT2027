@@ -137,6 +137,10 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽📚⃟ ${prefix}wiki [assunto] - Pesquisar na Wikipedia
 │ 𖧈∘̥⸽🔍⃟ ${prefix}googleimagem [busca] - Buscar imagens no Google
 │ 𖧈∘̥⸽🔎⃟ ${prefix}bingimagem [busca] - Buscar imagens no Bing
+│ 𖧈∘̥⸽📱⃟ ${prefix}playstore [app] - Pesquisar apps na Play Store
+│ 𖧈∘̥⸽🎵⃟ ${prefix}tiktoksearch [busca] - Pesquisar vídeos no TikTok
+│ 𖧈∘̥⸽📸⃟ ${prefix}reels [busca] - Pesquisar reels no Instagram
+│ 𖧈∘̥⸽📚⃟ ${prefix}wattpad [busca] - Pesquisar histórias no Wattpad
 ╰──────────────────────⪨
 
 ╭──〔 COMANDOS TOOLS 〕──⪩
