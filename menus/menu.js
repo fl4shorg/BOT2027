@@ -949,7 +949,6 @@ function obterMenuAlteradores() {
 
 module.exports = {
     obterMenuPrincipal,
-    obterMenuMembro,
     obterMenuAdmin,
     obterMenuAdm,
     obterMenuDono,
