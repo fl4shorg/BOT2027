@@ -104,10 +104,10 @@ Os dados de autenticação são salvos na pasta `/conexao` e persistem entre rei
 ## Atualizações Recentes
 
 ### 06 de Novembro de 2025
-- ✅ Corrigidos comandos de logos (menulogos) para aceitar resposta de imagem direta da API
-- ✅ Funções `processarLogo` e `processarLogoDuplo` agora suportam tanto imagens diretas quanto JSON com localstream
-- ✅ Melhor detecção de Content-Type para processar diferentes formatos de resposta da API
-- ✅ Mantida compatibilidade com o formato JSON antigo
+- ✅ Corrigidos todos os comandos de logos (menulogos)
+- ✅ API retorna imagem diretamente (removida lógica desnecessária de JSON)
+- ✅ Funções `processarLogo` e `processarLogoDuplo` simplificadas
+- ✅ Timeout aumentado para 60s (alguns logos demoram para gerar)
 
 ### 03 de Novembro de 2025
 - Importado e configurado para Replit
