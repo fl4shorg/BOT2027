@@ -6320,10 +6320,20 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             }
                         });
 
-                        // Envia a figurinha
+                        // Converte para WebP usando writeExif
+                        const webpFile = await writeExif(
+                            { mimetype: 'image/png', data: Buffer.from(response.data) },
+                            { packname: "NEEXT LTDA", author: "NEEXT BOT", categories: ["😎"] }
+                        );
+
+                        // Envia a figurinha convertida
+                        const stickerBuffer = fs.readFileSync(webpFile);
                         await sock.sendMessage(from, {
-                            sticker: Buffer.from(response.data)
+                            sticker: stickerBuffer
                         });
+
+                        // Limpa arquivo temporário
+                        fs.unlinkSync(webpFile);
 
                         console.log(`✅ Figurinha ${i + 1}/5 enviada (${info.nome})`);
 

@@ -288,7 +288,6 @@ function contarComandos() {
         }
         
         const total = comandosPrincipais.size;
-        console.log(`✅ Total de comandos contados: ${total}`);
         return total;
     } catch (error) {
         console.error('❌ Erro ao contar comandos automaticamente:', error);
