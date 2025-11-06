@@ -127,6 +127,11 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽⭐⃟ ${prefix}imdbtopanimes - Top 10 animes
 ╰──────────────────────⪨
 
+╭──〔 COMANDOS PESQUISA 〕──⪩
+│ 𖧈∘̥⸽📚⃟ ${prefix}wikipedia [assunto] - Pesquisar na Wikipedia
+│ 𖧈∘̥⸽📚⃟ ${prefix}wiki [assunto] - Pesquisar na Wikipedia
+╰──────────────────────⪨
+
 © NEEXT LTDA`;
     } catch (error) {
         console.error('Erro ao gerar menu principal:', error);

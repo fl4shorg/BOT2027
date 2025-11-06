@@ -4203,20 +4203,14 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             break;
         }
 
-        // Comando Wikipedia
+        // Comando Wikipedia - Nova versão com API oficial
         case 'wikipedia':
         case 'wiki': {
             const assunto = args.join(' ');
             if (!assunto) {
                 const config = obterConfiguracoes();
                 await sock.sendMessage(from, {
-                    text: `📚 *Como usar o comando Wikipedia:*\n\n` +
-                          `📝 \`${config.prefix}wikipedia [assunto]\`\n` +
-                          `📝 \`${config.prefix}wiki [assunto]\`\n\n` +
-                          `💡 *Exemplo:*\n` +
-                          `\`${config.prefix}wikipedia Brasil\`\n` +
-                          `\`${config.prefix}wiki Inteligência Artificial\`\n\n` +
-                          `🔍 Digite o assunto que deseja pesquisar!`
+                    text: `📚 *WIKIPEDIA - Pesquise qualquer coisa!*\n\n📝 *Como usar:*\n${config.prefix}wikipedia [assunto]\n${config.prefix}wiki [assunto]\n\n💡 *Exemplos:*\n${config.prefix}wiki Brasil\n${config.prefix}wikipedia Inteligência Artificial\n\n🔍 Digite o que deseja pesquisar!`
                 }, { quoted: message });
                 break;
             }
@@ -4225,60 +4219,63 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             await reagirMensagem(sock, message, "⏳");
 
             try {
-                const response = await axios.get(`https://www.api.neext.online/search/wiki?q=${encodeURIComponent(assunto)}`, {
+                const apiUrl = `https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(assunto)}`;
+                console.log(`🔗 Chamando API Wikipedia: ${apiUrl}`);
+
+                const response = await axios.get(apiUrl, {
                     timeout: 15000,
                     headers: {
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
                     }
                 });
 
-                console.log(`📥 Resposta API Wikipedia:`, response.data);
+                console.log(`📥 Resposta API Wikipedia recebida`);
 
-                if (!response.data || response.data.status !== 200 || !response.data.dados) {
+                if (!response.data || response.data.type === 'disambiguation' || !response.data.extract) {
                     await reagirMensagem(sock, message, "❌");
                     await sock.sendMessage(from, {
-                        text: `❌ Nenhum resultado encontrado para "${assunto}".\n\n💡 Tente reformular sua pesquisa!`
+                        text: `❌ Nenhum resultado encontrado para "${assunto}".\n\n💡 Tente ser mais específico na sua pesquisa!`
                     }, { quoted: message });
                     break;
                 }
 
-                const dados = response.data.dados;
-                
-                // Limita a descrição a 1000 caracteres
-                let descricao = dados.descricao || 'Descrição não disponível';
-                if (descricao.length > 1000) {
-                    descricao = descricao.substring(0, 997) + '...';
-                }
+                const dados = response.data;
+                const titulo = dados.title || assunto;
+                const descricao = dados.extract || 'Descrição não disponível';
+                const imagemUrl = dados.thumbnail?.source || dados.originalimage?.source || null;
+                const pageUrl = dados.content_urls?.desktop?.page || `https://pt.wikipedia.org/wiki/${encodeURIComponent(assunto)}`;
 
                 await reagirMensagem(sock, message, "✅");
 
-                const mensagem = `📚 *WIKIPEDIA*\n\n` +
-                               `📖 *Título:* ${dados.titulo}\n\n` +
-                               `📝 *Descrição:*\n${descricao}\n\n` +
-                               `🔗 *Link:* ${dados.url}\n\n` +
-                               `🔍 *Busca:* ${assunto}\n` +
-                               `© NEEXT LTDA`;
-
-                await sock.sendMessage(from, {
-                    text: mensagem,
-                    contextInfo: {
-                        forwardingScore: 100000,
-                        isForwarded: true,
-                        forwardedNewsletterMessageInfo: {
-                            newsletterJid: "120363289739581116@newsletter",
-                            newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                        },
-                        externalAdReply: {
-                            title: "📚 WIKIPEDIA NEEXT",
-                            body: `Resultado da busca • ${assunto}`,
-                            thumbnailUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png',
-                            mediaType: 1,
-                            sourceUrl: dados.url
+                // Envia com imagem se disponível
+                if (imagemUrl) {
+                    await sock.sendMessage(from, {
+                        image: { url: imagemUrl },
+                        caption: `📚 *WIKIPEDIA*\n\n📖 *${titulo}*\n\n${descricao}\n\n🔗 ${pageUrl}\n\n© NEEXT LTDA`,
+                        contextInfo: {
+                            forwardingScore: 100000,
+                            isForwarded: true,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: "120363289739581116@newsletter",
+                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                            },
+                            externalAdReply: {
+                                title: "📚 WIKIPEDIA",
+                                body: titulo,
+                                thumbnailUrl: imagemUrl,
+                                mediaType: 1,
+                                sourceUrl: pageUrl
+                            }
                         }
-                    }
-                }, { quoted: selinho });
+                    }, { quoted: message });
+                } else {
+                    // Sem imagem, envia só texto
+                    await sock.sendMessage(from, {
+                        text: `📚 *WIKIPEDIA*\n\n📖 *${titulo}*\n\n${descricao}\n\n🔗 ${pageUrl}\n\n© NEEXT LTDA`
+                    }, { quoted: message });
+                }
 
-                console.log(`✅ Resultado da Wikipedia enviado: ${dados.titulo}`);
+                console.log(`✅ Resultado da Wikipedia enviado: ${titulo}`);
 
             } catch (error) {
                 console.error('❌ Erro ao buscar na Wikipedia:', error.message);
@@ -4286,13 +4283,15 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 let errorMessage = '❌ Erro ao buscar na Wikipedia.';
                 
                 if (error.code === 'ENOTFOUND') {
-                    errorMessage += ' API indisponível.';
+                    errorMessage += ' Problema de conexão.';
                 } else if (error.code === 'ETIMEDOUT') {
                     errorMessage += ' Timeout. Tente novamente.';
+                } else if (error.response?.status === 404) {
+                    errorMessage = `❌ Página "${assunto}" não encontrada na Wikipedia.\n\n💡 Verifique a ortografia ou tente outro termo!`;
                 } else if (error.response?.status >= 500) {
-                    errorMessage += ' Servidor fora do ar.';
+                    errorMessage += ' Servidor Wikipedia fora do ar.';
                 } else {
-                    errorMessage += ' Tente novamente mais tarde.';
+                    errorMessage += ' Tente novamente.';
                 }
                 
                 await reagirMensagem(sock, message, "❌");
