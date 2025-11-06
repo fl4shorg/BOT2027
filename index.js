@@ -3584,21 +3584,40 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     break;
                 }
 
-                // Seleciona uma imagem aleatória
-                const randomIndex = Math.floor(Math.random() * response.data.results.search_data.length);
-                const randomImageUrl = response.data.results.search_data[randomIndex];
-                console.log(`📥 Encontradas ${response.data.results.count} imagens, enviando imagem aleatória #${randomIndex + 1}`);
+                // Tenta baixar e enviar uma imagem aleatória (com retry)
+                const maxRetries = 5;
+                let imageBuffer = null;
+                let successIndex = -1;
+                
+                for (let attempt = 0; attempt < maxRetries; attempt++) {
+                    try {
+                        const randomIndex = Math.floor(Math.random() * response.data.results.search_data.length);
+                        const randomImageUrl = response.data.results.search_data[randomIndex];
+                        console.log(`📥 Tentativa ${attempt + 1}/${maxRetries}: Baixando imagem #${randomIndex + 1}`);
 
-                // Baixa a imagem aleatória
-                const imageResponse = await axios.get(randomImageUrl, { 
-                    responseType: 'arraybuffer', 
-                    timeout: 15000,
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                        const imageResponse = await axios.get(randomImageUrl, { 
+                            responseType: 'arraybuffer', 
+                            timeout: 10000,
+                            headers: {
+                                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                            }
+                        });
+
+                        imageBuffer = Buffer.from(imageResponse.data);
+                        successIndex = randomIndex;
+                        console.log(`✅ Imagem #${randomIndex + 1} baixada com sucesso (${imageBuffer.length} bytes)`);
+                        break;
+                    } catch (downloadError) {
+                        console.log(`⚠️ Falha ao baixar imagem na tentativa ${attempt + 1}: ${downloadError.message}`);
+                        if (attempt === maxRetries - 1) {
+                            throw new Error('Não foi possível baixar nenhuma imagem após várias tentativas');
+                        }
                     }
-                });
+                }
 
-                const imageBuffer = Buffer.from(imageResponse.data);
+                if (!imageBuffer) {
+                    throw new Error('Falha ao obter imagem');
+                }
 
                 // Envia a imagem
                 await sock.sendMessage(from, {
@@ -3669,21 +3688,40 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     break;
                 }
 
-                // Seleciona uma imagem aleatória
-                const randomIndex = Math.floor(Math.random() * response.data.results.length);
-                const randomImageUrl = response.data.results[randomIndex];
-                console.log(`📥 Encontradas ${response.data.total} imagens, enviando imagem aleatória #${randomIndex + 1}`);
+                // Tenta baixar e enviar uma imagem aleatória (com retry)
+                const maxRetries = 5;
+                let imageBuffer = null;
+                let successIndex = -1;
+                
+                for (let attempt = 0; attempt < maxRetries; attempt++) {
+                    try {
+                        const randomIndex = Math.floor(Math.random() * response.data.results.length);
+                        const randomImageUrl = response.data.results[randomIndex];
+                        console.log(`📥 Tentativa ${attempt + 1}/${maxRetries}: Baixando imagem #${randomIndex + 1}`);
 
-                // Baixa a imagem aleatória
-                const imageResponse = await axios.get(randomImageUrl, { 
-                    responseType: 'arraybuffer', 
-                    timeout: 15000,
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                        const imageResponse = await axios.get(randomImageUrl, { 
+                            responseType: 'arraybuffer', 
+                            timeout: 10000,
+                            headers: {
+                                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                            }
+                        });
+
+                        imageBuffer = Buffer.from(imageResponse.data);
+                        successIndex = randomIndex;
+                        console.log(`✅ Imagem #${randomIndex + 1} baixada com sucesso (${imageBuffer.length} bytes)`);
+                        break;
+                    } catch (downloadError) {
+                        console.log(`⚠️ Falha ao baixar imagem na tentativa ${attempt + 1}: ${downloadError.message}`);
+                        if (attempt === maxRetries - 1) {
+                            throw new Error('Não foi possível baixar nenhuma imagem após várias tentativas');
+                        }
                     }
-                });
+                }
 
-                const imageBuffer = Buffer.from(imageResponse.data);
+                if (!imageBuffer) {
+                    throw new Error('Falha ao obter imagem');
+                }
 
                 // Envia a imagem
                 await sock.sendMessage(from, {
