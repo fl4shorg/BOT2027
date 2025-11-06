@@ -175,7 +175,8 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 
 ╭──〔 COMANDOS FIGURINHAS 〕──⪩
 │ 𖧈∘̥⸽🎨⃟ ${prefix}brat [texto] - Criar sticker brat
-│ 𖧈∘̥⸽🎬⃟ ${prefix}bratgif [texto1] [texto2] - Criar brat animado
+│ 𖧈∘̥⸽🎬⃟ ${prefix}bratgif [texto1] [texto2] - Brat animado
+│ 𖧈∘̥⸽✨⃟ ${prefix}attp [texto] - Texto animado colorido
 │ 𖧈∘̥⸽🏷️⃟ ${prefix}s - Criar sticker de mídia
 │ 𖧈∘̥⸽✏️⃟ ${prefix}rename [pack|author] - Renomear sticker
 ╰──────────────────────⪨

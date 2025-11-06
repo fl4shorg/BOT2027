@@ -104,10 +104,15 @@ Os dados de autenticação são salvos na pasta `/conexao` e persistem entre rei
 ## Atualizações Recentes
 
 ### 06 de Novembro de 2025 - Noite
-- ✅ **Comando bratgif adicionado**: Novo comando `.bratgif [texto1] [texto2]` para criar brat animado
-  - Aceita dois ou mais textos separados por espaço
-  - Retorna um vídeo/GIF animado com o estilo brat
+- ✅ **Comando attp adicionado**: Novo comando `.attp [texto]` para texto animado colorido
+  - Cria figurinha animada com texto colorido e animações
+  - API: https://www.api.neext.online/attp
+  - Retorna como sticker/figurinha animada no WhatsApp
+  - Adicionado na seção "COMANDOS FIGURINHAS" do menu
+- ✅ **Comando bratgif corrigido**: Agora retorna como **figurinha animada** (sticker)
+  - Aceita dois ou mais textos separados por espaço: `.bratgif [texto1] [texto2]`
   - API: https://www.api.neext.online/bratvideo
+  - Converte o vídeo para WebP animado e envia como sticker
   - Adicionado na seção "COMANDOS FIGURINHAS" do menu
 - ✅ **14 Comandos de Notícias adicionados**: Nova seção "COMANDOS DE NOTÍCIAS" no menu
   - `.jovempan` - Notícias da Jovem Pan

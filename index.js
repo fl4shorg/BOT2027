@@ -4390,9 +4390,9 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await reagirMensagem(sock, message, "🎬");
                 
                 const texto = args.join('+');
-                const url = `https://www.api.neext.online/bratvideo?text=${encodeURIComponent(texto)}`;
+                const url = `https://www.api.neext.online/bratvideo?text=${texto}`;
                 
-                await reply(sock, from, "⏳ Criando brat animado... Aguarde!");
+                await reply(sock, from, "⏳ Criando figurinha brat animada... Aguarde!");
                 
                 const response = await axios.get(url, {
                     responseType: 'arraybuffer',
@@ -4401,19 +4401,21 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 
                 const buffer = Buffer.from(response.data);
                 
-                await sock.sendMessage(from, {
-                    video: buffer,
-                    gifPlayback: true,
-                    caption: `🎬 *BRAT ANIMADO*\n\n📝 Texto: ${args.join(' ')}\n\n© NEEXT LTDA`,
-                    contextInfo: {
-                        forwardingScore: 100000,
-                        isForwarded: true,
-                        forwardedNewsletterMessageInfo: {
-                            newsletterJid: "120363289739581116@newsletter",
-                            newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                        }
+                const agora = new Date();
+                const dataHora = `${agora.toLocaleDateString('pt-BR')} ${agora.toLocaleTimeString('pt-BR')}`;
+                
+                const webpFile = await writeExif(
+                    { mimetype: 'video/mp4', data: buffer },
+                    { 
+                        packname: "BRAT ANIMADO", 
+                        author: `NEEXT BOT - ${dataHora}`, 
+                        categories: ["🎬"] 
                     }
-                }, { quoted: selinho });
+                );
+                
+                const stickerBuffer = fs.readFileSync(webpFile);
+                await sock.sendMessage(from, { sticker: stickerBuffer }, { quoted: selinho });
+                fs.unlinkSync(webpFile);
                 
                 await reagirMensagem(sock, message, "✅");
 
@@ -4421,6 +4423,54 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 console.error("❌ Erro ao criar bratgif:", error);
                 await reagirMensagem(sock, message, "❌");
                 await reply(sock, from, "❌ Erro ao criar brat animado! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "attp": {
+            if (args.length === 0) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}attp [texto]\n\n💡 Exemplo: ${config.prefix}attp neext`);
+                break;
+            }
+
+            try {
+                await reagirMensagem(sock, message, "✨");
+                
+                const texto = args.join(' ');
+                const url = `https://www.api.neext.online/attp?text=${encodeURIComponent(texto)}`;
+                
+                await reply(sock, from, "⏳ Criando figurinha animada... Aguarde!");
+                
+                const response = await axios.get(url, {
+                    responseType: 'arraybuffer',
+                    timeout: 60000
+                });
+                
+                const buffer = Buffer.from(response.data);
+                
+                const agora = new Date();
+                const dataHora = `${agora.toLocaleDateString('pt-BR')} ${agora.toLocaleTimeString('pt-BR')}`;
+                
+                const webpFile = await writeExif(
+                    { mimetype: 'video/mp4', data: buffer },
+                    { 
+                        packname: "TEXTO ANIMADO", 
+                        author: `NEEXT BOT - ${dataHora}`, 
+                        categories: ["✨"] 
+                    }
+                );
+                
+                const stickerBuffer = fs.readFileSync(webpFile);
+                await sock.sendMessage(from, { sticker: stickerBuffer }, { quoted: selinho });
+                fs.unlinkSync(webpFile);
+                
+                await reagirMensagem(sock, message, "✅");
+
+            } catch (error) {
+                console.error("❌ Erro ao criar attp:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao criar texto animado! Tente novamente mais tarde.");
             }
         }
         break;
