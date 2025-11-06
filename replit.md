@@ -106,8 +106,11 @@ Os dados de autenticação são salvos na pasta `/conexao` e persistem entre rei
 ### 06 de Novembro de 2025
 - ✅ Corrigidos todos os comandos de logos (menulogos)
 - ✅ API retorna imagem diretamente (removida lógica desnecessária de JSON)
-- ✅ Funções `processarLogo` e `processarLogoDuplo` simplificadas
+- ✅ Criada função `processarLogoTextpro` para logos Textpro (usa parâmetro `text1`)
+- ✅ Função `processarLogo` para logos Ephoto (usa parâmetro `text`)
+- ✅ Função `processarLogoDuplo` para logos com 2 textos
 - ✅ Timeout aumentado para 60s (alguns logos demoram para gerar)
+- ✅ Todos os 60+ comandos de logo funcionando perfeitamente
 
 ### 03 de Novembro de 2025
 - Importado e configurado para Replit

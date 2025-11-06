@@ -941,6 +941,51 @@ async function processarLogo(sock, from, message, args, apiUrl, nomeEfeito, emoj
     }
 }
 
+// Processa logos simples TEXTPRO (usa text1 ao invés de text)
+async function processarLogoTextpro(sock, from, message, args, apiUrl, nomeEfeito, emoji) {
+    const texto = args.join(' ');
+    if (!texto) {
+        const config = obterConfiguracoes();
+        await sock.sendMessage(from, { 
+            text: `❌ Digite o texto para criar o logo!\n\nExemplo: *${config.prefix}${nomeEfeito.toLowerCase().replace(/ /g, '')} Flash*` 
+        }, { quoted: message });
+        return;
+    }
+
+    console.log(`${emoji} Criando logo ${nomeEfeito}: "${texto}"`);
+    await reagirMensagem(sock, message, "⏳");
+
+    try {
+        const config = obterConfiguracoes();
+        
+        const response = await axios.get(`${apiUrl}?text1=${encodeURIComponent(texto)}`, {
+            responseType: 'arraybuffer',
+            timeout: 60000,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+        });
+        
+        console.log(`🖼️ Imagem recebida da API Textpro`);
+        const imageBuffer = Buffer.from(response.data);
+        
+        await sock.sendMessage(from, {
+            image: imageBuffer,
+            caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto: "${texto}"\n\n© ${config.nomeDoBot}`
+        }, { quoted: message });
+        
+        await reagirMensagem(sock, message, "✅");
+        console.log(`✅ Logo ${nomeEfeito} criado com sucesso!`);
+
+    } catch (error) {
+        console.error(`❌ Erro ao criar logo ${nomeEfeito}:`, error.message);
+        await reagirMensagem(sock, message, "❌");
+        await sock.sendMessage(from, {
+            text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
+        }, { quoted: message });
+    }
+}
+
 // Processa logos duplos (2 textos)
 async function processarLogoDuplo(sock, from, message, args, apiUrl, nomeEfeito, emoji) {
     const texto = args.join(' ');
@@ -4384,17 +4429,17 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         // ===================================
         
         case 'logoneon': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/neon', 'Logo Neon', '💡');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/neon', 'Logo Neon', '💡');
             break;
         }
         
         case 'logofrozen': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/frozen', 'Logo Frozen', '❄️');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/frozen', 'Logo Frozen', '❄️');
             break;
         }
         
         case 'logodeadpool': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/deadpool', 'Logo Deadpool', '💀');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/deadpool', 'Logo Deadpool', '💀');
             break;
         }
         
@@ -4404,12 +4449,12 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         
         case 'logomatrix': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/matrix', 'Logo Matrix', '💚');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/matrix', 'Logo Matrix', '💚');
             break;
         }
         
         case 'logothor': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/thor', 'Logo Thor', '⚡');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/thor', 'Logo Thor', '⚡');
             break;
         }
         
@@ -4419,27 +4464,27 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         
         case 'logobatman': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/batman', 'Logo Batman', '🦇');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/batman', 'Logo Batman', '🦇');
             break;
         }
         
         case 'logogreenhorror': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/greenhorror', 'Logo Green Horror', '👻');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/greenhorror', 'Logo Green Horror', '👻');
             break;
         }
         
         case 'logomagma': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/magma', 'Logo Magma', '🌋');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/magma', 'Logo Magma', '🌋');
             break;
         }
         
         case 'logoharrypotter': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/harrypotter', 'Logo Harry Potter', '⚡');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/harrypotter', 'Logo Harry Potter', '⚡');
             break;
         }
         
         case 'logoglowing': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/glowing', 'Logo Glowing', '✨');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/glowing', 'Logo Glowing', '✨');
             break;
         }
         
@@ -4449,47 +4494,47 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         
         case 'logoglitch': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/glitch', 'Logo Glitch', '📺');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/glitch', 'Logo Glitch', '📺');
             break;
         }
         
         case 'logohorror': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/horror', 'Logo Horror', '😱');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/horror', 'Logo Horror', '😱');
             break;
         }
         
         case 'logobearlogo': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/bearlogo', 'Logo Bear', '🐻');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/bearlogo', 'Logo Bear', '🐻');
             break;
         }
         
         case 'logograffiti': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/graffiti', 'Logo Graffiti', '🎨');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/graffiti', 'Logo Graffiti', '🎨');
             break;
         }
         
         case 'logothunder': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/thunder', 'Logo Thunder', '⚡');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/thunder', 'Logo Thunder', '⚡');
             break;
         }
         
         case 'logosketch': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/sketch', 'Logo Sketch', '✏️');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/sketch', 'Logo Sketch', '✏️');
             break;
         }
         
         case 'logothreeDchrome': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/threeDchrome', 'Logo 3D Chrome', '🔷');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/threeDchrome', 'Logo 3D Chrome', '🔷');
             break;
         }
         
         case 'logogold': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/gold', 'Logo Gold', '🥇');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/gold', 'Logo Gold', '🥇');
             break;
         }
         
         case 'logocandy': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/candy', 'Logo Candy', '🍬');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/candy', 'Logo Candy', '🍬');
             break;
         }
         
@@ -4504,47 +4549,47 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         
         case 'logostone': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/stone', 'Logo Stone', '🪨');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/stone', 'Logo Stone', '🪨');
             break;
         }
         
         case 'logowater': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/water', 'Logo Water', '💧');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/water', 'Logo Water', '💧');
             break;
         }
         
         case 'logometal': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/metal', 'Logo Metal', '⚙️');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/metal', 'Logo Metal', '⚙️');
             break;
         }
         
         case 'logolava': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/lava', 'Logo Lava', '🌋');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/lava', 'Logo Lava', '🌋');
             break;
         }
         
         case 'logojuice': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/juice', 'Logo Juice', '🧃');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/juice', 'Logo Juice', '🧃');
             break;
         }
         
         case 'logogalaxy': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/galaxy', 'Logo Galaxy', '🌌');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/galaxy', 'Logo Galaxy', '🌌');
             break;
         }
         
         case 'logoplasma': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/plasma', 'Logo Plasma', '⚡');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/plasma', 'Logo Plasma', '⚡');
             break;
         }
         
         case 'logotransformer': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/transformer', 'Logo Transformer', '🤖');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/transformer', 'Logo Transformer', '🤖');
             break;
         }
         
         case 'logoneon2': {
-            await processarLogo(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/neon2', 'Logo Neon 2', '🔆');
+            await processarLogoTextpro(sock, from, message, args, 'https://www.api.neext.online/api/efeito/textpro/neon2', 'Logo Neon 2', '🔆');
             break;
         }
 
