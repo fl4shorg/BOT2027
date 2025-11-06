@@ -7364,8 +7364,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
                     await reply(sock, from, `🎵 Encontrado: *${firstResult.title}* - ${firstResult.artist}\n📥 Baixando...`);
 
-                    const apiUrl = `https://api.agatz.xyz/api/spotify?url=${encodeURIComponent(spotifyLink)}`;
-                    console.log(`📥 [PLAY] Chamando API Agatz de download: ${apiUrl}`);
+                    const apiUrl = `https://api.nekolabs.web.id/downloader/spotify/v1?url=${encodeURIComponent(spotifyLink)}`;
+                    console.log(`📥 [PLAY] Chamando API Nekolabs de download: ${apiUrl}`);
                     
                     const response = await axios.get(apiUrl, {
                         timeout: 90000,
@@ -7374,17 +7374,17 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         }
                     });
 
-                    console.log(`📥 [PLAY] Resposta da API Agatz:`, JSON.stringify(response.data, null, 2));
+                    console.log(`📥 [PLAY] Resposta da API Nekolabs:`, JSON.stringify(response.data, null, 2));
 
-                    if (!response.data || !response.data.data || !response.data.data.url) {
-                        console.error("❌ [PLAY] API Agatz retornou erro:", response.data);
+                    if (!response.data || !response.data.success || !response.data.result) {
+                        console.error("❌ [PLAY] API Nekolabs retornou erro:", response.data);
                         await reagirMensagem(sock, message, "❌");
                         await reply(sock, from, "❌ Não foi possível processar esta música. API retornou erro.");
                         break;
                     }
 
-                    const result = response.data.data;
-                    const downloadUrl = result.url;
+                    const result = response.data.result;
+                    const downloadUrl = result.downloadUrl;
                     
                     if (!downloadUrl) {
                         console.error("❌ [PLAY] Link de download não encontrado:", result);
@@ -7416,12 +7416,12 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     }
 
                     let thumbnailBuffer = null;
-                    if (result.thumbnail) {
+                    if (result.cover) {
                         try {
-                            console.log(`📸 [PLAY] Baixando capa de: ${result.thumbnail}`);
+                            console.log(`📸 [PLAY] Baixando capa de: ${result.cover}`);
                             const thumbnailResponse = await axios({
                                 method: 'GET',
-                                url: result.thumbnail,
+                                url: result.cover,
                                 responseType: 'arraybuffer',
                                 timeout: 10000
                             });
@@ -7444,8 +7444,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         contextInfo: {
                             externalAdReply: {
                                 title: `🎵 ${songName}`,
-                                body: `🎤 ${artistName}`,
-                                thumbnailUrl: result.thumbnail || firstResult.thumbnail || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
+                                body: `🎤 ${artistName} • ⏱️ ${result.duration}`,
+                                thumbnailUrl: result.cover || firstResult.thumbnail || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
                                 mediaType: 2,
                                 sourceUrl: spotifyLink
                             }
@@ -7616,7 +7616,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await reply(sock, from, `🎵 Baixando música do Spotify, aguarde...`);
 
                 // Chama a API do Spotify
-                const apiUrl = `https://api.agatz.xyz/api/spotify?url=${encodeURIComponent(spotifyUrl)}`;
+                const apiUrl = `https://api.nekolabs.web.id/downloader/spotify/v1?url=${encodeURIComponent(spotifyUrl)}`;
                 const response = await axios.get(apiUrl, {
                     timeout: 30000,
                     headers: {
@@ -7624,15 +7624,15 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     }
                 });
 
-                if (!response.data || !response.data.data || !response.data.data.url) {
+                if (!response.data || !response.data.success || !response.data.result) {
                     await reagirMensagem(sock, message, "❌");
                     await reply(sock, from, "❌ Não foi possível baixar esta música do Spotify. Verifique o link.");
                     break;
                 }
 
-                const result = response.data.data;
+                const result = response.data.result;
                 
-                if (!result.url) {
+                if (!result.downloadUrl) {
                     await reagirMensagem(sock, message, "❌");
                     await reply(sock, from, "❌ Link de download não encontrado para esta música.");
                     break;
@@ -7641,7 +7641,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 // Baixa o áudio
                 const audioResponse = await axios({
                     method: 'GET',
-                    url: result.url,
+                    url: result.downloadUrl,
                     responseType: 'arraybuffer',
                     timeout: 60000
                 });
@@ -7650,11 +7650,11 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
                 // Baixa a capa se existir
                 let thumbnailBuffer = null;
-                if (result.thumbnail) {
+                if (result.cover) {
                     try {
                         const thumbnailResponse = await axios({
                             method: 'GET',
-                            url: result.thumbnail,
+                            url: result.cover,
                             responseType: 'arraybuffer',
                             timeout: 10000
                         });
@@ -7669,6 +7669,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
 📝 **Título:** ${result.title}
 👤 **Artista:** ${result.artist}
+⏱️ **Duração:** ${result.duration}
 
 🎧 **Enviado com selinho2**
 © NEEXT LTDA`;
@@ -7683,8 +7684,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     contextInfo: {
                         externalAdReply: {
                             title: `🎵 ${result.title}`,
-                            body: `🎤 ${result.artist}`,
-                            thumbnailUrl: result.thumbnail || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
+                            body: `🎤 ${result.artist} • ⏱️ ${result.duration}`,
+                            thumbnailUrl: result.cover || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
                             mediaType: 2,
                             sourceUrl: spotifyUrl
                         }
