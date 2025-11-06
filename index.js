@@ -2332,36 +2332,14 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 const response = await axios.get(`https://www.api.neext.online/api/tiktok?q=${encodeURIComponent(busca)}`);
                 
                 if (response.data && response.data.success && response.data.videos && response.data.videos.length > 0) {
-                    const video = response.data.videos[0];
-                    
-                    let mensagem = `🎵 *TIKTOK SEARCH*\n\n`;
-                    mensagem += `━━━━━━━━━━━━━━━\n`;
-                    mensagem += `📝 Título: ${video.title.substring(0, 200)}\n`;
-                    mensagem += `⏱️ Duração: ${video.duration}\n`;
-                    mensagem += `🌍 Região: ${video.region}\n`;
-                    if (video.author) {
-                        mensagem += `👤 Autor: ${video.author.id}\n`;
-                    }
-                    mensagem += `━━━━━━━━━━━━━━━\n`;
-                    mensagem += `📦 Total: ${response.data.total} vídeos encontrados\n\n`;
-                    mensagem += `⬇️ Enviando vídeo...`;
-                    
-                    await sock.sendMessage(from, {
-                        text: mensagem,
-                        contextInfo: {
-                            forwardingScore: 100000,
-                            isForwarded: true,
-                            forwardedNewsletterMessageInfo: {
-                                newsletterJid: "120363289739581116@newsletter",
-                                newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                            }
-                        }
-                    }, { quoted: selinho });
+                    // Pega um vídeo aleatório da lista
+                    const randomIndex = Math.floor(Math.random() * response.data.videos.length);
+                    const video = response.data.videos[randomIndex];
                     
                     if (video.play) {
                         await sock.sendMessage(from, {
                             video: { url: video.play },
-                            caption: `🎵 *${video.title.substring(0, 100)}*`,
+                            caption: `🎵 *${video.title.substring(0, 200)}*`,
                             contextInfo: {
                                 forwardingScore: 100000,
                                 isForwarded: true,
@@ -2371,9 +2349,12 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                                 }
                             }
                         }, { quoted: selinho });
+                        
+                        await reagirMensagem(sock, message, "✅");
+                    } else {
+                        await reagirMensagem(sock, message, "❌");
+                        await reply(sock, from, `❌ Não foi possível baixar o vídeo.`);
                     }
-                    
-                    await reagirMensagem(sock, message, "✅");
                 } else {
                     await reagirMensagem(sock, message, "❌");
                     await reply(sock, from, `❌ Nenhum vídeo encontrado para "${busca}".`);
@@ -2402,53 +2383,44 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 const response = await axios.get(`https://www.api.neext.online/pesquisa/reels?q=${encodeURIComponent(busca)}`);
                 
                 if (response.data && response.data.results && response.data.results.search_data && response.data.results.search_data.length > 0) {
-                    const reels = response.data.results.search_data.slice(0, 5);
+                    // Pega um reel aleatório
+                    const randomIndex = Math.floor(Math.random() * response.data.results.search_data.length);
+                    const reel = response.data.results.search_data[randomIndex];
                     
-                    let mensagem = `📸 *REELS - "${busca}"*\n\n`;
-                    mensagem += `🔍 Total: ${response.data.results.count} reels\n\n`;
+                    // Baixa o reel usando o link
+                    const downloadResponse = await axios.get(`https://www.api.neext.online/download/instagram?url=${encodeURIComponent(reel.links)}`);
                     
-                    reels.forEach((reel, index) => {
-                        mensagem += `━━━━━━━━━━━━━━━\n`;
-                        mensagem += `*${index + 1}. ${reel.profile.username}*\n`;
-                        mensagem += `📝 ${reel.caption.substring(0, 100)}...\n`;
-                        mensagem += `⏱️ Duração: ${Math.round(reel.duration)}s\n`;
-                        if (reel.statistics) {
-                            mensagem += `❤️ Likes: ${reel.statistics.like_count.toLocaleString()}\n`;
-                            mensagem += `👁️ Views: ${reel.statistics.play_count.toLocaleString()}\n`;
+                    if (downloadResponse.data && downloadResponse.data.resultado) {
+                        const videoUrl = downloadResponse.data.resultado.url || downloadResponse.data.resultado.video;
+                        
+                        if (videoUrl) {
+                            let caption = `📸 *@${reel.profile.username}*\n\n`;
+                            if (reel.caption) {
+                                caption += `${reel.caption.substring(0, 200)}`;
+                            }
+                            
+                            await sock.sendMessage(from, {
+                                video: { url: videoUrl },
+                                caption: caption,
+                                contextInfo: {
+                                    forwardingScore: 100000,
+                                    isForwarded: true,
+                                    forwardedNewsletterMessageInfo: {
+                                        newsletterJid: "120363289739581116@newsletter",
+                                        newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                                    }
+                                }
+                            }, { quoted: selinho });
+                            
+                            await reagirMensagem(sock, message, "✅");
+                        } else {
+                            await reagirMensagem(sock, message, "❌");
+                            await reply(sock, from, `❌ Não foi possível baixar o reel.`);
                         }
-                        mensagem += `🔗 ${reel.links}\n\n`;
-                    });
-                    
-                    mensagem += `━━━━━━━━━━━━━━━`;
-                    
-                    if (reels[0].thumbnail) {
-                        await sock.sendMessage(from, {
-                            image: { url: reels[0].thumbnail },
-                            caption: mensagem,
-                            contextInfo: {
-                                forwardingScore: 100000,
-                                isForwarded: true,
-                                forwardedNewsletterMessageInfo: {
-                                    newsletterJid: "120363289739581116@newsletter",
-                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                                }
-                            }
-                        }, { quoted: selinho });
                     } else {
-                        await sock.sendMessage(from, {
-                            text: mensagem,
-                            contextInfo: {
-                                forwardingScore: 100000,
-                                isForwarded: true,
-                                forwardedNewsletterMessageInfo: {
-                                    newsletterJid: "120363289739581116@newsletter",
-                                    newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
-                                }
-                            }
-                        }, { quoted: selinho });
+                        await reagirMensagem(sock, message, "❌");
+                        await reply(sock, from, `❌ Não foi possível baixar o reel.`);
                     }
-                    
-                    await reagirMensagem(sock, message, "✅");
                 } else {
                     await reagirMensagem(sock, message, "❌");
                     await reply(sock, from, `❌ Nenhum reel encontrado para "${busca}".`);
