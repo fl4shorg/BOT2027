@@ -101,5 +101,13 @@ Se preferir usar código de pareamento ao invés de QR Code:
 ### Persistência da Sessão
 Os dados de autenticação são salvos na pasta `/conexao` e persistem entre reinicializações, então você só precisa conectar uma vez.
 
-## Última Atualização
-03 de Novembro de 2025 - Importado e configurado para Replit
+## Atualizações Recentes
+
+### 06 de Novembro de 2025
+- ✅ Corrigidos comandos de logos (menulogos) para aceitar resposta de imagem direta da API
+- ✅ Funções `processarLogo` e `processarLogoDuplo` agora suportam tanto imagens diretas quanto JSON com localstream
+- ✅ Melhor detecção de Content-Type para processar diferentes formatos de resposta da API
+- ✅ Mantida compatibilidade com o formato JSON antigo
+
+### 03 de Novembro de 2025
+- Importado e configurado para Replit

@@ -914,32 +914,46 @@ async function processarLogo(sock, from, message, args, apiUrl, nomeEfeito, emoj
         const config = obterConfiguracoes();
         
         const response = await axios.get(`${apiUrl}?text=${encodeURIComponent(texto)}`, {
+            responseType: 'arraybuffer',
             timeout: 30000,
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
         });
         
-        console.log(`📥 Resposta API Logo:`, response.data);
+        const contentType = response.headers['content-type'] || '';
+        console.log(`📥 Tipo de conteúdo: ${contentType}`);
         
-        if (!response.data || !response.data.localstream) {
-            await reagirMensagem(sock, message, "❌");
-            await sock.sendMessage(from, {
-                text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
-            }, { quoted: message });
-            return;
+        let imageBuffer;
+        
+        if (contentType.includes('image/')) {
+            console.log(`🖼️ API retornou imagem diretamente`);
+            imageBuffer = Buffer.from(response.data);
+        } else {
+            const jsonData = JSON.parse(response.data.toString());
+            console.log(`📥 Resposta API Logo:`, jsonData);
+            
+            if (!jsonData || !jsonData.localstream) {
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
+                }, { quoted: message });
+                return;
+            }
+
+            const imageUrl = jsonData.localstream;
+            console.log(`🖼️ Baixando imagem do logo: ${imageUrl}`);
+
+            const imageResponse = await axios.get(imageUrl, {
+                responseType: 'arraybuffer',
+                timeout: 20000
+            });
+            
+            imageBuffer = Buffer.from(imageResponse.data);
         }
-
-        const imageUrl = response.data.localstream;
-        console.log(`🖼️ Baixando imagem do logo: ${imageUrl}`);
-
-        const imageResponse = await axios.get(imageUrl, {
-            responseType: 'arraybuffer',
-            timeout: 20000
-        });
         
         await sock.sendMessage(from, {
-            image: Buffer.from(imageResponse.data),
+            image: imageBuffer,
             caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto: "${texto}"\n\n© ${config.nomeDoBot}`
         }, { quoted: message });
         
@@ -982,32 +996,46 @@ async function processarLogoDuplo(sock, from, message, args, apiUrl, nomeEfeito,
         const config = obterConfiguracoes();
         
         const response = await axios.get(`${apiUrl}?text1=${encodeURIComponent(textos[0])}&text2=${encodeURIComponent(textos[1])}`, {
+            responseType: 'arraybuffer',
             timeout: 30000,
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
         });
         
-        console.log(`📥 Resposta API Logo:`, response.data);
+        const contentType = response.headers['content-type'] || '';
+        console.log(`📥 Tipo de conteúdo: ${contentType}`);
         
-        if (!response.data || !response.data.localstream) {
-            await reagirMensagem(sock, message, "❌");
-            await sock.sendMessage(from, {
-                text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
-            }, { quoted: message });
-            return;
+        let imageBuffer;
+        
+        if (contentType.includes('image/')) {
+            console.log(`🖼️ API retornou imagem diretamente`);
+            imageBuffer = Buffer.from(response.data);
+        } else {
+            const jsonData = JSON.parse(response.data.toString());
+            console.log(`📥 Resposta API Logo:`, jsonData);
+            
+            if (!jsonData || !jsonData.localstream) {
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
+                }, { quoted: message });
+                return;
+            }
+
+            const imageUrl = jsonData.localstream;
+            console.log(`🖼️ Baixando imagem do logo: ${imageUrl}`);
+
+            const imageResponse = await axios.get(imageUrl, {
+                responseType: 'arraybuffer',
+                timeout: 20000
+            });
+            
+            imageBuffer = Buffer.from(imageResponse.data);
         }
-
-        const imageUrl = response.data.localstream;
-        console.log(`🖼️ Baixando imagem do logo: ${imageUrl}`);
-
-        const imageResponse = await axios.get(imageUrl, {
-            responseType: 'arraybuffer',
-            timeout: 20000
-        });
         
         await sock.sendMessage(from, {
-            image: Buffer.from(imageResponse.data),
+            image: imageBuffer,
             caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto 1: "${textos[0]}"\n📝 Texto 2: "${textos[1]}"\n\n© ${config.nomeDoBot}`
         }, { quoted: message });
         
