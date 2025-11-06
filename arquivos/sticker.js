@@ -16,18 +16,27 @@ async function recodeVideo(inputPath) {
     
     await new Promise((resolve, reject) => {
         ff(inputPath)
+            .duration(5)
+            .size('512x512')
+            .fps(15)
+            .videoBitrate('500k')
             .outputOptions([
                 '-c:v', 'libx264',
-                '-preset', 'fast',
-                '-crf', '23',
+                '-preset', 'ultrafast',
+                '-crf', '28',
                 '-pix_fmt', 'yuv420p',
+                '-vf', 'scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:black',
                 '-movflags', '+faststart',
                 '-an'
             ])
             .on("error", (err) => {
+                console.error('❌ Erro ao recodificar vídeo:', err.message);
                 reject(err);
             })
-            .on("end", () => resolve())
+            .on("end", () => {
+                console.log('✅ Vídeo recodificado com sucesso');
+                resolve();
+            })
             .save(outputPath);
     });
     
@@ -64,10 +73,13 @@ async function bufferToWebp(buffer, isVideo = false, mimetype = null, isPinteres
     // Se for vídeo do Pinterest, recodifica primeiro para garantir compatibilidade
     if (isVideo && isPinterestVideo) {
         try {
+            console.log('🔄 Recodificando vídeo do Pinterest...');
             const recodedInput = await recodeVideo(input);
             if (fs.existsSync(input)) fs.unlinkSync(input);
             input = recodedInput;
+            console.log('✅ Vídeo do Pinterest recodificado');
         } catch (err) {
+            console.error('❌ Falha ao recodificar vídeo do Pinterest:', err.message);
             if (fs.existsSync(input)) fs.unlinkSync(input);
             throw err;
         }
@@ -83,18 +95,19 @@ async function bufferToWebp(buffer, isVideo = false, mimetype = null, isPinteres
             .on("end", () => resolve());
 
         if (isVideo) {
-            // Para vídeos: máximo 6 segundos, 512px, preserva transparência
+            // Para vídeos: máximo 5 segundos, 512px, menor qualidade para evitar corrupção
             ffmpegCommand
-                .duration(6)
+                .duration(5)
                 .addOutputOptions([
                     "-vcodec", "libwebp",
-                    "-vf", "fps=15,scale=512:512:force_original_aspect_ratio=decrease,format=rgba,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=0x00000000,setsar=1",
+                    "-vf", "fps=12,scale=512:512:force_original_aspect_ratio=decrease,format=rgba,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=0x00000000,setsar=1",
                     "-loop", "0",
                     "-preset", "default",
                     "-an",
                     "-vsync", "0",
-                    "-q:v", "80",
-                    "-lossless", "0"
+                    "-q:v", "75",
+                    "-lossless", "0",
+                    "-compression_level", "4"
                 ]);
         } else {
             // Para imagens: 512px, preserva transparência, sem fps
@@ -117,6 +130,23 @@ async function bufferToWebp(buffer, isVideo = false, mimetype = null, isPinteres
 
     // Cleanup input file
     if (fs.existsSync(input)) fs.unlinkSync(input);
+    
+    // Valida se o arquivo WebP foi gerado corretamente
+    if (!fs.existsSync(output)) {
+        throw new Error('Arquivo WebP não foi gerado');
+    }
+    
+    const stats = fs.statSync(output);
+    if (stats.size === 0) {
+        if (fs.existsSync(output)) fs.unlinkSync(output);
+        throw new Error('Arquivo WebP gerado está vazio');
+    }
+    
+    // Verifica se o arquivo não está muito grande (máximo 1MB para stickers WhatsApp)
+    if (stats.size > 1024 * 1024) {
+        console.warn(`⚠️ Arquivo WebP muito grande: ${(stats.size / 1024).toFixed(2)} KB`);
+    }
+    
     return output;
 }
 
