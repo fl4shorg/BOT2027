@@ -104,6 +104,11 @@ Os dados de autenticação são salvos na pasta `/conexao` e persistem entre rei
 ## Atualizações Recentes
 
 ### 06 de Novembro de 2025 - Noite
+- ✅ **Comando bratgif adicionado**: Novo comando `.bratgif [texto1] [texto2]` para criar brat animado
+  - Aceita dois ou mais textos separados por espaço
+  - Retorna um vídeo/GIF animado com o estilo brat
+  - API: https://www.api.neext.online/bratvideo
+  - Adicionado na seção "COMANDOS FIGURINHAS" do menu
 - ✅ **14 Comandos de Notícias adicionados**: Nova seção "COMANDOS DE NOTÍCIAS" no menu
   - `.jovempan` - Notícias da Jovem Pan
   - `.g1` - Notícias do G1

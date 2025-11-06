@@ -4379,6 +4379,52 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        case "bratgif": {
+            if (args.length < 2) {
+                const config = obterConfiguracoes();
+                await reply(sock, from, `❌ Use: ${config.prefix}bratgif [texto1] [texto2]\n\n💡 Exemplo: ${config.prefix}bratgif flash kuun`);
+                break;
+            }
+
+            try {
+                await reagirMensagem(sock, message, "🎬");
+                
+                const texto = args.join('+');
+                const url = `https://www.api.neext.online/bratvideo?text=${encodeURIComponent(texto)}`;
+                
+                await reply(sock, from, "⏳ Criando brat animado... Aguarde!");
+                
+                const response = await axios.get(url, {
+                    responseType: 'arraybuffer',
+                    timeout: 60000
+                });
+                
+                const buffer = Buffer.from(response.data);
+                
+                await sock.sendMessage(from, {
+                    video: buffer,
+                    gifPlayback: true,
+                    caption: `🎬 *BRAT ANIMADO*\n\n📝 Texto: ${args.join(' ')}\n\n© NEEXT LTDA`,
+                    contextInfo: {
+                        forwardingScore: 100000,
+                        isForwarded: true,
+                        forwardedNewsletterMessageInfo: {
+                            newsletterJid: "120363289739581116@newsletter",
+                            newsletterName: "🐦‍🔥⃝ 𝆅࿙⵿ׂ𝆆𝝢𝝣𝝣𝝬𝗧𓋌𝗟𝗧𝗗𝗔⦙⦙ꜣྀ"
+                        }
+                    }
+                }, { quoted: selinho });
+                
+                await reagirMensagem(sock, message, "✅");
+
+            } catch (error) {
+                console.error("❌ Erro ao criar bratgif:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao criar brat animado! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
         case "s":
             try {
                 // Obtém hora atual para metadados
