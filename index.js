@@ -6211,7 +6211,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             const info = tipoMap[command];
             const apiUrl = `https://www.api.neext.online/sticker/figurinhas/${info.tipo}`;
 
-            console.log(`${info.emoji} Buscando figurinhas ${info.nome}...`);
             await reagirMensagem(sock, message, "⏳");
 
             try {
@@ -6301,7 +6300,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             const info = coresMap[command];
             const apiUrl = `https://www.api.neext.online/bluesticker/${info.cor}`;
 
-            console.log(`${info.emoji} Buscando figurinhas ${info.nome}...`);
             await reagirMensagem(sock, message, "⏳");
 
             try {
@@ -6335,8 +6333,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         // Limpa arquivo temporário
                         fs.unlinkSync(webpFile);
 
-                        console.log(`✅ Figurinha ${i + 1}/5 enviada (${info.nome})`);
-
                         // Aguarda entre envios
                         if (i < 4) {
                             await new Promise(resolve => setTimeout(resolve, 800));
@@ -6350,8 +6346,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await sock.sendMessage(from, {
                     text: `${info.emoji} *5 figurinhas ${info.nome} enviadas com sucesso!*\n\n© NEEXT LTDA`
                 }, { quoted: message });
-
-                console.log(`✅ Pacote de figurinhas ${info.nome} enviado com sucesso!`);
 
             } catch (error) {
                 console.error(`❌ Erro ao buscar figurinhas ${info.nome}:`, error.message);
