@@ -6276,6 +6276,96 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             break;
         }
 
+        // Comandos de Figurinhas Coloridas (BlueSticker)
+        case 'figurinhasemojiazul':
+        case 'figurinhasemojivioleta':
+        case 'figurinhasemojiamarelo':
+        case 'figurinhasemojivermelho':
+        case 'figurinhasemojirosa':
+        case 'figurinhasemojiturquesa':
+        case 'figurinhasemojiverde':
+        case 'figurinhasemojibranco':
+        case 'figurinhasemojipreto': {
+            const coresMap = {
+                'figurinhasemojiazul': { cor: 'blue', emoji: '🔵', nome: 'Emoji Azul' },
+                'figurinhasemojivioleta': { cor: 'violet', emoji: '🟣', nome: 'Emoji Violeta' },
+                'figurinhasemojiamarelo': { cor: 'yellow', emoji: '🟡', nome: 'Emoji Amarelo' },
+                'figurinhasemojivermelho': { cor: 'red', emoji: '🔴', nome: 'Emoji Vermelho' },
+                'figurinhasemojirosa': { cor: 'pink', emoji: '🩷', nome: 'Emoji Rosa' },
+                'figurinhasemojiturquesa': { cor: 'teal', emoji: '🩵', nome: 'Emoji Turquesa' },
+                'figurinhasemojiverde': { cor: 'green', emoji: '🟢', nome: 'Emoji Verde' },
+                'figurinhasemojibranco': { cor: 'white', emoji: '⚪', nome: 'Emoji Branco' },
+                'figurinhasemojipreto': { cor: 'black', emoji: '⚫', nome: 'Emoji Preto' }
+            };
+
+            const info = coresMap[command];
+            const apiUrl = `https://www.api.neext.online/bluesticker/${info.cor}`;
+
+            console.log(`${info.emoji} Buscando figurinhas ${info.nome}...`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                await sock.sendMessage(from, {
+                    text: `${info.emoji} *Enviando 5 figurinhas ${info.nome}...*\n\n⏳ Aguarde um momento...`
+                }, { quoted: message });
+
+                // Envia 5 figurinhas
+                for (let i = 0; i < 5; i++) {
+                    try {
+                        const response = await axios.get(apiUrl, {
+                            responseType: 'arraybuffer',
+                            timeout: 15000,
+                            headers: {
+                                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                            }
+                        });
+
+                        // Envia a figurinha
+                        await sock.sendMessage(from, {
+                            sticker: Buffer.from(response.data)
+                        });
+
+                        console.log(`✅ Figurinha ${i + 1}/5 enviada (${info.nome})`);
+
+                        // Aguarda entre envios
+                        if (i < 4) {
+                            await new Promise(resolve => setTimeout(resolve, 800));
+                        }
+                    } catch (err) {
+                        console.error(`❌ Erro ao enviar figurinha ${i + 1}:`, err.message);
+                    }
+                }
+
+                await reagirMensagem(sock, message, "✅");
+                await sock.sendMessage(from, {
+                    text: `${info.emoji} *5 figurinhas ${info.nome} enviadas com sucesso!*\n\n© NEEXT LTDA`
+                }, { quoted: message });
+
+                console.log(`✅ Pacote de figurinhas ${info.nome} enviado com sucesso!`);
+
+            } catch (error) {
+                console.error(`❌ Erro ao buscar figurinhas ${info.nome}:`, error.message);
+                
+                let errorMessage = `❌ Erro ao buscar figurinhas ${info.nome}.`;
+                
+                if (error.code === 'ENOTFOUND') {
+                    errorMessage += ' API indisponível.';
+                } else if (error.code === 'ETIMEDOUT') {
+                    errorMessage += ' Timeout. Tente novamente.';
+                } else if (error.response?.status >= 500) {
+                    errorMessage += ' Servidor temporariamente fora do ar.';
+                } else {
+                    errorMessage += ' Tente novamente mais tarde.';
+                }
+                
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: errorMessage
+                }, { quoted: message });
+            }
+            break;
+        }
+
         // Comando Pensador - Frases de pensadores
         case 'pensador': {
             const personagem = args.join(' ');

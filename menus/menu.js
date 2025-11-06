@@ -194,6 +194,15 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽💮⃟ ${prefix}figurinhasdesenho - Figurinhas desenho
 │ 𖧈∘̥⸽💮⃟ ${prefix}figurinhasraiva - Figurinhas de raiva
 │ 𖧈∘̥⸽💮⃟ ${prefix}figurinhasroblox - Figurinhas Roblox
+│ 𖧈∘̥⸽🔵⃟ ${prefix}figurinhasemojiazul - Figurinhas emoji azul
+│ 𖧈∘̥⸽🟣⃟ ${prefix}figurinhasemojivioleta - Figurinhas emoji violeta
+│ 𖧈∘̥⸽🟡⃟ ${prefix}figurinhasemojiamarelo - Figurinhas emoji amarelo
+│ 𖧈∘̥⸽🔴⃟ ${prefix}figurinhasemojivermelho - Figurinhas emoji vermelho
+│ 𖧈∘̥⸽🩷⃟ ${prefix}figurinhasemojirosa - Figurinhas emoji rosa
+│ 𖧈∘̥⸽🩵⃟ ${prefix}figurinhasemojiturquesa - Figurinhas emoji turquesa
+│ 𖧈∘̥⸽🟢⃟ ${prefix}figurinhasemojiverde - Figurinhas emoji verde
+│ 𖧈∘̥⸽⚪⃟ ${prefix}figurinhasemojibranco - Figurinhas emoji branco
+│ 𖧈∘̥⸽⚫⃟ ${prefix}figurinhasemojipreto - Figurinhas emoji preto
 │ 𖧈∘̥⸽🎨⃟ ${prefix}brat [texto] - Criar sticker brat
 │ 𖧈∘̥⸽🎬⃟ ${prefix}bratgif [texto1] [texto2] - Brat animado
 │ 𖧈∘̥⸽✨⃟ ${prefix}attp [texto] - Texto animado colorido
@@ -592,6 +601,18 @@ function obterMenuFigurinhas() {
 │┊𖥨ํ∘̥⃟⸽⃟💮￫ ${prefix}figurinhasraiva - Figurinhas aleatórias
 │┊𖥨ํ∘̥⃟⸽⃟💮￫ ${prefix}figurinhasroblox - Figurinhas aleatórias
 │╰─━─⋆｡°✩🏮✩°｡⋆ ━─━╯
+
+│╭─━─⋆｡°✩🎨✩°｡⋆ ━─━╮
+│┊𖥨ํ∘̥⃟⸽⃟🔵￫ ${prefix}figurinhasemojiazul - Figurinhas emoji azul
+│┊𖥨ํ∘̥⃟⸽⃟🟣￫ ${prefix}figurinhasemojivioleta - Figurinhas emoji violeta
+│┊𖥨ํ∘̥⃟⸽⃟🟡￫ ${prefix}figurinhasemojiamarelo - Figurinhas emoji amarelo
+│┊𖥨ํ∘̥⃟⸽⃟🔴￫ ${prefix}figurinhasemojivermelho - Figurinhas emoji vermelho
+│┊𖥨ํ∘̥⃟⸽⃟🩷￫ ${prefix}figurinhasemojirosa - Figurinhas emoji rosa
+│┊𖥨ํ∘̥⃟⸽⃟🩵￫ ${prefix}figurinhasemojiturquesa - Figurinhas emoji turquesa
+│┊𖥨ํ∘̥⃟⸽⃟🟢￫ ${prefix}figurinhasemojiverde - Figurinhas emoji verde
+│┊𖥨ํ∘̥⃟⸽⃟⚪￫ ${prefix}figurinhasemojibranco - Figurinhas emoji branco
+│┊𖥨ํ∘̥⃟⸽⃟⚫￫ ${prefix}figurinhasemojipreto - Figurinhas emoji preto
+│╰─━─⋆｡°✩🎨✩°｡⋆ ━─━╯
 
 │╭─━─⋆｡°✩🏮✩°｡⋆ ━─━╮
 │┊𖥨ํ∘̥⃟⸽⃟💮￫ ${prefix}s - Criar sticker de mídia
