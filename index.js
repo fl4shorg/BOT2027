@@ -896,7 +896,7 @@ async function reagirMensagem(sock, normalized, emoji = "🤖") {
 // FUNÇÕES HELPER PARA LOGOS
 // ===================================
 
-// Processa logos simples (1 texto)
+// Processa logos simples (1 texto) - COM RETRY
 async function processarLogo(sock, from, message, args, apiUrl, nomeEfeito, emoji) {
     const texto = args.join(' ');
     if (!texto) {
@@ -910,38 +910,75 @@ async function processarLogo(sock, from, message, args, apiUrl, nomeEfeito, emoj
     console.log(`${emoji} Criando logo ${nomeEfeito}: "${texto}"`);
     await reagirMensagem(sock, message, "⏳");
 
-    try {
-        const config = obterConfiguracoes();
-        
-        const response = await axios.get(`${apiUrl}?text=${encodeURIComponent(texto)}`, {
-            responseType: 'arraybuffer',
-            timeout: 60000,
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            }
-        });
-        
-        console.log(`🖼️ Imagem recebida da API`);
-        const imageBuffer = Buffer.from(response.data);
-        
-        await sock.sendMessage(from, {
-            image: imageBuffer,
-            caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto: "${texto}"\n\n© ${config.nomeDoBot}`
-        }, { quoted: message });
-        
-        await reagirMensagem(sock, message, "✅");
-        console.log(`✅ Logo ${nomeEfeito} criado com sucesso!`);
+    const maxRetries = 2;
+    let lastError = null;
 
-    } catch (error) {
-        console.error(`❌ Erro ao criar logo ${nomeEfeito}:`, error.message);
-        await reagirMensagem(sock, message, "❌");
-        await sock.sendMessage(from, {
-            text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
-        }, { quoted: message });
+    for (let tentativa = 1; tentativa <= maxRetries; tentativa++) {
+        try {
+            const config = obterConfiguracoes();
+            
+            if (tentativa > 1) {
+                console.log(`🔄 Tentativa ${tentativa}/${maxRetries} para ${nomeEfeito}`);
+                await new Promise(resolve => setTimeout(resolve, 1000 * tentativa));
+            }
+            
+            const response = await axios.get(`${apiUrl}?text=${encodeURIComponent(texto)}`, {
+                responseType: 'arraybuffer',
+                timeout: 45000,
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Accept': 'image/*'
+                }
+            });
+            
+            if (response.status !== 200) {
+                throw new Error(`API retornou status ${response.status}`);
+            }
+            
+            console.log(`🖼️ Imagem recebida da API (${response.data.length} bytes)`);
+            const imageBuffer = Buffer.from(response.data);
+            
+            await sock.sendMessage(from, {
+                image: imageBuffer,
+                caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto: "${texto}"\n\n© ${config.nomeDoBot}`
+            }, { quoted: message });
+            
+            await reagirMensagem(sock, message, "✅");
+            console.log(`✅ Logo ${nomeEfeito} criado com sucesso!`);
+            return;
+
+        } catch (error) {
+            lastError = error;
+            console.error(`❌ Tentativa ${tentativa}/${maxRetries} falhou para ${nomeEfeito}:`, error.message);
+            
+            if (error.response) {
+                console.error(`   Status: ${error.response.status}, StatusText: ${error.response.statusText}`);
+            }
+        }
     }
+
+    await reagirMensagem(sock, message, "❌");
+    
+    let mensagemErro = `❌ Não foi possível gerar o logo ${nomeEfeito} após ${maxRetries} tentativas.\n\n`;
+    
+    if (lastError.code === 'ECONNABORTED') {
+        mensagemErro += `⏱️ A API demorou muito para responder (timeout).\n`;
+    } else if (lastError.response?.status === 500) {
+        mensagemErro += `🔧 A API está com problemas internos no momento.\n`;
+    } else if (lastError.response?.status === 503) {
+        mensagemErro += `🚧 A API está indisponível temporariamente.\n`;
+    } else {
+        mensagemErro += `📡 Erro: ${lastError.message}\n`;
+    }
+    
+    mensagemErro += `\n💡 Tente novamente em alguns instantes ou teste outro comando de logo.`;
+    
+    await sock.sendMessage(from, {
+        text: mensagemErro
+    }, { quoted: message });
 }
 
-// Processa logos simples TEXTPRO (usa text1 ao invés de text)
+// Processa logos simples TEXTPRO (usa text1 ao invés de text) - COM RETRY
 async function processarLogoTextpro(sock, from, message, args, apiUrl, nomeEfeito, emoji) {
     const texto = args.join(' ');
     if (!texto) {
@@ -955,38 +992,75 @@ async function processarLogoTextpro(sock, from, message, args, apiUrl, nomeEfeit
     console.log(`${emoji} Criando logo ${nomeEfeito}: "${texto}"`);
     await reagirMensagem(sock, message, "⏳");
 
-    try {
-        const config = obterConfiguracoes();
-        
-        const response = await axios.get(`${apiUrl}?text1=${encodeURIComponent(texto)}`, {
-            responseType: 'arraybuffer',
-            timeout: 60000,
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            }
-        });
-        
-        console.log(`🖼️ Imagem recebida da API Textpro`);
-        const imageBuffer = Buffer.from(response.data);
-        
-        await sock.sendMessage(from, {
-            image: imageBuffer,
-            caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto: "${texto}"\n\n© ${config.nomeDoBot}`
-        }, { quoted: message });
-        
-        await reagirMensagem(sock, message, "✅");
-        console.log(`✅ Logo ${nomeEfeito} criado com sucesso!`);
+    const maxRetries = 2;
+    let lastError = null;
 
-    } catch (error) {
-        console.error(`❌ Erro ao criar logo ${nomeEfeito}:`, error.message);
-        await reagirMensagem(sock, message, "❌");
-        await sock.sendMessage(from, {
-            text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
-        }, { quoted: message });
+    for (let tentativa = 1; tentativa <= maxRetries; tentativa++) {
+        try {
+            const config = obterConfiguracoes();
+            
+            if (tentativa > 1) {
+                console.log(`🔄 Tentativa ${tentativa}/${maxRetries} para ${nomeEfeito}`);
+                await new Promise(resolve => setTimeout(resolve, 1000 * tentativa));
+            }
+            
+            const response = await axios.get(`${apiUrl}?text1=${encodeURIComponent(texto)}`, {
+                responseType: 'arraybuffer',
+                timeout: 45000,
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Accept': 'image/*'
+                }
+            });
+            
+            if (response.status !== 200) {
+                throw new Error(`API retornou status ${response.status}`);
+            }
+            
+            console.log(`🖼️ Imagem recebida da API Textpro (${response.data.length} bytes)`);
+            const imageBuffer = Buffer.from(response.data);
+            
+            await sock.sendMessage(from, {
+                image: imageBuffer,
+                caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto: "${texto}"\n\n© ${config.nomeDoBot}`
+            }, { quoted: message });
+            
+            await reagirMensagem(sock, message, "✅");
+            console.log(`✅ Logo ${nomeEfeito} criado com sucesso!`);
+            return;
+
+        } catch (error) {
+            lastError = error;
+            console.error(`❌ Tentativa ${tentativa}/${maxRetries} falhou para ${nomeEfeito}:`, error.message);
+            
+            if (error.response) {
+                console.error(`   Status: ${error.response.status}, StatusText: ${error.response.statusText}`);
+            }
+        }
     }
+
+    await reagirMensagem(sock, message, "❌");
+    
+    let mensagemErro = `❌ Não foi possível gerar o logo ${nomeEfeito} após ${maxRetries} tentativas.\n\n`;
+    
+    if (lastError.code === 'ECONNABORTED') {
+        mensagemErro += `⏱️ A API demorou muito para responder (timeout).\n`;
+    } else if (lastError.response?.status === 500) {
+        mensagemErro += `🔧 A API está com problemas internos no momento.\n`;
+    } else if (lastError.response?.status === 503) {
+        mensagemErro += `🚧 A API está indisponível temporariamente.\n`;
+    } else {
+        mensagemErro += `📡 Erro: ${lastError.message}\n`;
+    }
+    
+    mensagemErro += `\n💡 Tente novamente em alguns instantes ou teste outro comando de logo.`;
+    
+    await sock.sendMessage(from, {
+        text: mensagemErro
+    }, { quoted: message });
 }
 
-// Processa logos duplos (2 textos)
+// Processa logos duplos (2 textos) - COM RETRY
 async function processarLogoDuplo(sock, from, message, args, apiUrl, nomeEfeito, emoji) {
     const texto = args.join(' ');
     if (!texto) {
@@ -1009,35 +1083,72 @@ async function processarLogoDuplo(sock, from, message, args, apiUrl, nomeEfeito,
     console.log(`${emoji} Criando logo ${nomeEfeito}: "${textos[0]}" | "${textos[1]}"`);
     await reagirMensagem(sock, message, "⏳");
 
-    try {
-        const config = obterConfiguracoes();
-        
-        const response = await axios.get(`${apiUrl}?text1=${encodeURIComponent(textos[0])}&text2=${encodeURIComponent(textos[1])}`, {
-            responseType: 'arraybuffer',
-            timeout: 60000,
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            }
-        });
-        
-        console.log(`🖼️ Imagem recebida da API`);
-        const imageBuffer = Buffer.from(response.data);
-        
-        await sock.sendMessage(from, {
-            image: imageBuffer,
-            caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto 1: "${textos[0]}"\n📝 Texto 2: "${textos[1]}"\n\n© ${config.nomeDoBot}`
-        }, { quoted: message });
-        
-        await reagirMensagem(sock, message, "✅");
-        console.log(`✅ Logo ${nomeEfeito} criado com sucesso!`);
+    const maxRetries = 2;
+    let lastError = null;
 
-    } catch (error) {
-        console.error(`❌ Erro ao criar logo ${nomeEfeito}:`, error.message);
-        await reagirMensagem(sock, message, "❌");
-        await sock.sendMessage(from, {
-            text: `❌ Erro ao gerar logo ${nomeEfeito}. Tente novamente.`
-        }, { quoted: message });
+    for (let tentativa = 1; tentativa <= maxRetries; tentativa++) {
+        try {
+            const config = obterConfiguracoes();
+            
+            if (tentativa > 1) {
+                console.log(`🔄 Tentativa ${tentativa}/${maxRetries} para ${nomeEfeito}`);
+                await new Promise(resolve => setTimeout(resolve, 1000 * tentativa));
+            }
+            
+            const response = await axios.get(`${apiUrl}?text1=${encodeURIComponent(textos[0])}&text2=${encodeURIComponent(textos[1])}`, {
+                responseType: 'arraybuffer',
+                timeout: 45000,
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Accept': 'image/*'
+                }
+            });
+            
+            if (response.status !== 200) {
+                throw new Error(`API retornou status ${response.status}`);
+            }
+            
+            console.log(`🖼️ Imagem recebida da API (${response.data.length} bytes)`);
+            const imageBuffer = Buffer.from(response.data);
+            
+            await sock.sendMessage(from, {
+                image: imageBuffer,
+                caption: `${emoji} *${nomeEfeito.toUpperCase()}* ${emoji}\n\n📝 Texto 1: "${textos[0]}"\n📝 Texto 2: "${textos[1]}"\n\n© ${config.nomeDoBot}`
+            }, { quoted: message });
+            
+            await reagirMensagem(sock, message, "✅");
+            console.log(`✅ Logo ${nomeEfeito} criado com sucesso!`);
+            return;
+
+        } catch (error) {
+            lastError = error;
+            console.error(`❌ Tentativa ${tentativa}/${maxRetries} falhou para ${nomeEfeito}:`, error.message);
+            
+            if (error.response) {
+                console.error(`   Status: ${error.response.status}, StatusText: ${error.response.statusText}`);
+            }
+        }
     }
+
+    await reagirMensagem(sock, message, "❌");
+    
+    let mensagemErro = `❌ Não foi possível gerar o logo ${nomeEfeito} após ${maxRetries} tentativas.\n\n`;
+    
+    if (lastError.code === 'ECONNABORTED') {
+        mensagemErro += `⏱️ A API demorou muito para responder (timeout).\n`;
+    } else if (lastError.response?.status === 500) {
+        mensagemErro += `🔧 A API está com problemas internos no momento.\n`;
+    } else if (lastError.response?.status === 503) {
+        mensagemErro += `🚧 A API está indisponível temporariamente.\n`;
+    } else {
+        mensagemErro += `📡 Erro: ${lastError.message}\n`;
+    }
+    
+    mensagemErro += `\n💡 Tente novamente em alguns instantes ou teste outro comando de logo.`;
+    
+    await sock.sendMessage(from, {
+        text: mensagemErro
+    }, { quoted: message });
 }
 
 // Detecta links na mensagem (MELHORADO - MENOS FALSOS POSITIVOS)
@@ -6633,8 +6744,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             const menulogos = require('./menus/menulogos.js');
             const config = obterConfiguracoes();
             await sock.sendMessage(from, {
-                image: { url: config.fotoDoBot },
-                caption: menulogos.gerarMenuLogos(config.prefix, config.nomeDoBot)
+                text: menulogos.gerarMenuLogos(config.prefix, config.nomeDoBot)
             }, { quoted: message });
         }
         break;
