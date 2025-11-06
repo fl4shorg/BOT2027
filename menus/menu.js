@@ -87,6 +87,18 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
         const cargoUsuario = await obterCargoUsuario(sock, from, sender);
         const nomeUsuario = pushName || "Usuário";
         
+        // Obter versão do Baileys do package.json
+        let versaoBaileys = "7.0.0";
+        try {
+            const path = require('path');
+            const packagePath = path.join(__dirname, "..", "package.json");
+            delete require.cache[require.resolve(packagePath)];
+            const packageJson = require(packagePath);
+            versaoBaileys = packageJson.dependencies["@whiskeysockets/baileys"] || "7.0.0";
+        } catch (err) {
+            // Se der erro, usa versão padrão
+        }
+        
         return `${saudacao}! 👋
 
 ╭──〔 𖦹∘̥⸽⃟ INFORMAÇÕES 〕──⪩
@@ -94,7 +106,7 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖦹∘̥⸽📊⃟ Total de Comandos: ${totalComandos}
 │ 𖦹∘̥⸽🤖⃟ Nome do Bot: ${nomeDoBot}
 │ 𖦹∘̥⸽👤⃟ Usuário: ${nomeUsuario}
-│ 𖦹∘̥⸽🛠️⃟ Versão: ^7.0.0-rc.3
+│ 𖦹∘̥⸽🛠️⃟ Versão: ${versaoBaileys}
 │ 𖦹∘̥⸽👑⃟ Dono: ${nickDoDono}
 │ 𖦹∘̥⸽📈⃟ Total de Grupos: ${totalGrupos}
 │ 𖦹∘̥⸽📝⃟ Total Registrado: ${estatisticasRegistros.totalRegistros}
@@ -174,11 +186,20 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 ╰──────────────────────⪨
 
 ╭──〔 COMANDOS FIGURINHAS 〕──⪩
+│ 𖧈∘̥⸽💮⃟ ${prefix}figurinhasanime - Figurinhas anime aleatórias
+│ 𖧈∘̥⸽💮⃟ ${prefix}figurinhasmeme - Figurinhas meme aleatórias
+│ 𖧈∘̥⸽💮⃟ ${prefix}figurinhasengracadas - Figurinhas engraçadas
+│ 𖧈∘̥⸽💮⃟ ${prefix}figurinhasemoji - Figurinhas emoji
+│ 𖧈∘̥⸽💮⃟ ${prefix}figurinhascoreana - Figurinhas coreanas
+│ 𖧈∘̥⸽💮⃟ ${prefix}figurinhasdesenho - Figurinhas desenho
+│ 𖧈∘̥⸽💮⃟ ${prefix}figurinhasraiva - Figurinhas de raiva
+│ 𖧈∘̥⸽💮⃟ ${prefix}figurinhasroblox - Figurinhas Roblox
 │ 𖧈∘̥⸽🎨⃟ ${prefix}brat [texto] - Criar sticker brat
 │ 𖧈∘̥⸽🎬⃟ ${prefix}bratgif [texto1] [texto2] - Brat animado
 │ 𖧈∘̥⸽✨⃟ ${prefix}attp [texto] - Texto animado colorido
 │ 𖧈∘̥⸽🏷️⃟ ${prefix}s - Criar sticker de mídia
 │ 𖧈∘̥⸽✏️⃟ ${prefix}rename [pack|author] - Renomear sticker
+│ 𖧈∘̥⸽🎯⃟ ${prefix}take - Pegar sticker com seu nome
 ╰──────────────────────⪨
 
 © NEEXT LTDA`;
