@@ -3340,10 +3340,10 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 // Lê o sticker gerado e envia
                 const stickerBuffer = fs.readFileSync(webpFile);
 
-                // Envia a figurinha sem caption, reply ou context
+                // Envia a figurinha marcando a mensagem do usuário
                 const stickerMessage = await sock.sendMessage(from, {
                     sticker: stickerBuffer
-                });
+                }, { quoted: message });
 
                 // Cleanup do arquivo temporário
                 fs.unlinkSync(webpFile);

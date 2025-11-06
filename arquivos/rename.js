@@ -24,7 +24,7 @@ let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ?
 await conn.sendMessage(jid, {
     sticker: {url: buffer}, 
     ...options
-})
+}, { quoted: quoted })
 return buffer;
 };
 
@@ -39,7 +39,7 @@ let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ?
 await conn.sendMessage(jid, { 
     sticker: { url: buffer }, 
     ...options 
-})
+}, { quoted: quoted })
 return buffer;
 }
 
