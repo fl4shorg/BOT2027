@@ -17,7 +17,6 @@ async function recodeVideo(inputPath) {
     await new Promise((resolve, reject) => {
         ff(inputPath)
             .duration(5)
-            .size('512x512')
             .fps(15)
             .videoBitrate('500k')
             .outputOptions([
@@ -25,7 +24,7 @@ async function recodeVideo(inputPath) {
                 '-preset', 'ultrafast',
                 '-crf', '28',
                 '-pix_fmt', 'yuv420p',
-                '-vf', 'scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:black',
+                '-vf', 'scale=512:512:force_original_aspect_ratio=decrease',
                 '-movflags', '+faststart',
                 '-an'
             ])
