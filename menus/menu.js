@@ -129,6 +129,7 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽💭⃟ ${prefix}pensador [personagem] - Frases do pensador
 │ 𖧈∘̥⸽🎌⃟ ${prefix}frasesanime - Frases de anime
 │ 𖧈∘̥⸽🎲⃟ ${prefix}chance [texto] - Calcular chance
+│ 𖧈∘̥⸽🧮⃟ ${prefix}calcular [expressão] - Calculadora matemática
 ╰──────────────────────⪨
 
 ╭──〔 COMANDOS PESQUISA 〕──⪩
