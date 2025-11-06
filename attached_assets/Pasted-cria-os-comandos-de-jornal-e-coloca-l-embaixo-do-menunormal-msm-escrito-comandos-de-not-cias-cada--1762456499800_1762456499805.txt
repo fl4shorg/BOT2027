@@ -1,0 +1,236 @@
+cria os comandos de jornal e coloca lá embaixo do menunormal msm escrito comandos de notícias, cada um sempre retorna notícias aleatórias
+
+Method: GET
+URL: https://www.api.neext.online/jornal/jovempan?
+Status: 200
+
+{
+  "status": 200,
+  "source": "Jovem Pan",
+  "total": 25,
+  "results": [
+    {
+      "author": "Victoria Abel",
+      "title": "COP 30: Itamaraty diz Argentina participará do evento e minimiza ausência das EUA",
+      "image": "https://jpimg.com.br/uploads/2025/08/victoria.png",
+      "link": "https://jovempan.com.br/opiniao-jovem-pan/comentaristas/victoria-abel/cop-30-itamaraty-diz-argentina-participara-do-evento-e-minimiza-ausencia-das-eua.html"
+    },
+    {
+
+Method: GET
+URL: https://www.api.neext.online/jornal/g1?
+Status: 200
+
+
+{
+  "status": true,
+  "fonte": "https://g1.globo.com/",
+  "total": 6,
+  "resultados": [
+    {
+      "noticia": "Lula diz que justiça climática é 'aliada do combate à pobreza' em reunião da COP",
+      "descricao": "",
+      "categoria": "Cop 30",
+      "imagem": "https://s2-g1.glbimg.com/seHeXZj4GWrgG0eaZ-lVa-9rqVs=/0x238:6351x3810/540x304/smart/filters:max_age(3600)/https://i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2025/Z/T/LCroi7Rui9cv1GTz8FgA/afp-20251106-839x74a-v1-highres-brazilclimatecop30unleadersplenary.jpg",
+      "link": "https://g1.globo.com/meio-ambiente/cop-30/noticia/2025/11/06/lula-discursa-na-abertura-da-cupula-do-clima-da-cop30-em-belem.ghtml",
+      "postado": "Há 28 minutos"
+
+Method: GET
+URL: https://www.api.neext.online/jornal/poder360?
+Status: 200
+
+{
+  "status": true,
+  "fonte": "https://www.poder360.com.br/",
+  "total": 4,
+  "resultados": [
+    {
+      "noticia": "Moraes manda retirar de ação pedido de exame de Bolsonaro",
+      "imagem": "https://static.poder360.com.br/2025/09/moraes-stf-julgamento-bolsonaro-405x270.jpg",
+      "link": "https://www.poder360.com.br/poder-justica/moraes-manda-retirar-de-acao-pedido-de-exame-de-bolsonaro/"
+
+
+Method: GET
+URL: https://www.api.neext.online/jornal/uol?
+Status: 200
+
+
+{
+  "status": true,
+  "fonte": "https://www.uol.com.br/",
+  "total": 18,
+  "resultados": [
+    {
+      "noticia": "Fátima Bernardes sobre saída de Bonner do JN: 'Fiquei preocupada'",
+      "imagem": "https://conteudo.imguol.com.br/c/entretenimento/eb/2025/11/06/fatima-bernardes-opina-sobre-saida-de-william-bonner-do-jn-1762431590309_v2_300x225.jpg",
+        "link": "https://www.uol.com.br/splash/noticias/2025/11/06/fatima-bernardes-sobre-de-william-bonner-do-jn-fiquei-preocupada.htm
+
+
+Method: GET
+URL: https://www.api.neext.online/jornal/cnn?
+Status: 200
+
+
+{
+  "status": true,
+  "fonte": "https://www.cnnbrasil.com.br/",
+  "total": 138,
+  "resultados": [
+    {
+      "noticia": "\"Conflitos drenam recursos que deveriam ser usados contra aquecimento\", diz Lula",
+      "imagem": "",
+      "autor": null,
+      "link": "https://www.cnnbrasil.com.br/politica/lula-sobre-clima-janela-de-oportunidade-para-agir-esta-se-fechando/"
+    },
+
+Method: GET
+URL: https://www.api.neext.online/jornal/estadao?
+Status: 200
+
+
+JSON Response:
+{
+  "status": true,
+  "fonte": "https://www.estadao.com.br/",
+  "total": 63,
+  "resultados": [
+    {
+      "noticia": "IBGE Avenida Paulista ficou aberta para pedestres pela primeira vez desde o início da pandemia de covid-19 neste domingo, 18. Foto: Daniel Teixeira/Estadão",
+      "imagem": "https://cloudfront-us-east-1.images.arcpublishing.com/estadao/AXZCBGUZUNBKLD5MTRCMUXY4J4.jpg",
+      "desc": "IBGE Avenida Paulista ficou aberta para pedestres pela primeira vez desde o início da pandemia de covid-19 neste domingo, 18. Foto: Daniel Teixeira/Estadão",
+      "link": "https://www.estadao.com.br/noticias/IBGE Avenida Paulista ficou aberta para pedestres pela primeira vez desde o início da pandemia de covid-19 neste domingo, 18. Foto: Daniel Teixeira/Estadão"
+    },
+
+Method: GET
+URL: https://www.api.neext.online/jornal/terra?
+Status: 200
+
+
+{
+  "status": true,
+  "fonte": "https://www.terra.com.br/noticias/",
+  "total": 27,
+  "resultados": [
+    {
+      "noticia": "A estimativa do Republicanos sobre a votação do PL da Dosimetria de golpistas",
+      "imagem": "https://p2.trrsf.com/image/fget/cf/112/112/smart/images.terra.com/2025/11/06/957534219-img20240207113606566med.jpg",
+      "link": "https://www.cartacapital.com.br/cartaexpressa/a-estimativa-do-republicanos-sobre-a-votacao-do-pl-da-dosimetria-de-golpistas/?utm_source=terra_capa_noticias&utm_medium=referral"
+
+
+Method: GET
+URL: https://www.api.neext.online/jornal/exame?
+Status: 200
+
+{
+  "status": true,
+  "fonte": "https://exame.com/",
+  "total": 26,
+  "resultados": [
+    {
+      "noticia": "'É hora de acabar com distância entre diplomatas e mundo real', diz Lula na COP30",
+      "imagem": "",
+      "link": "https://exame.com/mundo/amazonia-e-como-uma-biblia-diz-lula-na-cupula-de-lideres-da-cop/"
+    },
+    {
+
+Method: GET
+URL: https://www.api.neext.online/jornal/bbc?
+Status: 200
+
+"https://www.bbc.com/portuguese",
+  "total": 10,
+  "resultado": [
+    {
+      "noticia": "O que o governo Lula quer da COP30 e quais os principais obstáculos",
+      "desc": "A COP30 é tida por diplomatas e observadores como a maior aposta diplomática do governo Lula neste terceiro mandato.",
+      "imagem": "https://ichef.bbci.co.uk/ace/ws/800/cpsprodpb/8889/live/1f7f1800-bae7-11f0-b2a1-6f537f66f9aa.jpg",
+
+Method: GET
+URL: https://www.api.neext.online/jornal/agazeta?
+Status: 200
+
+status": true,
+  "fonte": "https://www.agazeta.com.br/brasil",
+  "total": 9,
+  "resultado": [
+    {
+      "noticia": "Lula cobra urgência climática e diz que forças extremistas espalham inverdades",
+      "desc": "Presidente disse que \"rivalidades estratégicas\" concentram recursos financeiros que poderiam ser canalizados para o enfrentamento do aquecimento global",
+      "categoria": "Meio ambienteAo Vivo",
+      "imagem": "https://midias.agazeta.com.br/2025/11/06/598x337/presidente-da-republica-luiz-inacio-lula-da-silva-durante-a-recepcao-oficial-dos-chefes-de-delegacao-da-cupula-do-clima-cop30-2998622.webp",
+      "link": "https://www.agazeta.com.br/brasil/lula-cobra-urgencia-climatica-e-diz-que-forcas-extremistas-espalham-inverdades-1125"
+    },
+
+
+Method: GET
+URL: https://www.api.neext.online/jornal/veja?
+Status: 200
+
+
+  "status": true,
+  "fonte": "https://veja.abril.com.br/",
+  "total": 40,
+  "resultado": [
+    {
+      "noticia": "A reação do governo brasileiro ao primeiro revés da COP30",
+      "categoria": "Conferência em Belém",
+      "imagem": "https://veja.abril.com.br/wp-content/uploads/2025/11/54902631786_5e5497b7bd_o.jpg?quality=70&strip=info&w=384&h=256&crop=1",
+      "link": "https://veja.abril.com.br/economia/a-reacao-do-governo-brasileiro-ao-primeiro-reves-da-cop30/"
+    },
+    {
+
+Method: GET
+URL: https://www.api.neext.online/jornal/metropoles?
+Status: 200
+
+{
+  "status": 200,
+  "fonte": "https://www.metropoles.com/",
+  "criador": "© neext ltda",
+  "resultado": [
+    {
+      "noticia": "Cúpula do Clima: saiba como serão repasses de fundo lançado por Lula",
+      "imagem": "https://i.metroimg.com/tFcYEyAR3QiISVLr9sDpx0UMyFHA-JKPRQVIrMVzsQM/w:700/q:85/f:webp/plain/2025/11/06082238/Lula-no-para.jpg",
+      "categoria": "Brasil",
+      "link": "https://www.metropoles.com/brasil/cupula-do-clima-saiba-como-serao-repasses-de-fundo-lancado-por-lula"
+    },
+    {
+      "noticia": "COP30: Lula defende “justiça climática” para combater fome e pobreza",
+      "imagem": "https://telegra.ph/file/2003e814c68cf402903cf.jpg",
+      "categoria": null,
+      "link": "https://www.metropoles.com/brasil/lula-abre-cupula-do-clima-em-belem"
+    },
+    {
+
+Method: GET
+URL: https://www.api.neext.online/jornal/folha?
+Status: 200
+
+
+{
+  "status": 200,
+  "fonte": "https://www.folha.uol.com.br/",
+  "criador": "© neext ltda",
+  "resultado": [
+    {
+      "noticia": "99Food",
+      "desc": "Comida do mundo todo a preços justos",
+      "link": "https://estudio.folha.uol.com.br/99-food/2025/11/com-99food-e-possivel-experimentar-comida-do-mundo-todo-a-precos-justos.shtml?utm_source=99food&utm_medium=comida-do-mundo-todo",
+      "imagem": "https://f.i.uol.com.br/fotografia/2025/11/05/1762365757690b913d3076f_1762365757_3x2_th.jpg"
+    },
+    {
+
+
+Method: GET
+URL: https://www.api.neext.online/jornal/espn?
+Status: 200
+{
+  "status": 200,
+  "resultados": [
+    {
+      "🏆 Campeonato": "Favorites",
+      "📰 Manchete": "Site especializado vaza suposta nova camisa 2 azul e preta do Brasil, feita por linha de Michael Jordan",
+      "🖼️ Imagem": "https://a.espncdn.com/photo/2025/1106/r1571740_1296x729_16-9.jpg",
+      "⏱️ Tempo": "13m"
+    },
+    {

@@ -104,6 +104,23 @@ Os dados de autenticação são salvos na pasta `/conexao` e persistem entre rei
 ## Atualizações Recentes
 
 ### 06 de Novembro de 2025 - Noite
+- ✅ **14 Comandos de Notícias adicionados**: Nova seção "COMANDOS DE NOTÍCIAS" no menu
+  - `.jovempan` - Notícias da Jovem Pan
+  - `.g1` - Notícias do G1
+  - `.poder360` - Notícias do Poder360
+  - `.uol` - Notícias do UOL
+  - `.cnn` - Notícias da CNN Brasil
+  - `.estadao` - Notícias do Estadão
+  - `.terra` - Notícias do Terra
+  - `.exame` - Notícias da Exame
+  - `.bbc` - Notícias da BBC Brasil
+  - `.agazeta` - Notícias da A Gazeta
+  - `.veja` - Notícias da Veja
+  - `.metropoles` - Notícias do Metrópoles
+  - `.folha` - Notícias da Folha de S.Paulo
+  - `.espn` - Notícias esportivas da ESPN
+  - Cada comando retorna uma notícia aleatória da fonte escolhida
+  - Exibe imagem quando disponível + título + link
 - ✅ **Comando DDD adicionado**: Novo comando `.ddd [número]` para consultar códigos DDD brasileiros
   - Retorna o estado e todas as cidades que usam aquele DDD
   - API integrada: https://www.api.neext.online/ddd

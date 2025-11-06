@@ -149,6 +149,23 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽📞⃟ ${prefix}ddd [número] - Consultar DDD
 ╰──────────────────────⪨
 
+╭──〔 COMANDOS DE NOTÍCIAS 〕──⪩
+│ 𖧈∘̥⸽📰⃟ ${prefix}jovempan - Notícias Jovem Pan
+│ 𖧈∘̥⸽📰⃟ ${prefix}g1 - Notícias G1
+│ 𖧈∘̥⸽📰⃟ ${prefix}poder360 - Notícias Poder360
+│ 𖧈∘̥⸽📰⃟ ${prefix}uol - Notícias UOL
+│ 𖧈∘̥⸽📰⃟ ${prefix}cnn - Notícias CNN Brasil
+│ 𖧈∘̥⸽📰⃟ ${prefix}estadao - Notícias Estadão
+│ 𖧈∘̥⸽📰⃟ ${prefix}terra - Notícias Terra
+│ 𖧈∘̥⸽📰⃟ ${prefix}exame - Notícias Exame
+│ 𖧈∘̥⸽📰⃟ ${prefix}bbc - Notícias BBC Brasil
+│ 𖧈∘̥⸽📰⃟ ${prefix}agazeta - Notícias A Gazeta
+│ 𖧈∘̥⸽📰⃟ ${prefix}veja - Notícias Veja
+│ 𖧈∘̥⸽📰⃟ ${prefix}metropoles - Notícias Metrópoles
+│ 𖧈∘̥⸽📰⃟ ${prefix}folha - Notícias Folha
+│ 𖧈∘̥⸽⚽⃟ ${prefix}espn - Notícias ESPN
+╰──────────────────────⪨
+
 ╭──〔 COMANDOS STALKER 〕──⪩
 │ 𖧈∘̥⸽📸⃟ ${prefix}stalkerinstagram [user] - Stalk Instagram
 │ 𖧈∘̥⸽📺⃟ ${prefix}stalkeryoutube [canal] - Stalk YouTube

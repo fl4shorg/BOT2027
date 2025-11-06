@@ -2184,6 +2184,537 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
         break;
 
+        // ==================== COMANDOS DE NOTÍCIAS ====================
+
+        case "jovempan": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/jovempan');
+                
+                if (response.data && response.data.status === 200 && response.data.results && response.data.results.length > 0) {
+                    const noticias = response.data.results;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *JOVEM PAN*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.title}*\n\n`;
+                    if (noticia.author) mensagem += `✍️ Autor: ${noticia.author}\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.image) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.image },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias Jovem Pan:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "g1": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/g1');
+                
+                if (response.data && response.data.status && response.data.resultados && response.data.resultados.length > 0) {
+                    const noticias = response.data.resultados;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *G1*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    if (noticia.descricao) mensagem += `📝 ${noticia.descricao}\n\n`;
+                    if (noticia.categoria) mensagem += `📁 Categoria: ${noticia.categoria}\n`;
+                    if (noticia.postado) mensagem += `⏰ ${noticia.postado}\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias G1:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "poder360": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/poder360');
+                
+                if (response.data && response.data.status && response.data.resultados && response.data.resultados.length > 0) {
+                    const noticias = response.data.resultados;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *PODER360*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias Poder360:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "uol": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/uol');
+                
+                if (response.data && response.data.status && response.data.resultados && response.data.resultados.length > 0) {
+                    const noticias = response.data.resultados;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *UOL*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias UOL:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "cnn": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/cnn');
+                
+                if (response.data && response.data.status && response.data.resultados && response.data.resultados.length > 0) {
+                    const noticias = response.data.resultados;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *CNN BRASIL*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    if (noticia.autor) mensagem += `✍️ Autor: ${noticia.autor}\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias CNN:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "estadao": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/estadao');
+                
+                if (response.data && response.data.status && response.data.resultados && response.data.resultados.length > 0) {
+                    const noticias = response.data.resultados;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *ESTADÃO*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    if (noticia.desc) mensagem += `📝 ${noticia.desc}\n\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias Estadão:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "terra": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/terra');
+                
+                if (response.data && response.data.status && response.data.resultados && response.data.resultados.length > 0) {
+                    const noticias = response.data.resultados;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *TERRA*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias Terra:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "exame": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/exame');
+                
+                if (response.data && response.data.status && response.data.resultados && response.data.resultados.length > 0) {
+                    const noticias = response.data.resultados;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *EXAME*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias Exame:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "bbc": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/bbc');
+                
+                if (response.data && response.data.resultado && response.data.resultado.length > 0) {
+                    const noticias = response.data.resultado;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *BBC BRASIL*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    if (noticia.desc) mensagem += `📝 ${noticia.desc}\n\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias BBC:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "agazeta": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/agazeta');
+                
+                if (response.data && response.data.status && response.data.resultado && response.data.resultado.length > 0) {
+                    const noticias = response.data.resultado;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *A GAZETA*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    if (noticia.desc) mensagem += `📝 ${noticia.desc}\n\n`;
+                    if (noticia.categoria) mensagem += `📁 Categoria: ${noticia.categoria}\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias A Gazeta:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "veja": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/veja');
+                
+                if (response.data && response.data.status && response.data.resultado && response.data.resultado.length > 0) {
+                    const noticias = response.data.resultado;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *VEJA*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    if (noticia.categoria) mensagem += `📁 Categoria: ${noticia.categoria}\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias Veja:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "metropoles": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/metropoles');
+                
+                if (response.data && response.data.status === 200 && response.data.resultado && response.data.resultado.length > 0) {
+                    const noticias = response.data.resultado;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *METRÓPOLES*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    if (noticia.categoria) mensagem += `📁 Categoria: ${noticia.categoria}\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias Metrópoles:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "folha": {
+            try {
+                await reagirMensagem(sock, message, "📰");
+                const response = await axios.get('https://www.api.neext.online/jornal/folha');
+                
+                if (response.data && response.data.status === 200 && response.data.resultado && response.data.resultado.length > 0) {
+                    const noticias = response.data.resultado;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `📰 *FOLHA DE S.PAULO*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    mensagem += `📌 *${noticia.noticia}*\n\n`;
+                    if (noticia.desc) mensagem += `📝 ${noticia.desc}\n\n`;
+                    mensagem += `🔗 Link: ${noticia.link}\n`;
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    if (noticia.imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: noticia.imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias Folha:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        case "espn": {
+            try {
+                await reagirMensagem(sock, message, "⚽");
+                const response = await axios.get('https://www.api.neext.online/jornal/espn');
+                
+                if (response.data && response.data.status === 200 && response.data.resultados && response.data.resultados.length > 0) {
+                    const noticias = response.data.resultados;
+                    const noticia = noticias[Math.floor(Math.random() * noticias.length)];
+                    
+                    let mensagem = `⚽ *ESPN*\n\n`;
+                    mensagem += `━━━━━━━━━━━━━━━\n`;
+                    
+                    if (noticia['🏆 Campeonato']) mensagem += `🏆 ${noticia['🏆 Campeonato']}\n\n`;
+                    
+                    const manchete = noticia['📰 Manchete'] || noticia.manchete || noticia.noticia || '';
+                    mensagem += `📌 *${manchete}*\n\n`;
+                    
+                    const tempo = noticia['⏱️ Tempo'] || noticia.tempo || '';
+                    if (tempo) mensagem += `⏱️ ${tempo}\n`;
+                    
+                    const link = noticia.link || noticia['🔗 Link'] || '';
+                    if (link) mensagem += `🔗 Link: ${link}\n`;
+                    
+                    mensagem += `━━━━━━━━━━━━━━━`;
+                    
+                    const imagem = noticia['🖼️ Imagem'] || noticia.imagem || '';
+                    if (imagem) {
+                        await sock.sendMessage(from, {
+                            image: { url: imagem },
+                            caption: mensagem
+                        }, { quoted: selinho });
+                    } else {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: selinho });
+                    }
+                    await reagirMensagem(sock, message, "✅");
+                } else {
+                    await reagirMensagem(sock, message, "❌");
+                    await reply(sock, from, "❌ Nenhuma notícia encontrada no momento.");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao buscar notícias ESPN:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao buscar notícias! Tente novamente mais tarde.");
+            }
+        }
+        break;
+
+        // ==================== FIM DOS COMANDOS DE NOTÍCIAS ====================
+
         case "signo": {
             if (args.length === 0) {
                 const config = obterConfiguracoes();
