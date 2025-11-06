@@ -103,13 +103,20 @@ Os dados de autenticação são salvos na pasta `/conexao` e persistem entre rei
 
 ## Atualizações Recentes
 
-### 06 de Novembro de 2025
+### 06 de Novembro de 2025 - Tarde
+- ✅ **Comando audiomeme adicionado**: Pesquisa e envia áudio aleatório via `.audiomeme` ou `.audio`
+- ✅ **Contador de comandos corrigido**: Agora conta corretamente independente da indentação
+- ✅ **Sistema de retry em comandos de logo**: Tenta 2x automaticamente antes de falhar
+- ✅ **Mensagens de erro melhoradas**: Feedback detalhado quando logos falham (timeout, API offline, etc)
+- ✅ **Menulogos otimizado**: Responde instantaneamente (removido carregamento de imagem)
+
+### 06 de Novembro de 2025 - Manhã
 - ✅ Corrigidos todos os comandos de logos (menulogos)
 - ✅ API retorna imagem diretamente (removida lógica desnecessária de JSON)
 - ✅ Criada função `processarLogoTextpro` para logos Textpro (usa parâmetro `text1`)
 - ✅ Função `processarLogo` para logos Ephoto (usa parâmetro `text`)
 - ✅ Função `processarLogoDuplo` para logos com 2 textos
-- ✅ Timeout aumentado para 60s (alguns logos demoram para gerar)
+- ✅ Timeout ajustado para 45s com retry automático
 - ✅ Todos os 60+ comandos de logo funcionando perfeitamente
 
 ### 03 de Novembro de 2025
