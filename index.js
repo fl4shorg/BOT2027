@@ -7262,7 +7262,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await reply(sock, from, "🔍 Pesquisando no Spotify, aguarde...");
 
                 try {
-                    const apiUrl = `https://nayan-video-downloader.vercel.app/spotify-search?name=${encodeURIComponent(query)}&limit=5`;
+                    const apiUrl = `https://api.ypnk.dpdns.org/api/search/spotify?q=${encodeURIComponent(query)}`;
                     const response = await axios.get(apiUrl, {
                         timeout: 15000,
                         headers: {
@@ -7270,18 +7270,20 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         }
                     });
 
-                    if (!response.data || response.data.status !== 200 || !response.data.results || response.data.results.length === 0) {
+                    if (!response.data || !response.data.status || !response.data.data || response.data.data.length === 0) {
                         await reagirMensagem(sock, message, "❌");
                         await reply(sock, from, "❌ Nenhum resultado encontrado para esta pesquisa.");
                         break;
                     }
 
-                    const firstResult = response.data.results[0];
+                    const firstResult = response.data.data[0];
 
                     const resultMessage = `🎵 *Resultado no Spotify*\n\n` +
-                        `📌 *Música:* ${firstResult.name}\n` +
-                        `🎤 *Artista:* ${firstResult.artists}\n` +
-                        `🔗 *Link:* ${firstResult.link}`;
+                        `📌 *Música:* ${firstResult.title}\n` +
+                        `🎤 *Artista:* ${firstResult.artist}\n` +
+                        `💿 *Álbum:* ${firstResult.album}\n` +
+                        `⏱️ *Duração:* ${firstResult.duration}\n` +
+                        `🔗 *Link:* ${firstResult.url}`;
 
                     await sock.sendMessage(from, {
                         text: resultMessage,
@@ -7295,7 +7297,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             externalAdReply: {
                                 title: "© NEEXT LTDA - Spotify Search",
                                 body: "📱 Instagram: @neet.tk",
-                                thumbnailUrl: "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
+                                thumbnailUrl: firstResult.thumbnail || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
                                 mediaType: 1,
                                 sourceUrl: "https://www.neext.online",
                                 showAdAttribution: true
@@ -7334,7 +7336,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await reply(sock, from, "🎵 Buscando e baixando música, aguarde...");
 
                 try {
-                    const searchUrl = `https://nayan-video-downloader.vercel.app/spotify-search?name=${encodeURIComponent(query)}&limit=5`;
+                    const searchUrl = `https://api.ypnk.dpdns.org/api/search/spotify?q=${encodeURIComponent(query)}`;
                     console.log(`🔍 [PLAY] URL de busca: ${searchUrl}`);
                     
                     const searchResponse = await axios.get(searchUrl, {
@@ -7346,24 +7348,24 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
                     console.log(`🔍 [PLAY] Resposta da busca recebida:`, {
                         status: searchResponse.data?.status,
-                        resultCount: searchResponse.data?.results?.length || 0
+                        resultCount: searchResponse.data?.data?.length || 0
                     });
 
-                    if (!searchResponse.data || searchResponse.data.status !== 200 || !searchResponse.data.results || searchResponse.data.results.length === 0) {
+                    if (!searchResponse.data || !searchResponse.data.status || !searchResponse.data.data || searchResponse.data.data.length === 0) {
                         await reagirMensagem(sock, message, "❌");
                         await reply(sock, from, "❌ Nenhuma música encontrada com esse nome.");
                         break;
                     }
 
-                    const firstResult = searchResponse.data.results[0];
-                    const spotifyLink = firstResult.link;
-                    console.log(`✅ [PLAY] Música encontrada: "${firstResult.name}" - ${firstResult.artists}`);
+                    const firstResult = searchResponse.data.data[0];
+                    const spotifyLink = firstResult.url;
+                    console.log(`✅ [PLAY] Música encontrada: "${firstResult.title}" - ${firstResult.artist}`);
                     console.log(`🔗 [PLAY] Link Spotify: ${spotifyLink}`);
 
-                    await reply(sock, from, `🎵 Encontrado: *${firstResult.name}* - ${firstResult.artists}\n📥 Baixando...`);
+                    await reply(sock, from, `🎵 Encontrado: *${firstResult.title}* - ${firstResult.artist}\n📥 Baixando...`);
 
-                    const apiUrl = `https://www.api.neext.online/download/spotify?url=${encodeURIComponent(spotifyLink)}`;
-                    console.log(`📥 [PLAY] Chamando API Neext de download: ${apiUrl}`);
+                    const apiUrl = `https://api.nekolabs.web.id/downloader/spotify/v1?url=${encodeURIComponent(spotifyLink)}`;
+                    console.log(`📥 [PLAY] Chamando API Nekolabs de download: ${apiUrl}`);
                     
                     const response = await axios.get(apiUrl, {
                         timeout: 90000,
@@ -7372,17 +7374,17 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         }
                     });
 
-                    console.log(`📥 [PLAY] Resposta da API Neext:`, JSON.stringify(response.data, null, 2));
+                    console.log(`📥 [PLAY] Resposta da API Nekolabs:`, JSON.stringify(response.data, null, 2));
 
-                    if (!response.data || response.data.status !== 'success' || !response.data.data) {
-                        console.error("❌ [PLAY] API Neext retornou erro:", response.data);
+                    if (!response.data || !response.data.success || !response.data.result) {
+                        console.error("❌ [PLAY] API Nekolabs retornou erro:", response.data);
                         await reagirMensagem(sock, message, "❌");
                         await reply(sock, from, "❌ Não foi possível processar esta música. API retornou erro.");
                         break;
                     }
 
-                    const result = response.data.data;
-                    const downloadUrl = result.dlink;
+                    const result = response.data.result;
+                    const downloadUrl = result.downloadUrl;
                     
                     if (!downloadUrl) {
                         console.error("❌ [PLAY] Link de download não encontrado:", result);
@@ -7414,12 +7416,12 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     }
 
                     let thumbnailBuffer = null;
-                    if (result.img) {
+                    if (result.cover) {
                         try {
-                            console.log(`📸 [PLAY] Baixando capa de: ${result.img}`);
+                            console.log(`📸 [PLAY] Baixando capa de: ${result.cover}`);
                             const thumbnailResponse = await axios({
                                 method: 'GET',
-                                url: result.img,
+                                url: result.cover,
                                 responseType: 'arraybuffer',
                                 timeout: 10000
                             });
@@ -7430,8 +7432,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         }
                     }
 
-                    const songName = result.song_name || firstResult.name;
-                    const artistName = result.artist || firstResult.artists;
+                    const songName = result.title;
+                    const artistName = result.artist;
 
                     console.log(`📤 [PLAY] Enviando áudio para WhatsApp...`);
                     await sock.sendMessage(from, {
@@ -7442,8 +7444,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         contextInfo: {
                             externalAdReply: {
                                 title: `🎵 ${songName}`,
-                                body: `🎤 ${artistName}`,
-                                thumbnailUrl: result.img || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
+                                body: `🎤 ${artistName} • ⏱️ ${result.duration}`,
+                                thumbnailUrl: result.cover || "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
                                 mediaType: 2,
                                 sourceUrl: spotifyLink
                             }
@@ -7614,7 +7616,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await reply(sock, from, `🎵 Baixando música do Spotify, aguarde...`);
 
                 // Chama a API do Spotify
-                const apiUrl = `https://api.nekolabs.my.id/downloader/spotify/v1?url=${encodeURIComponent(spotifyUrl)}`;
+                const apiUrl = `https://api.nekolabs.web.id/downloader/spotify/v1?url=${encodeURIComponent(spotifyUrl)}`;
                 const response = await axios.get(apiUrl, {
                     timeout: 30000,
                     headers: {
@@ -7622,7 +7624,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     }
                 });
 
-                if (!response.data || !response.data.status || !response.data.result) {
+                if (!response.data || !response.data.success || !response.data.result) {
                     await reagirMensagem(sock, message, "❌");
                     await reply(sock, from, "❌ Não foi possível baixar esta música do Spotify. Verifique o link.");
                     break;
