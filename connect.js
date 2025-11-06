@@ -44,7 +44,7 @@ async function perguntarMetodoConexao() {
         console.log("│┃֪࣪├ׁ̟̇❮☆ [🐦‍🔥] ESCOLHA SEU MÉTODO DE CONEXÃO");
         console.log("│┃֪࣪├ׁ̟̇❮☆ [❄️] QR CODE 「 1 」");
         console.log("│┃֪࣪├ׁ̟̇❮☆ [🪻] PAIRING CODE 「 2 」");
-        console.log("│┃֪࣪├ׁ̟̇❮☆ [🩸] DESENVOLVIDO PELA NEEXT");
+        console.log("│┃֪࣪├ׁ̟̇❮☆ [🩸] DESENVOLVIDO POR FLASH");
         console.log("┗:*:◇:*:◆:*:◇:*:◆:*:◇:*:◆:*:◇:*::*\n");
         
         rl.question("𝐃𝐈𝐆𝐈𝐓𝐄 𝐒𝐔𝐀 𝐎𝐏𝐂̧𝐀̃𝐎: ", (opcao) => {
@@ -116,7 +116,7 @@ async function enviarContatoSelinho(sock) {
             key: { fromMe:false, participant: `553176011100@s.whatsapp.net`, remoteJid: numeroAlvo },
             message: {
                 contactMessage: {
-                    displayName: 'NEEXT LTDA',
+                    displayName: 'GODDARD BOT',
                     vcard: `BEGIN:VCARD
 VERSION:3.0
 N:Kuun;Flash;;;

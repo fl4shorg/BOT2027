@@ -20,26 +20,36 @@ const botNome = settings.nomeDoBot || "NEEXT BOT";
 function mostrarBanner() {
     console.clear();
 
-    // NEEXT em roxo sólido
-    cfonts.say("NEEXT", {
-        font: "block",
-        align: "center",
-        colors: ["#800080"], // roxo real
-        background: "transparent",
+    // GODDARD com degradê verde limão e azul neon
+    const banner = cfonts.render('GODDARD', {
+        font: 'block',
+        align: 'center',
+        colors: ['#BFFF00', '#00FFFF'], // verde limão e azul neon
+        background: 'transparent',
         letterSpacing: 1,
-        space: true
+        lineHeight: 1,
+        space: true,
+        gradient: ['#BFFF00', '#00FFFF'],
+        transitionGradient: true, // suaviza a transição
+        env: 'node'
     });
 
-    // LTDA em roxo sólido
-    cfonts.say("LTDA", {
-        font: "block",
-        align: "center",
-        colors: ["#800080"], // roxo real
-        background: "transparent",
-        letterSpacing: 1,
-        space: true
-    });
+    console.log(banner.string ? banner.string : banner);
 
+    // Banner secundário com informações do criador e canal
+    const banner2 = cfonts.render(
+        'CRIADOR: FLASH\nCANAL: https://whatsapp.com/channel/0029Vacb5xJKrWQpjjJgwi1z\nV4.0\nINSTAGRAM: @NEET.TK',
+        {
+            font: 'console',
+            align: 'center',
+            colors: ['#BFFF00', '#00FFFF'],
+            gradient: ['#BFFF00', '#00FFFF'],
+            transitionGradient: true,
+            env: 'node'
+        }
+    );
+
+    console.log(banner2.string ? banner2.string : banner2);
     console.log("\n");
 }
 
