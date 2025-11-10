@@ -13259,9 +13259,6 @@ function setupListeners(sock) {
             
             // Processa X9 (monitor de ações de admin)
             const config = antiSpam.carregarConfigGrupo(id);
-            console.log(`🔍 [X9-DEBUG] Config carregado para grupo ${id}:`, config);
-            console.log(`🔍 [X9-DEBUG] x9 está ${config?.x9 ? 'ATIVADO' : 'DESATIVADO'}`);
-            console.log(`🔍 [X9-DEBUG] action: ${action}, author: ${author}`);
             
             if (config && config.x9 && (action === 'promote' || action === 'demote' || action === 'remove' || action === 'add')) {
                 console.log(`🕵️ [X9] Monitorando ação: ${action} por ${author}`);
@@ -13279,8 +13276,6 @@ function setupListeners(sock) {
                     const normalizedParticipants = participants.map(p => typeof p === 'string' ? p : p?.id);
                     const mentions = authorId !== 'Sistema' ? [authorId, ...normalizedParticipants] : normalizedParticipants;
                     
-                    console.log(`🔍 [X9-DEBUG] participants originais:`, participants);
-                    console.log(`🔍 [X9-DEBUG] participants normalizados:`, normalizedParticipants);
                     
                     for (const participant of normalizedParticipants) {
                         const participantNumber = participant.split('@')[0];
@@ -13380,6 +13375,59 @@ function setupListeners(sock) {
             }
         } catch (error) {
             console.error('❌ Erro ao processar participantes do grupo:', error);
+        }
+    });
+
+    // Listener para mensagens fixadas/desfixadas (para X9)
+    sock.ev.on('messages.update', async (updates) => {
+        try {
+            for (const update of updates) {
+                // Verifica se é uma atualização de pin
+                if (update.update?.pinned !== undefined) {
+                    const messageId = update.key;
+                    const groupId = messageId.remoteJid;
+                    
+                    // Só processa se for grupo e x9 estiver ativo
+                    if (groupId && groupId.endsWith('@g.us')) {
+                        const config = antiSpam.carregarConfigGrupo(groupId);
+                        
+                        if (config && config.x9) {
+                            console.log(`📌 [X9] Mensagem ${update.update.pinned ? 'fixada' : 'desfixada'} no grupo ${groupId}`);
+                            
+                            try {
+                                const groupMetadata = await sock.groupMetadata(groupId);
+                                const groupName = groupMetadata.subject || 'Grupo';
+                                
+                                // Tenta pegar informações do autor da ação
+                                // Nota: Baileys nem sempre fornece o autor em messages.update
+                                const isPinned = update.update.pinned;
+                                
+                                const mensagemX9 = isPinned
+                                    ? `🕵️ *X9 MONITOR - MENSAGEM FIXADA*\n\n` +
+                                      `📌 *Ação:* Mensagem fixada\n` +
+                                      `📱 *Grupo:* ${groupName}\n` +
+                                      `⏰ *Horário:* ${new Date().toLocaleString('pt-BR')}\n\n` +
+                                      `🔍 Sistema X9 ativo - Monitorando ações administrativas`
+                                    : `🕵️ *X9 MONITOR - MENSAGEM DESFIXADA*\n\n` +
+                                      `📌 *Ação:* Mensagem desfixada\n` +
+                                      `📱 *Grupo:* ${groupName}\n` +
+                                      `⏰ *Horário:* ${new Date().toLocaleString('pt-BR')}\n\n` +
+                                      `🔍 Sistema X9 ativo - Monitorando ações administrativas`;
+                                
+                                await sock.sendMessage(groupId, {
+                                    text: mensagemX9
+                                });
+                                
+                                console.log(`✅ [X9] Notificação de ${isPinned ? 'fixação' : 'desfixação'} enviada`);
+                            } catch (x9Error) {
+                                console.error(`❌ [X9] Erro ao processar fixação de mensagem:`, x9Error);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('❌ Erro ao processar atualização de mensagem:', error);
         }
     });
 
