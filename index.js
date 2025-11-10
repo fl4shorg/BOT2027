@@ -3729,28 +3729,60 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 break;
             }
 
-            const texto = args.join(" ").trim();
-            if (!texto) {
-                const config = obterConfiguracoes();
-                await reply(sock, from, `❌ Use: ${config.prefix}totag [mensagem]\n\nExemplo: ${config.prefix}totag Atenção galera! Reunião em 10 minutos!`);
-                break;
-            }
-
             try {
                 const groupMetadata = await sock.groupMetadata(from);
                 const participants = groupMetadata.participants.map(p => p.id);
                 
                 await reagirMensagem(sock, message, "✅");
                 
-                // Envia mensagem marcando todos sem mostrar as menções
-                await sock.sendMessage(from, {
-                    text: texto,
-                    mentions: participants
-                });
+                // Verifica se tem mídia (imagem, vídeo, áudio)
+                const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+                const isImage = quotedMessage?.imageMessage || message.message?.imageMessage;
+                const isVideo = quotedMessage?.videoMessage || message.message?.videoMessage;
+                const isAudio = quotedMessage?.audioMessage || message.message?.audioMessage;
+                const isSticker = quotedMessage?.stickerMessage || message.message?.stickerMessage;
+                
+                const texto = args.join(" ").trim();
+                
+                // Se tiver mídia (resposta a uma mensagem com mídia)
+                if (isImage || isVideo || isAudio || isSticker) {
+                    const mediaMessage = isImage || isVideo || isAudio || isSticker;
+                    const mediaType = isImage ? 'image' : isVideo ? 'video' : isAudio ? 'audio' : 'sticker';
+                    
+                    const messageContent = {
+                        [mediaType]: mediaMessage,
+                        caption: texto || undefined,
+                        mentions: participants,
+                        contextInfo: {
+                            mentionedJid: participants,
+                            forwardingScore: 999999,
+                            isForwarded: true
+                        }
+                    };
+                    
+                    await sock.sendMessage(from, messageContent);
+                } else {
+                    // Se não tiver mídia, envia texto normal
+                    if (!texto) {
+                        const config = obterConfiguracoes();
+                        await reply(sock, from, `❌ Use: ${config.prefix}totag [mensagem]\nOu responda a uma foto/vídeo/áudio com ${config.prefix}totag\n\nExemplo: ${config.prefix}totag Atenção galera! Reunião em 10 minutos!`);
+                        break;
+                    }
+                    
+                    await sock.sendMessage(from, {
+                        text: texto,
+                        mentions: participants,
+                        contextInfo: {
+                            mentionedJid: participants,
+                            forwardingScore: 999999,
+                            isForwarded: true
+                        }
+                    });
+                }
                 
             } catch (error) {
                 console.error("❌ Erro no totag:", error);
-                await reply(sock, from, "❌ Erro ao enviar mensagem com marcação oculta.");
+                await reply(sock, from, "❌ Erro ao enviar mensagem com marcação.");
             }
         }
         break;
@@ -10093,7 +10125,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
         case "fechargrupo":
         case "fechar":
-        case "f": {
+        case "f":
+        case "grupo f": {
             // Só funciona em grupos
             if (!from.endsWith('@g.us') && !from.endsWith('@lid')) {
                 await reply(sock, from, "❌ Este comando só pode ser usado em grupos.");
@@ -10146,7 +10179,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
         case "abrirgrupo":
         case "abrir":
-        case "a": {
+        case "a":
+        case "grupo a": {
             // Só funciona em grupos
             if (!from.endsWith('@g.us') && !from.endsWith('@lid')) {
                 await reply(sock, from, "❌ Este comando só pode ser usado em grupos.");
