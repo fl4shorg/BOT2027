@@ -13259,7 +13259,11 @@ function setupListeners(sock) {
             
             // Processa X9 (monitor de ações de admin)
             const config = antiSpam.carregarConfigGrupo(id);
-            if (config && config.x9 && (action === 'promote' || action === 'demote' || action === 'remove')) {
+            console.log(`🔍 [X9-DEBUG] Config carregado para grupo ${id}:`, config);
+            console.log(`🔍 [X9-DEBUG] x9 está ${config?.x9 ? 'ATIVADO' : 'DESATIVADO'}`);
+            console.log(`🔍 [X9-DEBUG] action: ${action}, author: ${author}`);
+            
+            if (config && config.x9 && (action === 'promote' || action === 'demote' || action === 'remove' || action === 'add')) {
                 console.log(`🕵️ [X9] Monitorando ação: ${action} por ${author}`);
                 
                 try {
@@ -13301,6 +13305,16 @@ function setupListeners(sock) {
                                     `👑 *Admin responsável:* @${authorNumber}\n` +
                                     `👤 *Usuário removido:* @${participantNumber}\n` +
                                     `🚫 *Ação:* Removido do grupo\n` +
+                                    `📱 *Grupo:* ${groupName}\n` +
+                                    `⏰ *Horário:* ${new Date().toLocaleString('pt-BR')}\n\n` +
+                                    `🔍 Sistema X9 ativo - Monitorando ações administrativas`;
+                                break;
+                                
+                            case 'add':
+                                mensagemX9 = `🕵️ *X9 MONITOR - ADIÇÃO*\n\n` +
+                                    `👑 *Admin responsável:* @${authorNumber}\n` +
+                                    `👤 *Usuário adicionado:* @${participantNumber}\n` +
+                                    `➕ *Ação:* Adicionado ao grupo\n` +
                                     `📱 *Grupo:* ${groupName}\n` +
                                     `⏰ *Horário:* ${new Date().toLocaleString('pt-BR')}\n\n` +
                                     `🔍 Sistema X9 ativo - Monitorando ações administrativas`;
