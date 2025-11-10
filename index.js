@@ -13271,11 +13271,18 @@ function setupListeners(sock) {
                     const groupMetadata = await sock.groupMetadata(id);
                     const groupName = groupMetadata.subject || 'Grupo';
                     
-                    // Prepara as menções (inclui autor e participantes)
-                    const mentions = author ? [author, ...participants] : participants;
-                    const authorNumber = author ? author.split('@')[0] : 'Sistema';
+                    // Normaliza author - pode vir como string ou objeto
+                    const authorId = typeof author === 'string' ? author : (author?.id || 'Sistema');
+                    const authorNumber = authorId !== 'Sistema' ? authorId.split('@')[0] : 'Sistema';
                     
-                    for (const participant of participants) {
+                    // Normaliza participants - podem vir como strings ou objetos
+                    const normalizedParticipants = participants.map(p => typeof p === 'string' ? p : p?.id);
+                    const mentions = authorId !== 'Sistema' ? [authorId, ...normalizedParticipants] : normalizedParticipants;
+                    
+                    console.log(`🔍 [X9-DEBUG] participants originais:`, participants);
+                    console.log(`🔍 [X9-DEBUG] participants normalizados:`, normalizedParticipants);
+                    
+                    for (const participant of normalizedParticipants) {
                         const participantNumber = participant.split('@')[0];
                         let mensagemX9 = '';
                         
