@@ -3735,23 +3735,47 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 
                 await reagirMensagem(sock, message, "✅");
                 
-                // Verifica se tem mídia (imagem, vídeo, áudio)
-                const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-                const isImage = quotedMessage?.imageMessage || message.message?.imageMessage;
-                const isVideo = quotedMessage?.videoMessage || message.message?.videoMessage;
-                const isAudio = quotedMessage?.audioMessage || message.message?.audioMessage;
-                const isSticker = quotedMessage?.stickerMessage || message.message?.stickerMessage;
+                // Verifica se tem mídia na mensagem atual ou citada
+                const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+                const currentMsg = message.message;
+                
+                const imageMessage = currentMsg?.imageMessage || quotedMsg?.imageMessage;
+                const videoMessage = currentMsg?.videoMessage || quotedMsg?.videoMessage;
+                const audioMessage = currentMsg?.audioMessage || quotedMsg?.audioMessage;
+                const stickerMessage = currentMsg?.stickerMessage || quotedMsg?.stickerMessage;
                 
                 const texto = args.join(" ").trim();
                 
-                // Se tiver mídia (resposta a uma mensagem com mídia)
-                if (isImage || isVideo || isAudio || isSticker) {
-                    const mediaMessage = isImage || isVideo || isAudio || isSticker;
-                    const mediaType = isImage ? 'image' : isVideo ? 'video' : isAudio ? 'audio' : 'sticker';
+                // Se tiver mídia
+                if (imageMessage || videoMessage || audioMessage || stickerMessage) {
+                    let mediaType, mediaMsg;
                     
+                    if (imageMessage) {
+                        mediaType = 'image';
+                        mediaMsg = imageMessage;
+                    } else if (videoMessage) {
+                        mediaType = 'video';
+                        mediaMsg = videoMessage;
+                    } else if (audioMessage) {
+                        mediaType = 'audio';
+                        mediaMsg = audioMessage;
+                    } else if (stickerMessage) {
+                        mediaType = 'sticker';
+                        mediaMsg = stickerMessage;
+                    }
+                    
+                    // Baixa a mídia corretamente
+                    const stream = await downloadContentFromMessage(mediaMsg, mediaType.replace('Message', ''));
+                    const chunks = [];
+                    for await (const chunk of stream) {
+                        chunks.push(chunk);
+                    }
+                    const buffer = Buffer.concat(chunks);
+                    
+                    // Monta o conteúdo da mensagem
                     const messageContent = {
-                        [mediaType]: mediaMessage,
-                        caption: texto || undefined,
+                        [mediaType]: buffer,
+                        caption: texto || mediaMsg.caption || undefined,
                         mentions: participants,
                         contextInfo: {
                             mentionedJid: participants,
@@ -3760,12 +3784,13 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         }
                     };
                     
-                    await sock.sendMessage(from, messageContent);
+                    // Envia marcando a mensagem original
+                    await sock.sendMessage(from, messageContent, { quoted: message });
                 } else {
                     // Se não tiver mídia, envia texto normal
                     if (!texto) {
                         const config = obterConfiguracoes();
-                        await reply(sock, from, `❌ Use: ${config.prefix}totag [mensagem]\nOu responda a uma foto/vídeo/áudio com ${config.prefix}totag\n\nExemplo: ${config.prefix}totag Atenção galera! Reunião em 10 minutos!`);
+                        await reply(sock, from, `❌ Use: ${config.prefix}totag [mensagem]\nOu envie uma foto/vídeo/áudio com ${config.prefix}totag\n\nExemplo: ${config.prefix}totag Atenção galera! Reunião em 10 minutos!`);
                         break;
                     }
                     
@@ -3777,7 +3802,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             forwardingScore: 999999,
                             isForwarded: true
                         }
-                    });
+                    }, { quoted: message });
                 }
                 
             } catch (error) {
