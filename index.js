@@ -3775,7 +3775,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     // Monta o conteúdo da mensagem
                     const messageContent = {
                         [mediaType]: buffer,
-                        caption: texto || mediaMsg.caption || undefined,
                         mentions: participants,
                         contextInfo: {
                             mentionedJid: participants,
@@ -3783,6 +3782,11 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                             isForwarded: true
                         }
                     };
+                    
+                    // Adiciona caption apenas se tiver texto nos argumentos
+                    if (texto) {
+                        messageContent.caption = texto;
+                    }
                     
                     // Envia marcando a mensagem original
                     await sock.sendMessage(from, messageContent, { quoted: message });
