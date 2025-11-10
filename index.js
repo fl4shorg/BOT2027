@@ -3733,31 +3733,12 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 const groupMetadata = await sock.groupMetadata(from);
                 const participants = groupMetadata.participants.map(p => p.id);
                 
+                // Reage à mensagem do comando (sua mensagem)
+                await reagirMensagem(sock, message, "✅");
+                
                 // Verifica se tem mídia na mensagem atual ou citada
                 const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
                 const currentMsg = message.message;
-                
-                // Reage APENAS à mensagem citada (da pessoa), não ao comando
-                const stanzaId = message.message?.extendedTextMessage?.contextInfo?.stanzaId;
-                const quotedParticipant = message.message?.extendedTextMessage?.contextInfo?.participant;
-                
-                if (quotedMsg && stanzaId) {
-                    try {
-                        await sock.sendMessage(from, {
-                            react: {
-                                text: "✅",
-                                key: {
-                                    remoteJid: from,
-                                    fromMe: false,
-                                    id: stanzaId,
-                                    participant: quotedParticipant
-                                }
-                            }
-                        });
-                    } catch (err) {
-                        console.log("⚠️ Não foi possível reagir à mensagem citada");
-                    }
-                }
                 
                 const imageMessage = currentMsg?.imageMessage || quotedMsg?.imageMessage;
                 const videoMessage = currentMsg?.videoMessage || quotedMsg?.videoMessage;
