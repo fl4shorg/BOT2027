@@ -3791,15 +3791,26 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     // Envia marcando a mensagem original
                     await sock.sendMessage(from, messageContent, { quoted: message });
                 } else {
-                    // Se não tiver mídia, envia texto normal
-                    if (!texto) {
+                    // Se não tiver mídia, verifica se tem texto citado ou texto nos args
+                    let textoFinal = texto;
+                    
+                    // Se não tiver texto nos args, verifica se está respondendo uma mensagem de texto
+                    if (!textoFinal && quotedMsg) {
+                        // Pega o texto da mensagem citada
+                        textoFinal = quotedMsg.conversation || 
+                                    quotedMsg.extendedTextMessage?.text ||
+                                    quotedMsg.imageMessage?.caption ||
+                                    quotedMsg.videoMessage?.caption;
+                    }
+                    
+                    if (!textoFinal) {
                         const config = obterConfiguracoes();
-                        await reply(sock, from, `❌ Use: ${config.prefix}totag [mensagem]\nOu envie uma foto/vídeo/áudio com ${config.prefix}totag\n\nExemplo: ${config.prefix}totag Atenção galera! Reunião em 10 minutos!`);
+                        await reply(sock, from, `❌ Use: ${config.prefix}totag [mensagem]\nOu responda/envie uma foto/vídeo/áudio/texto com ${config.prefix}totag\n\nExemplo: ${config.prefix}totag Atenção galera! Reunião em 10 minutos!`);
                         break;
                     }
                     
                     await sock.sendMessage(from, {
-                        text: texto,
+                        text: textoFinal,
                         mentions: participants,
                         contextInfo: {
                             mentionedJid: participants,
