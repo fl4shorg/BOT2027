@@ -13032,17 +13032,17 @@ function setupListeners(sock) {
                 // Rastreamento de atividades para ranking (apenas em grupos)
                 if (isGroup) {
                     const configGrupo = antiSpam.carregarConfigGrupo(from);
-                    if (configGrupo && configGrupo.rankativo) {
+                    if (configGrupo && configGrupo.rankativo && normalized.message) {
                         // Determina o tipo de atividade
                         let tipoAtividade = '';
                         
                         // Verifica se é sticker
-                        if (normalized.message.stickerMessage) {
+                        if (normalized.message?.stickerMessage) {
                             tipoAtividade = 'sticker';
                         }
                         // Verifica se é mídia (foto, vídeo, áudio)
-                        else if (normalized.message.imageMessage || normalized.message.videoMessage || 
-                                normalized.message.audioMessage || normalized.message.documentMessage) {
+                        else if (normalized.message?.imageMessage || normalized.message?.videoMessage || 
+                                normalized.message?.audioMessage || normalized.message?.documentMessage) {
                             tipoAtividade = 'midia';
                         }
                         // Se tem texto, é mensagem
