@@ -3898,19 +3898,21 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     resposta += `\n🔗 *Link Shazam:* ${track.share.href}`;
                 }
                 
-                // Envia resposta
-                await reply(sock, from, resposta);
-                
-                // Se tiver capa da música, envia também
+                // Se tiver capa da música, envia imagem com todas as informações
                 if (track.images && track.images.coverart) {
                     try {
                         await sock.sendMessage(from, {
                             image: { url: track.images.coverart },
-                            caption: `🎵 ${track.title} - ${track.subtitle}`
+                            caption: resposta
                         }, { quoted: message });
                     } catch (err) {
                         console.log("⚠️ Erro ao enviar capa:", err.message);
+                        // Se falhar ao enviar imagem, envia só o texto
+                        await reply(sock, from, resposta);
                     }
+                } else {
+                    // Se não tiver imagem, envia só o texto
+                    await reply(sock, from, resposta);
                 }
                 
             } catch (error) {
