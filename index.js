@@ -3833,36 +3833,81 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             try {
                 await reagirMensagem(sock, message, "🎵");
                 
-                // Verifica se tem áudio citado
+                // Verifica se tem áudio ou vídeo citado
                 const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
                 const audioMessage = quotedMsg?.audioMessage;
+                const videoMessage = quotedMsg?.videoMessage;
                 
-                if (!audioMessage) {
+                if (!audioMessage && !videoMessage) {
                     const config = obterConfiguracoes();
-                    await reply(sock, from, `❌ Marque/responda um áudio para identificar!\n\nUso: ${config.prefix}shazam (respondendo a um áudio)`);
+                    await reply(sock, from, `❌ Marque/responda um áudio ou vídeo para identificar!\n\nUso: ${config.prefix}shazam (respondendo a um áudio/vídeo)`);
                     break;
                 }
                 
                 await reply(sock, from, "🎵 Identificando música... Aguarde!");
                 
-                // Baixa o áudio
-                const stream = await downloadContentFromMessage(audioMessage, 'audio');
-                const chunks = [];
-                for await (const chunk of stream) {
-                    chunks.push(chunk);
-                }
-                const buffer = Buffer.concat(chunks);
+                let tempFile;
                 
-                // Salva temporariamente
-                const tempFile = path.join(os.tmpdir(), `shazam_${Date.now()}.ogg`);
-                fs.writeFileSync(tempFile, buffer);
+                // Se for vídeo, extrai o áudio
+                if (videoMessage) {
+                    // Baixa o vídeo
+                    const stream = await downloadContentFromMessage(videoMessage, 'video');
+                    const chunks = [];
+                    for await (const chunk of stream) {
+                        chunks.push(chunk);
+                    }
+                    const videoBuffer = Buffer.concat(chunks);
+                    
+                    // Salva vídeo temporariamente
+                    const tempVideo = path.join(os.tmpdir(), `shazam_video_${Date.now()}.mp4`);
+                    fs.writeFileSync(tempVideo, videoBuffer);
+                    
+                    // Extrai áudio do vídeo usando ffmpeg
+                    tempFile = path.join(os.tmpdir(), `shazam_audio_${Date.now()}.mp3`);
+                    
+                    await new Promise((resolve, reject) => {
+                        ffmpeg(tempVideo)
+                            .output(tempFile)
+                            .audioCodec('libmp3lame')
+                            .noVideo()
+                            .on('end', () => {
+                                // Deleta vídeo temporário
+                                if (fs.existsSync(tempVideo)) {
+                                    fs.unlinkSync(tempVideo);
+                                }
+                                resolve();
+                            })
+                            .on('error', (err) => {
+                                // Deleta vídeo temporário
+                                if (fs.existsSync(tempVideo)) {
+                                    fs.unlinkSync(tempVideo);
+                                }
+                                reject(err);
+                            })
+                            .run();
+                    });
+                } else {
+                    // Baixa o áudio
+                    const stream = await downloadContentFromMessage(audioMessage, 'audio');
+                    const chunks = [];
+                    for await (const chunk of stream) {
+                        chunks.push(chunk);
+                    }
+                    const buffer = Buffer.concat(chunks);
+                    
+                    // Salva temporariamente
+                    tempFile = path.join(os.tmpdir(), `shazam_${Date.now()}.ogg`);
+                    fs.writeFileSync(tempFile, buffer);
+                }
                 
                 // Reconhece com Shazam
                 const shazam = new Shazam();
                 const result = await shazam.recognise(tempFile, 'pt-BR');
                 
                 // Deleta arquivo temporário
-                fs.unlinkSync(tempFile);
+                if (fs.existsSync(tempFile)) {
+                    fs.unlinkSync(tempFile);
+                }
                 
                 if (!result || !result.track) {
                     await reply(sock, from, "❌ Não consegui identificar essa música. Tente com outro áudio!");
