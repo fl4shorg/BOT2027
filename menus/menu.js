@@ -126,6 +126,7 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 ╰──────────────────────⪨
 
 ╭──〔 COMANDOS ESPECIAIS 〕──⪩
+│ 𖧈∘̥⸽🎵⃟ ${prefix}shazam - Identifica música de áudio
 │ 𖧈∘̥⸽🔫⃟ ${prefix}arma [nome] - Buscar armas
 │ 𖧈∘̥⸽📖⃟ ${prefix}dicionario [palavra] - Buscar no dicionário
 │ 𖧈∘̥⸽🛒⃟ ${prefix}amazon [produto] - Buscar produtos Amazon

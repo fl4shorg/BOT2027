@@ -23,6 +23,7 @@ const UserAgent = require('user-agents');
 const moment = require('moment-timezone');
 const { Chess } = require('chess.js');
 const ffmpeg = require('fluent-ffmpeg');
+const { Shazam } = require('node-shazam');
 
 // Sistema RPG - NeextCity (Nova Versão Completa)
 const rpg = require('./arquivos/rpg/index.js');
@@ -3824,6 +3825,97 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             } catch (error) {
                 console.error("❌ Erro no totag:", error);
                 await reply(sock, from, "❌ Erro ao enviar mensagem com marcação.");
+            }
+        }
+        break;
+
+        case "shazam": {
+            try {
+                await reagirMensagem(sock, message, "🎵");
+                
+                // Verifica se tem áudio citado
+                const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+                const audioMessage = quotedMsg?.audioMessage;
+                
+                if (!audioMessage) {
+                    const config = obterConfiguracoes();
+                    await reply(sock, from, `❌ Marque/responda um áudio para identificar!\n\nUso: ${config.prefix}shazam (respondendo a um áudio)`);
+                    break;
+                }
+                
+                await reply(sock, from, "🎵 Identificando música... Aguarde!");
+                
+                // Baixa o áudio
+                const stream = await downloadContentFromMessage(audioMessage, 'audio');
+                const chunks = [];
+                for await (const chunk of stream) {
+                    chunks.push(chunk);
+                }
+                const buffer = Buffer.concat(chunks);
+                
+                // Salva temporariamente
+                const tempFile = path.join(os.tmpdir(), `shazam_${Date.now()}.ogg`);
+                fs.writeFileSync(tempFile, buffer);
+                
+                // Reconhece com Shazam
+                const shazam = new Shazam();
+                const result = await shazam.recognise(tempFile, 'pt-BR');
+                
+                // Deleta arquivo temporário
+                fs.unlinkSync(tempFile);
+                
+                if (!result || !result.track) {
+                    await reply(sock, from, "❌ Não consegui identificar essa música. Tente com outro áudio!");
+                    break;
+                }
+                
+                const track = result.track;
+                
+                // Monta resposta formatada
+                let resposta = "🎵 *MÚSICA IDENTIFICADA!* 🎵\n\n";
+                resposta += `🎤 *Artista:* ${track.subtitle || 'Desconhecido'}\n`;
+                resposta += `🎧 *Música:* ${track.title || 'Desconhecido'}\n`;
+                
+                if (track.genres && track.genres.primary) {
+                    resposta += `🎼 *Gênero:* ${track.genres.primary}\n`;
+                }
+                
+                if (track.sections) {
+                    // Procura por informações adicionais
+                    const metadata = track.sections.find(s => s.type === 'SONG');
+                    if (metadata && metadata.metadata) {
+                        const meta = metadata.metadata;
+                        if (meta.find(m => m.title === 'Album')?.text) {
+                            resposta += `💿 *Álbum:* ${meta.find(m => m.title === 'Album').text}\n`;
+                        }
+                        if (meta.find(m => m.title === 'Released')?.text) {
+                            resposta += `📅 *Lançamento:* ${meta.find(m => m.title === 'Released').text}\n`;
+                        }
+                    }
+                }
+                
+                if (track.share && track.share.href) {
+                    resposta += `\n🔗 *Link Shazam:* ${track.share.href}`;
+                }
+                
+                // Envia resposta
+                await reply(sock, from, resposta);
+                
+                // Se tiver capa da música, envia também
+                if (track.images && track.images.coverart) {
+                    try {
+                        await sock.sendMessage(from, {
+                            image: { url: track.images.coverart },
+                            caption: `🎵 ${track.title} - ${track.subtitle}`
+                        }, { quoted: message });
+                    } catch (err) {
+                        console.log("⚠️ Erro ao enviar capa:", err.message);
+                    }
+                }
+                
+            } catch (error) {
+                console.error("❌ Erro no comando shazam:", error);
+                await reply(sock, from, "❌ Erro ao identificar música. Tente novamente!");
             }
         }
         break;
