@@ -3833,14 +3833,14 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             try {
                 await reagirMensagem(sock, message, "🎵");
                 
-                // Verifica se tem áudio ou vídeo citado
+                // Verifica se tem áudio ou vídeo citado OU enviado diretamente
                 const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-                const audioMessage = quotedMsg?.audioMessage;
-                const videoMessage = quotedMsg?.videoMessage;
+                let audioMessage = quotedMsg?.audioMessage || message.message?.audioMessage;
+                let videoMessage = quotedMsg?.videoMessage || message.message?.videoMessage;
                 
                 if (!audioMessage && !videoMessage) {
                     const config = obterConfiguracoes();
-                    await reply(sock, from, `❌ Marque/responda um áudio ou vídeo para identificar!\n\nUso: ${config.prefix}shazam (respondendo a um áudio/vídeo)`);
+                    await reply(sock, from, `❌ Envie ou marque/responda um áudio ou vídeo para identificar!\n\nUso: ${config.prefix}shazam (com áudio/vídeo)`);
                     break;
                 }
                 
