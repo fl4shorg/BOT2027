@@ -185,6 +185,8 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽📺⃟ ${prefix}stalkeryoutube [canal] - Stalk YouTube
 │ 𖧈∘̥⸽🎵⃟ ${prefix}stalkertiktok [user] - Stalk TikTok
 │ 𖧈∘̥⸽🎮⃟ ${prefix}stalkerroblox [user] - Stalk Roblox
+│ 𖧈∘̥⸽📱⃟ ${prefix}kwaistalker [user] - Stalk Kwai
+│ 𖧈∘̥⸽🐦⃟ ${prefix}twitterstalker [user] - Stalk Twitter
 ╰──────────────────────⪨
 
 ╭──〔 COMANDOS FIGURINHAS 〕──⪩

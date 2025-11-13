@@ -5662,6 +5662,161 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             break;
         }
 
+        case 'kwaistalker':
+        case 'stalkerkwai':
+        case 'stalkkwai': {
+            const username = args.join(' ').replace('@', '');
+            if (!username) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, { 
+                    text: `❌ Digite o username do Kwai!\n\nExemplo: *${config.prefix}kwaistalker CinePlusPlayy*` 
+                }, { quoted: message });
+                break;
+            }
+
+            console.log(`📱 Stalkando Kwai: "${username}"`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const config = obterConfiguracoes();
+                
+                const response = await axios.get(`https://www.api.neext.online/kwaistalker?name=${encodeURIComponent(username)}`, {
+                    timeout: 20000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+                
+                console.log(`📥 Resposta Kwai Stalk:`, response.data);
+                
+                if (!response.data || !response.data.username) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: `❌ Usuário *${username}* não encontrado no Kwai.`
+                    }, { quoted: message });
+                    break;
+                }
+
+                const result = response.data;
+                const mensagem = `📱 *KWAI STALKER* 📱\n\n` +
+                    `👤 Username: @${result.username}\n` +
+                    `📝 Nome: ${result.name || 'Não informado'}\n` +
+                    `📄 Descrição: ${result.description || 'Sem descrição'}\n` +
+                    `❤️ Curtidas: ${result.likes.toLocaleString('pt-BR')}\n` +
+                    `👥 Seguidores: ${result.followers.toLocaleString('pt-BR')}\n` +
+                    `🔗 Perfil: ${result.profileUrl}\n\n` +
+                    `© ${config.nomeDoBot}`;
+
+                if (result.avatar) {
+                    try {
+                        const imageResponse = await axios.get(result.avatar, {
+                            responseType: 'arraybuffer',
+                            timeout: 10000
+                        });
+                        
+                        await sock.sendMessage(from, {
+                            image: Buffer.from(imageResponse.data),
+                            caption: mensagem
+                        }, { quoted: message });
+                    } catch (imgError) {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                    }
+                } else {
+                    await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                }
+                
+                await reagirMensagem(sock, message, "✅");
+
+            } catch (error) {
+                console.error('❌ Erro ao stalkar Kwai:', error.message);
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: '❌ Erro ao buscar informações do Kwai. Tente novamente.'
+                }, { quoted: message });
+            }
+            break;
+        }
+
+        case 'twitterstalker':
+        case 'stalkertwitter':
+        case 'stalktwitter': {
+            const username = args.join(' ').replace('@', '');
+            if (!username) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, { 
+                    text: `❌ Digite o username do Twitter!\n\nExemplo: *${config.prefix}twitterstalker sbtbrasil*` 
+                }, { quoted: message });
+                break;
+            }
+
+            console.log(`🐦 Stalkando Twitter: "${username}"`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const config = obterConfiguracoes();
+                
+                const response = await axios.get(`https://www.api.neext.online/stalker/twitter?name=${encodeURIComponent(username)}`, {
+                    timeout: 20000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+                
+                console.log(`📥 Resposta Twitter Stalk:`, response.data);
+                
+                if (!response.data || !response.data.username) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: `❌ Usuário *${username}* não encontrado no Twitter.`
+                    }, { quoted: message });
+                    break;
+                }
+
+                const result = response.data;
+                const mensagem = `🐦 *TWITTER STALKER* 🐦\n\n` +
+                    `👤 Username: @${result.username}\n` +
+                    `📝 Nome: ${result.displayName}\n` +
+                    `✅ Verificado: ${result.verified ? 'Sim ✓' : 'Não'}\n` +
+                    `🔒 Protegido: ${result.protected ? 'Sim 🔐' : 'Não'}\n` +
+                    `📄 Bio: ${result.bio || 'Sem biografia'}\n` +
+                    `📍 Localização: ${result.location || 'Não informado'}\n` +
+                    `🌐 Website: ${result.website || 'Nenhum'}\n` +
+                    `📅 Entrou em: ${result.joinDate}\n` +
+                    `📝 Tweets: ${result.tweets}\n` +
+                    `👥 Seguidores: ${result.followers}\n` +
+                    `➕ Seguindo: ${result.following}\n\n` +
+                    `© ${config.nomeDoBot}`;
+
+                if (result.avatar) {
+                    try {
+                        const imageResponse = await axios.get(result.avatar.replace('_normal', '_400x400'), {
+                            responseType: 'arraybuffer',
+                            timeout: 10000
+                        });
+                        
+                        await sock.sendMessage(from, {
+                            image: Buffer.from(imageResponse.data),
+                            caption: mensagem
+                        }, { quoted: message });
+                    } catch (imgError) {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                    }
+                } else {
+                    await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                }
+                
+                await reagirMensagem(sock, message, "✅");
+
+            } catch (error) {
+                console.error('❌ Erro ao stalkar Twitter:', error.message);
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: '❌ Erro ao buscar informações do Twitter. Tente novamente.'
+                }, { quoted: message });
+            }
+            break;
+        }
+
         // ===================================
         // COMANDOS ESPECIAIS - IMDB SÉRIES
         // ===================================
