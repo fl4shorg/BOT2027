@@ -226,11 +226,16 @@ function logMensagem(m, text = "", isCommand = false, sock = null) {
         detalhes.push(`${roxo}│ 👤 RemoteJid: ${jid}${reset}`);
     }
 
+    // Pega data e hora atual
+    const moment = require('moment-timezone');
+    const dataHora = moment().tz('America/Sao_Paulo').format('DD/MM/YYYY HH:mm:ss');
+
     const logText = `
 ${roxo}╭──〔 ${tipo} ${local} 〕──⪩${reset}
 ${roxo}│ De: ${infoRemetente}${reset}
 ${detalhes.join('\n')}
 ${roxo}│ Conteúdo: ${conteudo}${reset}
+${roxo}│ Data/Hora: ${dataHora}${reset}
 ${roxo}╰─────────⪨${reset}`;
 
     console.log(logText);
