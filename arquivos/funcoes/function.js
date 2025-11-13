@@ -137,10 +137,46 @@ function logMensagem(m, text = "", isCommand = false, sock = null) {
     const pushName = m?.pushName || "Sem nome";
 
     const conteudo = text || (() => {
+        // Texto normal
         if (m?.message?.conversation) return m.message.conversation;
         if (m?.message?.extendedTextMessage?.text) return m.message.extendedTextMessage.text;
-        if (m?.message?.imageMessage?.caption) return m.message.imageMessage.caption;
-        if (m?.message?.videoMessage?.caption) return m.message.videoMessage.caption;
+        
+        // Imagem com legenda
+        if (m?.message?.imageMessage) {
+            return m.message.imageMessage.caption ? `[imagem] ${m.message.imageMessage.caption}` : "[imagem]";
+        }
+        
+        // Vídeo com legenda
+        if (m?.message?.videoMessage) {
+            return m.message.videoMessage.caption ? `[vídeo] ${m.message.videoMessage.caption}` : "[vídeo]";
+        }
+        
+        // Áudio
+        if (m?.message?.audioMessage) {
+            return "[áudio]";
+        }
+        
+        // Sticker/Figurinha
+        if (m?.message?.stickerMessage) {
+            return "[sticker]";
+        }
+        
+        // Documento
+        if (m?.message?.documentMessage) {
+            const fileName = m.message.documentMessage.fileName || "arquivo";
+            return `[documento: ${fileName}]`;
+        }
+        
+        // Localização
+        if (m?.message?.locationMessage) {
+            return "[localização]";
+        }
+        
+        // Contato
+        if (m?.message?.contactMessage || m?.message?.contactsArrayMessage) {
+            return "[contato]";
+        }
+        
         return "[conteúdo não suportado]";
     })();
 
