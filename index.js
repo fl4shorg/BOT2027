@@ -4903,6 +4903,52 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             }
             break;
 
+        case "toimg": {
+            try {
+                await reagirMensagem(sock, message, "🖼️");
+                
+                // Verifica se tem sticker marcado/respondido ou enviado direto
+                const quotedMsg = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+                let stickerMessage = quotedMsg?.stickerMessage || message.message?.stickerMessage;
+                
+                if (!stickerMessage) {
+                    const config = obterConfiguracoes();
+                    await reply(sock, from, `❌ Marque ou envie uma figurinha para converter em imagem!\n\nUso: ${config.prefix}toimg (marcando/enviando figurinha)`);
+                    break;
+                }
+                
+                await reply(sock, from, "🖼️ Convertendo figurinha em imagem... Aguarde!");
+                
+                // Baixa o sticker
+                const stream = await downloadContentFromMessage(stickerMessage, 'sticker');
+                const chunks = [];
+                for await (const chunk of stream) {
+                    chunks.push(chunk);
+                }
+                const stickerBuffer = Buffer.concat(chunks);
+                
+                // Converte WebP para PNG usando Sharp
+                const sharp = require('sharp');
+                const imageBuffer = await sharp(stickerBuffer)
+                    .png()
+                    .toBuffer();
+                
+                // Envia a imagem
+                await sock.sendMessage(from, {
+                    image: imageBuffer,
+                    caption: "✅ Figurinha convertida em imagem!"
+                }, { quoted: message });
+                
+                await reagirMensagem(sock, message, "✅");
+                
+            } catch (error) {
+                console.error("❌ Erro no comando toimg:", error);
+                await reagirMensagem(sock, message, "❌");
+                await reply(sock, from, "❌ Erro ao converter figurinha em imagem. Tente novamente!");
+            }
+        }
+        break;
+
         case 'brat': {
             const text = args.join(' ');
             if (!text) {
