@@ -3703,7 +3703,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 // Envia mensagem com menções reais
                 await sock.sendMessage(from, {
                     text: mensagem,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch(err) {
                 console.error("❌ Erro ao marcar participantes:", err);
@@ -11644,7 +11644,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
                 // Embaralha e pega porcentagens aleatórias
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 🤡`;
                 }).join('\n');
@@ -11652,7 +11653,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/jvxHn5jf/23afed681d95265b23cfc9f32b3c6a35.jpg" },
                     caption: `🤡 *RANKING DOS CORNOS*\n\n${ranking}\n\n😈 Os chifrudos do grupo! 🦌`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -11678,7 +11679,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 🔥`;
                 }).join('\n');
@@ -11686,7 +11688,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await sock.sendMessage(from, {
                     image: { url: "https://telegra.ph/file/030489699735abe38e174.jpg" },
                     caption: `🔥 *RANKING DOS GOSTOSOS*\n\n${ranking}\n\n😏 Os mais gostosos do grupo! 🔥`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -11712,7 +11714,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 🔥`;
                 }).join('\n');
@@ -11720,7 +11723,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await sock.sendMessage(from, {
                     image: { url: "https://telegra.ph/file/dcff0d1e5ea578ade62fb.jpg" },
                     caption: `🔥 *RANKING DAS GOSTOSAS*\n\n${ranking}\n\n😏 As mais gostosas do grupo! 🔥`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -11746,7 +11749,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 卐`;
                 }).join('\n');
@@ -11754,7 +11758,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await sock.sendMessage(from, {
                     image: { url: "https://telegra.ph/file/dcff0d1e5ea578ade62fb.jpg" },
                     caption: `卐 *RANKING DOS NAZISTAS*\n\n${ranking}\n\n😈 Os mais nazistas do grupo! 卐`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -11780,7 +11784,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 🎌`;
                 }).join('\n');
@@ -11788,7 +11793,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await sock.sendMessage(from, {
                     image: { url: "https://telegra.ph/file/796eed26a8f761970d9f5.jpg" },
                     caption: `🎌 *RANKING DOS OTAKUS*\n\n${ranking}\n\n😎 Os mais otakus do grupo! 🎌`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -11814,7 +11819,8 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const size = Math.floor(Math.random() * 30) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${size}cm 🍆`;
                 }).join('\n');
@@ -11822,7 +11828,7 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await sock.sendMessage(from, {
                     image: { url: "https://telegra.ph/file/ee6aed00378a0d1b88dda.jpg" },
                     caption: `🍆 *RANKING DO PAU*\n\n${ranking}\n\n😏 Os tamanhos do grupo! 🍆`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -12382,7 +12388,8 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 🏳️‍🌈`;
                 }).join('\n');
@@ -12390,7 +12397,7 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/9mzjcW0b/4f5a6af5b0375c87e9a3e63143e231fe.jpg" },
                     caption: `🏳️‍🌈 *RANKING GAY*\n\n${ranking}\n\n✨ Pride sem julgamentos! 🌈`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -12416,7 +12423,8 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 🧠`;
                 }).join('\n');
@@ -12424,7 +12432,7 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/0VV96XgJ/7760232d1a909d291a3231e720bf5ec9.jpg" },
                     caption: `🧠 *RANKING DOS BURROS*\n\n${ranking}\n\n🤪 Burrice extrema! 📉`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -12450,7 +12458,8 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 🏳️‍🌈`;
                 }).join('\n');
@@ -12458,7 +12467,7 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/jkwgSYYK/0607b00f9464319df28dcbe3b4a965dd.jpg" },
                     caption: `🏳️‍🌈 *RANKING LÉSBICA*\n\n${ranking}\n\n💜 Love is love! 🌈`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -12521,7 +12530,8 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 🌿`;
                 }).join('\n');
@@ -12529,7 +12539,7 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/NdvLNTPN/15026da7ed842481343ded7960a8f8d5.jpg" },
                     caption: `🌿 *RANKING DOS MACONHEIROS*\n\n${ranking}\n\n💨 Os chapados! 🍃`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -12555,7 +12565,8 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 😍`;
                 }).join('\n');
@@ -12563,7 +12574,7 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/CKNS2Frr/150f9a8e0becc71f9c20113addb3d433.jpg" },
                     caption: `😍 *RANKING DOS BONITOS*\n\n${ranking}\n\n✨ Os gostosos do grupo! 🔥`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -12589,7 +12600,8 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 🖤`;
                 }).join('\n');
@@ -12597,7 +12609,7 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/9mtKb5rC/92e9188040a0728af1a49c61dd0c9279.jpg" },
                     caption: `🖤 *RANKING DOS EMOS*\n\n${ranking}\n\n💀 Os depressivos! 😭`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -12623,7 +12635,8 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 👹`;
                 }).join('\n');
@@ -12631,7 +12644,7 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/3x06vHm/7760232d1a909d291a3231e720bf5ec9.jpg" },
                     caption: `👹 *RANKING DOS FEIOS*\n\n${ranking}\n\n🤮 Os horrorosos! 😱`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -12804,7 +12817,8 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 🚬`;
                 }).join('\n');
@@ -12812,7 +12826,7 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/qYDN9Q7z/70c6ff9e2b8b8ae8a5b6f4a3e8c2e42a.jpg" },
                     caption: `🚬 *RANKING DOS FUMANTES*\n\n${ranking}\n\n💨 Os viciados em nicotina! 🚭`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -12838,7 +12852,8 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 💸`;
                 }).join('\n');
@@ -12846,7 +12861,7 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/1G69wkJD/d32b5cfe067aa82bf2a5356c39499539.jpg" },
                     caption: `💸 *RANKING DOS POBRES*\n\n${ranking}\n\n🪙 Os sem dinheiro! 💰`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
@@ -12872,7 +12887,8 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 const participants = groupMetadata.participants.map(p => p.id);
 
                 const shuffled = [...participants].sort(() => Math.random() - 0.5);
-                let ranking = shuffled.slice(0, Math.min(10, participants.length)).map((participant, index) => {
+                const top10 = shuffled.slice(0, Math.min(10, participants.length));
+                let ranking = top10.map((participant, index) => {
                     const percentage = Math.floor(Math.random() * 100) + 1;
                     return `${index + 1}. @${participant.split('@')[0]} - ${percentage}% 😭`;
                 }).join('\n');
@@ -12880,7 +12896,7 @@ async function enviarGif(sock, from, gifUrl, caption, mentions = [], quoted = nu
                 await sock.sendMessage(from, {
                     image: { url: "https://i.ibb.co/9mtKb5rC/92e9188040a0728af1a49c61dd0c9279.jpg" },
                     caption: `😭 *RANKING DOS TRISTES*\n\n${ranking}\n\n💔 Os deprimidos! 😢`,
-                    mentions: participants
+                    mentions: top10
                 });
             } catch (err) {
                 await reply(sock, from, "❌ Erro ao gerar ranking.");
