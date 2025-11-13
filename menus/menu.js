@@ -136,8 +136,10 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖧈∘̥⸽📸⃟ ${prefix}screenshotweb [url] - Screenshot de sites
 │ 𖧈∘̥⸽🎬⃟ ${prefix}imdbfilme [nome] - Buscar filmes
 │ 𖧈∘̥⸽📺⃟ ${prefix}imdbanime [nome] - Buscar animes
+│ 𖧈∘̥⸽📺⃟ ${prefix}imdbserie [nome] - Buscar séries
 │ 𖧈∘̥⸽🏆⃟ ${prefix}imdbtopfilmes - Top 10 filmes
 │ 𖧈∘̥⸽⭐⃟ ${prefix}imdbtopanimes - Top 10 animes
+│ 𖧈∘̥⸽🏆⃟ ${prefix}imdbseriestop10 - Top 10 séries
 │ 𖧈∘̥⸽📮⃟ ${prefix}correio [número]/[mensagem] - Correio elegante
 │ 𖧈∘̥⸽💭⃟ ${prefix}pensador [personagem] - Frases do pensador
 │ 𖧈∘̥⸽🎌⃟ ${prefix}frasesanime - Frases de anime
