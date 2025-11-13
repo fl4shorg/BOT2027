@@ -5663,6 +5663,122 @@ async function handleCommand(sock, message, command, args, from, quoted) {
         }
 
         // ===================================
+        // COMANDOS ESPECIAIS - IMDB SÉRIES
+        // ===================================
+        
+        case 'imdbserie': {
+            const query = args.join(' ');
+            if (!query) {
+                const config = obterConfiguracoes();
+                await sock.sendMessage(from, { 
+                    text: `❌ Digite o nome da série!\n\nExemplo: ${config.prefix}imdbserie Breaking Bad` 
+                }, { quoted: message });
+                break;
+            }
+
+            await reagirMensagem(sock, message, "🎬");
+
+            try {
+                const apiUrl = `https://www.api.neext.online/tmdb/search?name=${encodeURIComponent(query)}`;
+                
+                const response = await axios.get(apiUrl, {
+                    timeout: 30000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+
+                if (!response.data || !response.data.results || response.data.results.length === 0) {
+                    throw new Error('Nenhuma série encontrada');
+                }
+
+                const serie = response.data.results[0];
+                
+                let mensagem = `🎬 *SÉRIE ENCONTRADA* 🎬\n\n`;
+                mensagem += `📺 *Nome:* ${serie.name}\n`;
+                if (serie.originalName !== serie.name) {
+                    mensagem += `🌐 *Nome Original:* ${serie.originalName}\n`;
+                }
+                mensagem += `⭐ *Avaliação:* ${serie.voteAverage}/10 (${serie.voteCount} votos)\n`;
+                mensagem += `📅 *Primeiro Episódio:* ${new Date(serie.firstAirDate).toLocaleDateString('pt-BR')}\n`;
+                mensagem += `🌍 *Idioma:* ${serie.language}\n`;
+                mensagem += `📊 *Popularidade:* ${serie.popularity.toFixed(2)}\n\n`;
+                mensagem += `📖 *Sinopse:*\n${serie.overview || 'Sem sinopse disponível'}\n\n`;
+                mensagem += `© NEEXT LTDA`;
+
+                if (serie.poster) {
+                    try {
+                        const imageResponse = await axios.get(serie.poster, {
+                            responseType: 'arraybuffer',
+                            timeout: 10000
+                        });
+                        
+                        await sock.sendMessage(from, {
+                            image: Buffer.from(imageResponse.data),
+                            caption: mensagem
+                        }, { quoted: message });
+                    } catch (imgError) {
+                        await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                    }
+                } else {
+                    await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                }
+                
+                await reagirMensagem(sock, message, "✅");
+
+            } catch (error) {
+                console.error('❌ Erro ao buscar série:', error.message);
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: '❌ Erro ao buscar série. Verifique o nome e tente novamente.'
+                }, { quoted: message });
+            }
+            break;
+        }
+
+        case 'imdbseriestop10': {
+            await reagirMensagem(sock, message, "🏆");
+
+            try {
+                const apiUrl = 'https://www.api.neext.online/tmdb/top10/popular';
+                
+                const response = await axios.get(apiUrl, {
+                    timeout: 30000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+
+                if (!response.data || !response.data.top10 || response.data.top10.length === 0) {
+                    throw new Error('Nenhuma série encontrada');
+                }
+
+                let mensagem = `🏆 *TOP 10 SÉRIES MAIS POPULARES* 🏆\n\n`;
+                
+                response.data.top10.forEach((serie, index) => {
+                    mensagem += `${index + 1}. 📺 *${serie.name}*\n`;
+                    mensagem += `   ⭐ ${serie.voteAverage}/10 (${serie.voteCount} votos)\n`;
+                    mensagem += `   📅 ${new Date(serie.firstAirDate).toLocaleDateString('pt-BR')}\n`;
+                    mensagem += `   📊 Popularidade: ${serie.popularity.toFixed(2)}\n\n`;
+                });
+                
+                mensagem += `© NEEXT LTDA`;
+
+                await sock.sendMessage(from, { text: mensagem }, { quoted: message });
+                
+                await reagirMensagem(sock, message, "✅");
+
+            } catch (error) {
+                console.error('❌ Erro ao buscar top 10 séries:', error.message);
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: '❌ Erro ao buscar top 10 séries. Tente novamente.'
+                }, { quoted: message });
+            }
+            break;
+        }
+
+        // ===================================
         // COMANDOS DE LOGOS - EPHOTO360
         // ===================================
         

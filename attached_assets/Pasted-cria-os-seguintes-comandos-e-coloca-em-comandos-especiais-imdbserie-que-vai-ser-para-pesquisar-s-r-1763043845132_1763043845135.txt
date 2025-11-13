@@ -1,0 +1,87 @@
+cria os seguintes comandos e coloca em comandos especiais 
+
+imdbserie que vai ser para pesquisar séries e imdbseriestop10 que vai mostrar top10 séries, o de pesquisa só manda um resultado com imagem e tals
+
+Api Pesquisa Séries: https://www.api.neext.online/tmdb/search?name=Breaking
+
+
+  "total": 20,
+  "results": [
+    {
+      "id": 1396,
+      "name": "Breaking Bad",
+      "originalName": "Breaking Bad",
+      "overview": "Ao saber que tem câncer, um professor passa a fabricar metanfetamina pelo futuro da família, mudando o destino de todos.",
+      "firstAirDate": "2008-01-20",
+      "language": "en",
+      "popularity": 85.6175,
+      "voteAverage": 8.927,
+      "voteCount": 16371,
+      "poster": "https://image.tmdb.org/t/p/w500/hGwm9Cj3CdbJIqQWNExQqiYmCd4.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/w500/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg"
+    },
+    {
+      "id": 302540,
+      "name": "Os Caras Malvados No Pedaço",
+      "originalName": "The Bad Guys: Breaking In",
+      "overview": "Como é que os Caras Malvados acabaram ficando malvados? Esta série hilária ambientada antes dos filmes conta a história inteira.",
+      "firstAirDate": "2025-11-06",
+      "language": "en",
+      "popularity": 30.2023,
+      "voteAverage": 6.714,
+      "voteCount": 7,
+      "poster": "https://image.tmdb.org/t/p/w500/2MwexoT6ErCY8CBe80dBEV866oF.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/w500/pXdkJvhBcPf8oEj831ASMkLPXKT.jpg"
+    },
+    {
+      "id": 203942,
+      "name": "Breaking News: No Laugh Newsroom",
+      "originalName": "Breaking News: No Laugh Newsroom",
+      "overview": "",
+      "firstAirDate": "2018-07-07",
+      "language": "en",
+      "popularity": 7.3336,
+      "voteAverage": 8.8,
+      "voteCount": 6,
+      "poster": "https://image.tmdb.org/t/p/w500/upDguFeVhmMwGXeayxUwww6vzXQ.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/w500/uvg18tl6b8PU4YUiQ7F9EczmzPC.jpg"
+    },
+    {
+      "id": 34541,
+
+
+
+
+
+
+api:
+
+https://www.api.neext.online/tmdb/top10/popular
+  "top10": [
+    {
+      "id": 200875,
+      "name": "IT: Bem-Vindos a Derry",
+      "originalName": "IT: Welcome to Derry",
+      "overview": "Durante as férias de 1958, em uma pacata cidadezinha chamada Derry, um grupo de sete amigos começa a ver coisas bizarras. Um conta que viu um palhaço, outro que viu uma múmia. Finalmente, acabam descobrindo que estavam todos vendo a mesma coisa: um ser sobrenatural e maligno que pode assumir várias formas. Ele mesmo. O Pennywise.",
+      "firstAirDate": "2025-10-26",
+      "language": "en",
+      "popularity": 335.6045,
+      "voteAverage": 7.921,
+      "voteCount": 349,
+      "poster": "https://image.tmdb.org/t/p/w500/gMTfrLvrDaD0zrhpLZ7zXIIpKfJ.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/w500/2fOKVDoc2O3eZmBZesWPuE5kgPN.jpg"
+    },
+    {
+      "id": 66732,
+      "name": "Stranger Things",
+      "originalName": "Stranger Things",
+      "overview": "Quando um garoto desaparece, a cidade toda participa nas buscas. Mas o que encontram são segredos, forças sobrenaturais e uma menina.",
+      "firstAirDate": "2016-07-15",
+      "language": "en",
+      "popularity": 263.9158,
+      "voteAverage": 8.594,
+      "voteCount": 18954,
+      "poster": "https://image.tmdb.org/t/p/w500/7EZcuL3GuiNvwn5RlKLaWazzekL.jpg",
+      "backdrop": "https://image.tmdb.org/t/p/w500/9P4IIMYY3HifqeruZq0ZZ9g7YUi.jpg"
+    },
+    {
