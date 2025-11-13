@@ -1572,11 +1572,8 @@ async function processarDanbooru(sock, from, message, tag, titulo) {
         try {
             await reagirMensagem(sock, message, "✅");
         } catch (e) {
-            console.log("⚠️ Não foi possível reagir com sucesso (conexão instável)");
+            // Silencioso
         }
-        
-        const destino = isGroup ? `PV de ${sender.split('@')[0]}` : from;
-        console.log(`✅ ${tag} - Carrossel enviado com sucesso para ${destino}!`);
 
     } catch (error) {
         console.error(`❌ Erro ao buscar ${tag}:`, error.message);
@@ -4986,7 +4983,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await createSticker(imageBuffer, sock, from, false);
 
                 await reagirMensagem(sock, message, "✅");
-                console.log('✅ Imagem BRAT enviada com sucesso!');
 
             } catch (error) {
                 console.error('❌ Erro detalhado ao gerar BRAT:', error);
@@ -5110,7 +5106,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await sock.relayMessage(from, carouselMessage.message, {});
                 
                 await reagirMensagem(sock, message, "✅");
-                console.log(`✅ Pinterest - Carrossel enviado com sucesso!`);
 
             } catch (error) {
                 console.error('❌ Erro ao buscar no Pinterest:', error.message);
@@ -5193,7 +5188,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
                         imageBuffer = Buffer.from(imageResponse.data);
                         successIndex = randomIndex;
-                        console.log(`✅ Imagem #${randomIndex + 1} baixada com sucesso (${imageBuffer.length} bytes)`);
                         break;
                     } catch (downloadError) {
                         console.log(`⚠️ Falha ao baixar imagem na tentativa ${attempt + 1}: ${downloadError.message}`);
@@ -5214,7 +5208,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }, { quoted: message });
                 
                 await reagirMensagem(sock, message, "✅");
-                console.log(`✅ Google Images - Imagem aleatória enviada com sucesso!`);
 
             } catch (error) {
                 console.error('❌ Erro ao buscar no Google Images:', error.message);
@@ -5297,7 +5290,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
                         imageBuffer = Buffer.from(imageResponse.data);
                         successIndex = randomIndex;
-                        console.log(`✅ Imagem #${randomIndex + 1} baixada com sucesso (${imageBuffer.length} bytes)`);
                         break;
                     } catch (downloadError) {
                         console.log(`⚠️ Falha ao baixar imagem na tentativa ${attempt + 1}: ${downloadError.message}`);
@@ -5318,7 +5310,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }, { quoted: message });
                 
                 await reagirMensagem(sock, message, "✅");
-                console.log(`✅ Bing Images - Imagem aleatória enviada com sucesso!`);
 
             } catch (error) {
                 console.error('❌ Erro ao buscar no Bing Images:', error.message);
@@ -5410,7 +5401,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }
                 
                 await reagirMensagem(sock, message, "✅");
-                console.log(`✅ Instagram Stalk realizado com sucesso!`);
 
             } catch (error) {
                 console.error('❌ Erro ao stalkar Instagram:', error.message);
@@ -5487,7 +5477,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }
                 
                 await reagirMensagem(sock, message, "✅");
-                console.log(`✅ YouTube Stalk realizado com sucesso!`);
 
             } catch (error) {
                 console.error('❌ Erro ao stalkar YouTube:', error.message);
@@ -5568,7 +5557,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }
                 
                 await reagirMensagem(sock, message, "✅");
-                console.log(`✅ TikTok Stalk realizado com sucesso!`);
 
             } catch (error) {
                 console.error('❌ Erro ao stalkar TikTok:', error.message);
@@ -5663,7 +5651,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }
                 
                 await reagirMensagem(sock, message, "✅");
-                console.log(`✅ Roblox Stalk realizado com sucesso!`);
 
             } catch (error) {
                 console.error('❌ Erro ao stalkar Roblox:', error.message);
@@ -6092,7 +6079,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }, { quoted: message });
                 
                 await reagirMensagem(sock, message, "✅");
-                console.log(`✅ Informações da arma enviadas com sucesso!`);
 
             } catch (error) {
                 console.error('❌ Erro ao buscar arma:', error.message);
@@ -6213,7 +6199,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
 
                 await sock.relayMessage(from, carouselMessage.message, {});
                 await reagirMensagem(sock, message, "✅");
-                console.log('✅ Metadinhas enviadas em carrossel com sucesso!');
 
             } catch (error) {
                 console.error('❌ Erro ao buscar metadinha:', error.message);
@@ -6264,7 +6249,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }, { quoted: selinho });
 
                 await reagirMensagem(sock, message, "✅");
-                console.log('✅ ATTP enviado com sucesso!');
 
             } catch (error) {
                 console.error('❌ Erro detalhado ao gerar ATTP:', error);
@@ -6425,7 +6409,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 await reagirMensagem(sock, message, "✅");
                 await reply(sock, from, `✅ *✰ MENSAGEM ENVIADA COM SUCESSO! ★*\n\n📬 Destinatário: ${numeroDestino}\n💌 Sua mensagem anônima foi entregue!`);
                 
-                console.log(`✅ Correio anônimo enviado para ${numeroLimpo}`);
 
             } catch (error) {
                 console.error('❌ Erro ao enviar correio anônimo:', error);
@@ -6507,7 +6490,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     text: `${info.emoji} *5 figurinhas ${info.nome} enviadas com sucesso!*\n\n© NEEXT LTDA`
                 }, { quoted: selinho });
 
-                console.log(`✅ Pacote de figurinhas ${info.nome} enviado com sucesso!`);
 
             } catch (error) {
                 console.error(`❌ Erro ao buscar figurinhas ${info.nome}:`, error.message);
@@ -6756,7 +6738,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     }
                 }, { quoted: selinho });
 
-                console.log(`✅ Frase de anime enviada com sucesso!`);
 
             } catch (error) {
                 console.error('❌ Erro ao buscar frase de anime:', error.message);
@@ -6853,7 +6834,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     }, { quoted: message });
                 }
 
-                console.log(`✅ Resultado da Wikipedia enviado: ${titulo}`);
 
             } catch (error) {
                 console.error('❌ Erro ao buscar na Wikipedia:', error.message);
@@ -6957,7 +6937,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     text: `🎵 *${titulo}*\n\n🔍 Pesquisa: "${pesquisa}"\n📊 Total encontrado: ${total} áudios\n\n© NEEXT LTDA`
                 }, { quoted: message });
 
-                console.log(`✅ Áudio enviado: ${titulo}`);
 
             } catch (error) {
                 console.error('❌ Erro ao buscar áudio:', error.message);
@@ -7084,7 +7063,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }
 
                 await reagirMensagem(sock, message, "✅");
-                console.log('✅ Figurinha renomeada com sucesso!');
 
             } catch (error) {
                 console.error('❌ Erro no comando rename:', error.message);
@@ -7176,7 +7154,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }
 
                 await reagirMensagem(sock, message, "✅");
-                console.log(`✅ Figurinha "take" criada com sucesso para ${senderName}!`);
 
             } catch (error) {
                 console.error('❌ Erro no comando take:', error.message);
@@ -7664,7 +7641,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                     });
 
                     const audioBuffer = Buffer.from(audioResponse.data);
-                    console.log(`✅ [PLAY] Áudio baixado com sucesso! Tamanho: ${(audioBuffer.length / 1024 / 1024).toFixed(2)} MB`);
 
                     if (audioBuffer.length < 1000) {
                         console.error("❌ [PLAY] Áudio muito pequeno, pode estar corrompido");
@@ -7710,7 +7686,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                         }
                     });
 
-                    console.log(`✅ [PLAY] Áudio enviado com sucesso!`);
                     await reagirMensagem(sock, message, "✅");
 
                 } catch (apiError) {
@@ -10150,7 +10125,6 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 });
 
                 await reagirMensagem(sock, message, "✅");
-                console.log(`✅ Vídeo do TikTok baixado com sucesso`);
 
             } catch (error) {
                 console.error("❌ Erro ao baixar TikTok:", error.message);
@@ -13202,10 +13176,7 @@ function setupListeners(sock) {
                         const senderLid = sender.split('@')[0].split(':')[0];
                         
                         if (!ehDono) {
-                            console.log(`🚫 PV bloqueado: ${senderLid} (ANTIPV ativo - não é dono)`);
                             continue; // Ignora completamente mensagens de PV de não-donos
-                        } else {
-                            console.log(`✅ PV liberado: ${senderLid} (é dono)`);
                         }
                     }
                 }
@@ -13617,8 +13588,7 @@ function setupListeners(sock) {
                             const sucesso = await welcomeSystem.processarWelcome(sock, id, participant);
                             
                             if (sucesso) {
-                                console.log(`✅ [GROUP-UPDATE] Welcome enviado com sucesso para ${participant}`);
-                            } else {
+                                            } else {
                                 console.log(`❌ [GROUP-UPDATE] Falha no welcome para ${participant}`);
                             }
                         } else {
