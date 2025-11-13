@@ -109,7 +109,6 @@ async function obterMenuPrincipal(sock, from, sender, pushName) {
 │ 𖦹∘̥⸽🛠️⃟ Versão: ${versaoBaileys}
 │ 𖦹∘̥⸽👑⃟ Dono: ${nickDoDono}
 │ 𖦹∘̥⸽📈⃟ Total de Grupos: ${totalGrupos}
-│ 𖦹∘̥⸽📝⃟ Total Registrado: ${estatisticasRegistros.totalRegistros}
 │ 𖦹∘̥⸽🎗️⃟ Cargo: ${cargoUsuario.split(' ')[1]}
 ╰───────────────────⪨
 
