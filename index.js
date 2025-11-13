@@ -4924,11 +4924,9 @@ async function handleCommand(sock, message, command, args, from, quoted) {
                 }
                 const stickerBuffer = Buffer.concat(chunks);
                 
-                // Converte WebP para PNG usando Sharp
-                const sharp = require('sharp');
-                const imageBuffer = await sharp(stickerBuffer)
-                    .png()
-                    .toBuffer();
+                // Converte WebP para PNG usando Jimp
+                const image = await Jimp.read(stickerBuffer);
+                const imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
                 
                 // Envia a imagem
                 await sock.sendMessage(from, {
