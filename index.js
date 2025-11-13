@@ -7033,6 +7033,124 @@ async function handleCommand(sock, message, command, args, from, quoted) {
             break;
         }
 
+        // Comando Conselho 1
+        case 'conselho1': {
+            console.log(`💡 Buscando conselho...`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const response = await axios.get('https://www.api.neext.online/conselho1', {
+                    timeout: 15000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+
+                console.log(`📥 Resposta API Conselho 1:`, response.data);
+
+                if (!response.data || response.data.status !== 200 || !response.data.resultado) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: '❌ Erro ao buscar conselho. Tente novamente!'
+                    }, { quoted: message });
+                    break;
+                }
+
+                await reagirMensagem(sock, message, "✅");
+
+                const mensagem = `💡 *CONSELHO DO DIA*\n\n` +
+                               `📝 "${response.data.resultado}"\n\n` +
+                               `© NEEXT LTDA`;
+
+                await sock.sendMessage(from, {
+                    text: mensagem
+                }, { quoted: message });
+
+                console.log(`✅ Conselho enviado!`);
+
+            } catch (error) {
+                console.error('❌ Erro ao buscar conselho:', error.message);
+                
+                let errorMessage = '❌ Erro ao buscar conselho.';
+                
+                if (error.code === 'ENOTFOUND') {
+                    errorMessage += ' API indisponível.';
+                } else if (error.code === 'ETIMEDOUT') {
+                    errorMessage += ' Timeout. Tente novamente.';
+                } else if (error.response?.status >= 500) {
+                    errorMessage += ' Servidor fora do ar.';
+                } else {
+                    errorMessage += ' Tente novamente mais tarde.';
+                }
+                
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: errorMessage
+                }, { quoted: message });
+            }
+            break;
+        }
+
+        // Comando Conselho 2
+        case 'conselho2': {
+            console.log(`💡 Buscando conselho com autor...`);
+            await reagirMensagem(sock, message, "⏳");
+
+            try {
+                const response = await axios.get('https://www.api.neext.online/conselho2', {
+                    timeout: 15000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+
+                console.log(`📥 Resposta API Conselho 2:`, response.data);
+
+                if (!response.data || response.data.status !== 200 || !response.data.resultado) {
+                    await reagirMensagem(sock, message, "❌");
+                    await sock.sendMessage(from, {
+                        text: '❌ Erro ao buscar conselho. Tente novamente!'
+                    }, { quoted: message });
+                    break;
+                }
+
+                await reagirMensagem(sock, message, "✅");
+
+                const resultado = response.data.resultado;
+                const mensagem = `💡 *CONSELHO MOTIVACIONAL*\n\n` +
+                               `📝 "${resultado.frase}"\n\n` +
+                               `✍️ *Autor:* ${resultado.autor}\n\n` +
+                               `© NEEXT LTDA`;
+
+                await sock.sendMessage(from, {
+                    text: mensagem
+                }, { quoted: message });
+
+                console.log(`✅ Conselho com autor enviado!`);
+
+            } catch (error) {
+                console.error('❌ Erro ao buscar conselho 2:', error.message);
+                
+                let errorMessage = '❌ Erro ao buscar conselho.';
+                
+                if (error.code === 'ENOTFOUND') {
+                    errorMessage += ' API indisponível.';
+                } else if (error.code === 'ETIMEDOUT') {
+                    errorMessage += ' Timeout. Tente novamente.';
+                } else if (error.response?.status >= 500) {
+                    errorMessage += ' Servidor fora do ar.';
+                } else {
+                    errorMessage += ' Tente novamente mais tarde.';
+                }
+                
+                await reagirMensagem(sock, message, "❌");
+                await sock.sendMessage(from, {
+                    text: errorMessage
+                }, { quoted: message });
+            }
+            break;
+        }
+
         // Comando Wikipedia - Nova versão com API oficial
         case 'wikipedia':
         case 'wiki': {
